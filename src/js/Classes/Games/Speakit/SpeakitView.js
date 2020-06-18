@@ -1,3 +1,5 @@
+import './style.scss';
+
 const ID_DIFFICULTY_BAR = 'speakit__difficulty-bar';
 const ID_PANEL = 'speakit__panel';
 const ID_PICTURE = 'speakit__picture';
