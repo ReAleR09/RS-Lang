@@ -3,8 +3,12 @@ import 'materialize-css';
 
 // init Materialize components
 const initSideNavs = () => {
-  const elems = document.querySelectorAll('.sidenav');
-  const instances = M.Sidenav.init(elems);
+  const rightNav = document.querySelectorAll('#sidenav-right');
+  const leftNav = document.querySelectorAll('#sidenav-left');
+  const instanceLeft = M.Sidenav.init(leftNav);
+  const instanceRight = M.Sidenav.init(rightNav, {
+    edge: 'right',
+  });
 };
 
 const initFixedNavBtn = () => {
