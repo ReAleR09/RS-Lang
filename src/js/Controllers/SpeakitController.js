@@ -1,17 +1,24 @@
 import Controller from '../lib/Controller';
 import IndexView from '../Views/Speakit/IndexView';
-// import AppNavigator from '../lib/AppNavigator';
+import SpeakitGameManager from '../Classes/Games/Speakit/SpeakitGameManager';
+import PlayView from '../Views/Speakit/PlayView';
 
 export default class SpeakitController extends Controller {
   constructor() {
     const viewClasses = {
       index: IndexView,
+      play: PlayView,
     };
     super(viewClasses);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   indexAction() {
-    // passing some param to the IndexView
-    this.props.someParamPassToView = 'hello';
+
+  }
+
+  playAction() {
+    const gameManager = new SpeakitGameManager();
+    this.props.gameManager = gameManager;
   }
 }
