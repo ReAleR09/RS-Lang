@@ -9,6 +9,8 @@ const ID_WORDS_PANEL = 'speakit__words-panel';
 
 const CLASS_WORDCARD = 'speakit__word-card';
 
+const CLASS_BORDER = 'speakit__border';
+
 export default class SpeakitView {
   attach(element) {
     this.element = element;
@@ -22,16 +24,16 @@ export default class SpeakitView {
       difficultyElements += `<div class="${enabledClass}" data-level=${level}>[d${level}]</div>`;
     }
 
-    const html = `<div>
-      <div id="${ID_DIFFICULTY_BAR}">
+    const html = `<div class="${CLASS_BORDER}">
+      <div id="${ID_DIFFICULTY_BAR}" class="${CLASS_BORDER}">
         ${difficultyElements}
       </div>
-      <div id="${ID_PANEL}">
-        <div id="${ID_PICTURE}">Picture of the word goes there</div>
-        <div id="${ID_TRANSLATION}">Word translation hint goes there</div>
+      <div id="${ID_PANEL}" class="${CLASS_BORDER}">
+        <div id="${ID_PICTURE}" class="${CLASS_BORDER}">Picture of the word goes there</div>
+        <div id="${ID_TRANSLATION}" class="${CLASS_BORDER}">Word translation hint goes there</div>
       </div>
-      <div id="${ID_RECOGNIZED_TEXT}">recognized text</div>
-      <div id="${ID_WORDS_PANEL}">
+      <div id="${ID_RECOGNIZED_TEXT}" class="${CLASS_BORDER}">recognized text</div>
+      <div id="${ID_WORDS_PANEL}" class="${CLASS_BORDER}">
         
       </div>
     </div>`;
@@ -41,14 +43,14 @@ export default class SpeakitView {
 
   drawWordsToDOM(words) {
     const wordsHtml = words.reduce((html, wordInfo) => {
-      const wordHTML = `<div class="${CLASS_WORDCARD}" id="${wordInfo.id}">
-        <div>Sound knopka )</div>
-        <div>${wordInfo.word}</div>
-        <div>${wordInfo.transcription}</div>
+      const wordHTML = `<div class="${CLASS_WORDCARD} ${CLASS_BORDER}" id="${wordInfo.id}">
+        <div class="${CLASS_BORDER}">Sound knopka )</div>
+        <div class="${CLASS_BORDER}">${wordInfo.word}</div>
+        <div class="${CLASS_BORDER}">${wordInfo.transcription}</div>
       </div>`;
 
       return html + wordHTML;
-    });
+    }, '');
 
     const wordsPanelEl = this.element.querySelector(`#${ID_WORDS_PANEL}`);
 
