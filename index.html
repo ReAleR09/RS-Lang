@@ -9,17 +9,22 @@
       rel="stylesheet">
 </head>
 <body>
+  <ul class="sidenav" id="sidenav-left">
+    <li><a href="#">Sass</a></li>
+    <li><a href="#">Components</a></li>
+    <li><a href="#">Javascript</a></li>
+    <li><a href="#">Mobile</a></li>
+  </ul>
   <nav>
+    
     <div class="nav-wrapper #ff7043 deep-orange lighten-1">
       <div class="container">
-        <a data-target="slide-out" class="btn transparent waves-effect waves-orange vert-align"><i class="material-icons">menu</i></a>
+        <a data-target="sidenav-left" class="sidenav-trigger btn transparent waves-effect waves-orange vert-align sidenav-trigger-custom"><i class="material-icons">menu</i></a>
         <span class="brand-logo center">Dashboard</span>
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
-
-        </ul>
       </div>
-    
+      
     </div>
+
   </nav>
   
   <div id="sidebar"></div>
