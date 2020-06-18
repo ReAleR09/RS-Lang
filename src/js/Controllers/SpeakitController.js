@@ -1,6 +1,6 @@
 import Controller from '../lib/Controller';
 import IndexView from '../Views/Speakit/IndexView';
-import SpeakitGameManager from '../Classes/Games/Speakit/SpeakitGameManager';
+import SpeakitGameManager from '../Components/Games/Speakit/SpeakitGameManager';
 import PlayView from '../Views/Speakit/PlayView';
 
 export default class SpeakitController extends Controller {
