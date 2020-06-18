@@ -1,4 +1,5 @@
 import './style.scss';
+import AppNavigator from '../../../lib/AppNavigator';
 
 const ID_DIFFICULTY_BAR = 'speakit__difficulty-bar';
 const ID_PANEL = 'speakit__panel';
@@ -14,6 +15,16 @@ const CLASS_BORDER = 'speakit__border';
 export default class SpeakitView {
   attach(element) {
     this.element = element;
+    this.assignMainButtonClickListeners();
+  }
+
+  assignMainButtonClickListeners() {
+    const difficultyBarEl = this.element.querySelector(`#${ID_DIFFICULTY_BAR}`);
+    difficultyBarEl.addEventListener('click', (event) => {
+      if (event.target.dataset.level) {
+        AppNavigator.go('speakit', 'play', { difficulty: event.target.dataset.level });
+      }
+    });
   }
 
   // eslint-disable-next-line class-methods-use-this

@@ -30,6 +30,6 @@ export default class SpeakitGameManager {
   }
 
   getInitialLayout() {
-    return this.view.getGameLayout();
+    return this.view.getGameLayout(this.difficulty);
   }
 }
