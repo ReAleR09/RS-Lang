@@ -7,8 +7,14 @@ const initSideNavs = () => {
   const instances = M.Sidenav.init(elems);
 };
 
+const initFixedNavBtn = () => {
+  var elems = document.querySelectorAll('.fixed-action-btn');
+  var instances = M.FloatingActionButton.init(elems);
+};
+
 document.addEventListener('DOMContentLoaded', function() {
-  initSideNavs ();
+  initSideNavs();
+  initFixedNavBtn();
 });
 
 
