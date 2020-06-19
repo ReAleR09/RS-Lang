@@ -13,12 +13,27 @@ const CLASS_WORDCARD = 'speakit__word-card';
 const CLASS_BORDER = 'speakit__border';
 
 export default class SpeakitView {
-  attach(element) {
-    this.element = element;
-    this.assignMainButtonClickListeners();
+  constructor(wordSoundButtonClickCallback) {
+    this.wordSoundButtonClickCallback = wordSoundButtonClickCallback;
   }
 
-  assignMainButtonClickListeners() {
+  attach(element) {
+    this.element = element;
+    this.initDifficultySwitcher();
+    this.initWordSoundButtonClick();
+  }
+
+  initWordSoundButtonClick() {
+    const wordsPanelEl = this.element.querySelector(`#${ID_WORDS_PANEL}`);
+    wordsPanelEl.addEventListener('click', (event) => {
+      if (event.target.dataset.wordsound) {
+        const { wordid } = event.target.dataset;
+        this.wordSoundButtonClickCallback(wordid);
+      }
+    });
+  }
+
+  initDifficultySwitcher() {
     const difficultyBarEl = this.element.querySelector(`#${ID_DIFFICULTY_BAR}`);
     difficultyBarEl.addEventListener('click', (event) => {
       if (event.target.dataset.level) {
@@ -54,8 +69,8 @@ export default class SpeakitView {
 
   drawWordsToDOM(words) {
     const wordsHtml = words.reduce((html, wordInfo) => {
-      const wordHTML = `<div class="${CLASS_WORDCARD} ${CLASS_BORDER}" id="${wordInfo.id}">
-        <div class="${CLASS_BORDER}">Sound knopka )</div>
+      const wordHTML = `<div class="${CLASS_WORDCARD} ${CLASS_BORDER}" data-wordid="${wordInfo.id}">
+        <div class="${CLASS_BORDER}" data-wordid="${wordInfo.id}" data-wordsound="1">Sound knopka )</div>
         <div class="${CLASS_BORDER}">${wordInfo.word}</div>
         <div class="${CLASS_BORDER}">${wordInfo.transcription}</div>
       </div>`;

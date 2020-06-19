@@ -1,11 +1,13 @@
 import SpeakitView from './SpeakitView';
 import SpeakitWordsApi from './SpeakitWordsApi';
+import SpeakitSoundPlayer from './SpeakitSoundPlayer';
 
 export default class SpeakitGameManager {
   constructor(difficulty = 0) {
     this.difficulty = difficulty;
     this.wordsState = [];
-    this.view = new SpeakitView();
+    this.soundPlayer = new SpeakitSoundPlayer();
+    this.view = new SpeakitView(this.soundPlayer.playWordSound.bind(this.soundPlayer));
   }
 
   attach(element) {
@@ -17,15 +19,17 @@ export default class SpeakitGameManager {
     const wordsState = words.map((wordInfo) => {
       const wordState = {
         id: wordInfo.id,
+        guessed: false,
       };
 
       return wordState;
     });
     this.wordsState = wordsState;
-    this.drawWords(words);
+    this.displayWords(words);
   }
 
-  drawWords(wordsInfoArray) {
+  displayWords(wordsInfoArray) {
+    this.soundPlayer.initWordsSounds(wordsInfoArray);
     this.view.drawWordsToDOM(wordsInfoArray);
   }
 
