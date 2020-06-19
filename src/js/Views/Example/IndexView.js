@@ -21,9 +21,6 @@ export default class IndexView extends View {
    */
   onMount() {
     // we will render current datetime every sec
-    if (!localStorage.userId) {
-      AppNavigator.go('registration');
-    }
 
     this.timer = setInterval(() => {
       const date = new Date();

@@ -5,6 +5,7 @@ import { EVENT_NAVIGATION } from './js/Utils/Constants';
 import ExampleController from './js/Controllers/ExampleController';
 import RegistrationController from './js/Controllers/RegistrationController';
 import AuthorizationController from './js/Controllers/AuthorizationController';
+import AppNavigator from './js/lib/AppNavigator';
 
 function appInit() {
   /**
@@ -14,7 +15,6 @@ function appInit() {
    */
   const routes = {
     '/': ExampleController,
-    // '/': RegistrationController,
     registration: RegistrationController,
     authorization: AuthorizationController,
     example: ExampleController,
@@ -37,6 +37,10 @@ function appInit() {
 
   router.route();
   PublisherSubscriber.publish(EVENT_NAVIGATION, { controller: null, action: null, params: null });
+
+  if (!localStorage.userId) {
+    AppNavigator.go('registration');
+  }
 }
 
 window.onload = appInit;
