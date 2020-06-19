@@ -4,6 +4,7 @@ import PublisherSubscriber from './js/Classes/PublisherSubscriber';
 import { EVENT_NAVIGATION } from './js/Utils/Constants';
 import ExampleController from './js/Controllers/ExampleController';
 import SpeakitController from './js/Controllers/SpeakitController';
+import './js/plugins';
 
 function appInit() {
   /**
