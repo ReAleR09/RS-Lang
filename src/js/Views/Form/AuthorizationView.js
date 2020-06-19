@@ -25,6 +25,12 @@ const logIn = async (e) => {
     } else {
       console.log(userData, 'Incorrect e-mail or password');
     }
+  } else {
+    console.log(userData);
+    localStorage.userId = userData.userId;
+    localStorage.token = userData.token;
+
+    AppNavigator.go();
   }
 };
 
