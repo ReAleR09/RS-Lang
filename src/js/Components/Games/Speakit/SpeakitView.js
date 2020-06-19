@@ -8,15 +8,20 @@ const ID_TRANSLATION = 'speakit__picture';
 const ID_RECOGNIZED_TEXT = 'speakit__recognized-text';
 const ID_WORDS_PANEL = 'speakit__words-panel';
 const ID_BEGIN_BUTTON = 'speakit__begin-button';
+const ID_FINISH_BUTTON = 'speakit__finish-button';
 
 const CLASS_WORDCARD = 'speakit__word-card';
+const CLASS_BUTTON_HIDDEN = 'speakit__button-hidden';
 
 const CLASS_BORDER = 'speakit__border';
 
+// const CLASS_WORDCARD_RECOGNIZED = 'speakit__word-card_recognized'
+
 export default class SpeakitView {
-  constructor(wordSoundButtonClickCallback, beginCallback) {
+  constructor(wordSoundButtonClickCallback, beginCallback, stopCallback) {
     this.wordSoundButtonClickCallback = wordSoundButtonClickCallback;
     this.beginCallback = beginCallback;
+    this.stopCallback = stopCallback;
   }
 
   attach(element) {
@@ -24,12 +29,25 @@ export default class SpeakitView {
     this.initDifficultySwitcher();
     this.initWordSoundButtonClick();
     this.initBeginButton();
+    this.initFinishButton();
   }
 
   initBeginButton() {
-    const wordsPanelEl = this.element.querySelector(`#${ID_BEGIN_BUTTON}`);
-    wordsPanelEl.addEventListener('click', (e) => {
+    const beginButton = this.element.querySelector(`#${ID_BEGIN_BUTTON}`);
+    const finishButton = this.element.querySelector(`#${ID_FINISH_BUTTON}`);
+    beginButton.addEventListener('click', (e) => {
       this.beginCallback();
+      beginButton.classList.add(CLASS_BUTTON_HIDDEN);
+      finishButton.classList.remove(CLASS_BUTTON_HIDDEN);
+      e.preventDefault();
+      e.stopPropagation();
+    });
+  }
+
+  initFinishButton() {
+    const finishButton = this.element.querySelector(`#${ID_FINISH_BUTTON}`);
+    finishButton.addEventListener('click', (e) => {
+      this.stopCallback();
       e.preventDefault();
       e.stopPropagation();
     });
@@ -58,6 +76,11 @@ export default class SpeakitView {
     });
   }
 
+  markWordAsRecognized() {
+    const wordCardsEls = this.element.querySelector(`.${CLASS_WORDCARD}`);
+    console.log(wordCardsEls);
+  }
+
   // eslint-disable-next-line class-methods-use-this
   getGameLayout(difficulty) {
     let difficultyElements = '';
@@ -77,11 +100,17 @@ export default class SpeakitView {
       <div id="${ID_RECOGNIZED_TEXT}" class="${CLASS_BORDER}">recognized text</div>
       <div id="${ID_WORDS_PANEL}" class="${CLASS_BORDER}"></div>
       <div>
-        <div id="${ID_BEGIN_BUTTON}">BEGIN</div>
+        <div id="${ID_BEGIN_BUTTON}">START GAME</div>
+        <div id="${ID_FINISH_BUTTON}" class="${CLASS_BUTTON_HIDDEN}">FINISH GAME</div>
       </div>
     </div>`;
 
     return html;
+  }
+
+  drawRecognizedTextToDOM(text) {
+    const textDiv = this.element.querySelector(`#${ID_RECOGNIZED_TEXT}`);
+    textDiv.textContent = text;
   }
 
   drawWordsToDOM(words) {
