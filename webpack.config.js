@@ -25,6 +25,7 @@ module.exports = (env, options) => {
     output: {
       filename: 'js/script.js',
       path: path.resolve(__dirname, 'dist'),
+      publicPath: '/',
     },
     plugins: [
       new CleanWebpackPlugin(),
@@ -50,6 +51,7 @@ module.exports = (env, options) => {
               loader: 'babel-loader',
               options: {
                 presets: ['@babel/preset-env'],
+                plugins: ['@babel/plugin-transform-runtime'],
               },
             },
             {
