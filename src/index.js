@@ -1,8 +1,10 @@
 import Router from './js/Router';
-import Sidebar from './js/Classes/Sidebar';
+// import Sidebar from './js/Classes/Sidebar';
 import PublisherSubscriber from './js/Classes/PublisherSubscriber';
 import { EVENT_NAVIGATION } from './js/Utils/Constants';
 import ExampleController from './js/Controllers/ExampleController';
+import RegistrationController from './js/Controllers/RegistrationController';
+import AuthorizationController from './js/Controllers/AuthorizationController';
 
 function appInit() {
   /**
@@ -12,6 +14,9 @@ function appInit() {
    */
   const routes = {
     '/': ExampleController,
+    // '/': RegistrationController,
+    registration: RegistrationController,
+    authorization: AuthorizationController,
     example: ExampleController,
   };
 
@@ -27,8 +32,8 @@ function appInit() {
   const router = new Router(appContainter, routes);
 
   // styles are broken, so currently it's not a sidebar
-  const sideBar = new Sidebar();
-  sideBar.attach('sidebar', 'toggleSidebar');
+  // const sideBar = new Sidebar();
+  // sideBar.attach('sidebar', 'toggleSidebar');
 
   router.route();
   PublisherSubscriber.publish(EVENT_NAVIGATION, { controller: null, action: null, params: null });
