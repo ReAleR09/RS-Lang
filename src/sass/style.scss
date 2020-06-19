@@ -1,2 +1,12 @@
 // pefer BOM
 @import "./Components/Example.scss";
+
+// plugins
+@import "./plugins";
+
+//layout
+@import "./layout/layout";
+
+// components
+@import "./Components/helpers";
+@import "./Components/base";

@@ -25,6 +25,7 @@ module.exports = (env, options) => {
     output: {
       filename: 'js/script.js',
       path: path.resolve(__dirname, 'dist'),
+      publicPath: '/',
     },
     plugins: [
       new CleanWebpackPlugin(),
