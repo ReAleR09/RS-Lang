@@ -11,6 +11,7 @@ const getRandomWordsForDifficulty = (difficulty) => {
         image: `${CONF_MEDIA_BASE_PATH}${word.image}`,
         audioMeaning: `${CONF_MEDIA_BASE_PATH}${word.audioMeaning}`,
         audioExample: `${CONF_MEDIA_BASE_PATH}${word.audioExample}`,
+        id: `${word.id}`, // TODO remove, converting int to string for now
       };
 
       return wordMapped;

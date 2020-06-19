@@ -15,7 +15,7 @@ const CLASS_BUTTON_HIDDEN = 'speakit__button-hidden';
 
 const CLASS_BORDER = 'speakit__border';
 
-// const CLASS_WORDCARD_RECOGNIZED = 'speakit__word-card_recognized'
+const CLASS_WORDCARD_RECOGNIZED = 'speakit__word-card_recognized';
 
 export default class SpeakitView {
   constructor(wordSoundButtonClickCallback, beginCallback, stopCallback) {
@@ -76,9 +76,13 @@ export default class SpeakitView {
     });
   }
 
-  markWordAsRecognized() {
-    const wordCardsEls = this.element.querySelector(`.${CLASS_WORDCARD}`);
-    console.log(wordCardsEls);
+  markWordAsRecognized(wordId) {
+    const wordCardsEls = this.element.querySelectorAll(`.${CLASS_WORDCARD}`);
+    wordCardsEls.forEach((wordCardEl) => {
+      if (wordCardEl.dataset.wordid === wordId) {
+        wordCardEl.classList.add(CLASS_WORDCARD_RECOGNIZED);
+      }
+    });
   }
 
   // eslint-disable-next-line class-methods-use-this
