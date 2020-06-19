@@ -1,17 +1,31 @@
 import SpeakitView from './SpeakitView';
 import SpeakitWordsApi from './SpeakitWordsApi';
 import SpeakitSoundPlayer from './SpeakitSoundPlayer';
+import SpeakitVoiceRecognizer from './SpeakitVoiceRecognizer';
 
 export default class SpeakitGameManager {
   constructor(difficulty = 0) {
     this.difficulty = difficulty;
     this.wordsState = [];
     this.soundPlayer = new SpeakitSoundPlayer();
-    this.view = new SpeakitView(this.soundPlayer.playWordSound.bind(this.soundPlayer));
+    this.view = new SpeakitView(
+      this.soundPlayer.playWordSound.bind(this.soundPlayer),
+      this.startGame.bind(this),
+    );
+    this.speechRecognizer = new SpeakitVoiceRecognizer(this.handleRecognizedPhrase.bind(this));
   }
 
   attach(element) {
     this.view.attach(element);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  handleRecognizedPhrase(phrase) {
+    console.log(phrase);
+  }
+
+  startGame() {
+    this.speechRecognizer.startRecognition();
   }
 
   init() {

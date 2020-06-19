@@ -7,37 +7,53 @@ const ID_PICTURE = 'speakit__picture';
 const ID_TRANSLATION = 'speakit__picture';
 const ID_RECOGNIZED_TEXT = 'speakit__recognized-text';
 const ID_WORDS_PANEL = 'speakit__words-panel';
+const ID_BEGIN_BUTTON = 'speakit__begin-button';
 
 const CLASS_WORDCARD = 'speakit__word-card';
 
 const CLASS_BORDER = 'speakit__border';
 
 export default class SpeakitView {
-  constructor(wordSoundButtonClickCallback) {
+  constructor(wordSoundButtonClickCallback, beginCallback) {
     this.wordSoundButtonClickCallback = wordSoundButtonClickCallback;
+    this.beginCallback = beginCallback;
   }
 
   attach(element) {
     this.element = element;
     this.initDifficultySwitcher();
     this.initWordSoundButtonClick();
+    this.initBeginButton();
+  }
+
+  initBeginButton() {
+    const wordsPanelEl = this.element.querySelector(`#${ID_BEGIN_BUTTON}`);
+    wordsPanelEl.addEventListener('click', (e) => {
+      this.beginCallback();
+      e.preventDefault();
+      e.stopPropagation();
+    });
   }
 
   initWordSoundButtonClick() {
     const wordsPanelEl = this.element.querySelector(`#${ID_WORDS_PANEL}`);
-    wordsPanelEl.addEventListener('click', (event) => {
-      if (event.target.dataset.wordsound) {
-        const { wordid } = event.target.dataset;
+    wordsPanelEl.addEventListener('click', (e) => {
+      if (e.target.dataset.wordsound) {
+        const { wordid } = e.target.dataset;
         this.wordSoundButtonClickCallback(wordid);
+        e.preventDefault();
+        e.stopPropagation();
       }
     });
   }
 
   initDifficultySwitcher() {
     const difficultyBarEl = this.element.querySelector(`#${ID_DIFFICULTY_BAR}`);
-    difficultyBarEl.addEventListener('click', (event) => {
-      if (event.target.dataset.level) {
-        AppNavigator.go('speakit', 'play', { difficulty: event.target.dataset.level });
+    difficultyBarEl.addEventListener('click', (e) => {
+      if (e.target.dataset.level) {
+        AppNavigator.go('speakit', 'play', { difficulty: e.target.dataset.level });
+        e.preventDefault();
+        e.stopPropagation();
       }
     });
   }
@@ -59,8 +75,9 @@ export default class SpeakitView {
         <div id="${ID_TRANSLATION}" class="${CLASS_BORDER}">Word translation hint goes there</div>
       </div>
       <div id="${ID_RECOGNIZED_TEXT}" class="${CLASS_BORDER}">recognized text</div>
-      <div id="${ID_WORDS_PANEL}" class="${CLASS_BORDER}">
-        
+      <div id="${ID_WORDS_PANEL}" class="${CLASS_BORDER}"></div>
+      <div>
+        <div id="${ID_BEGIN_BUTTON}">BEGIN</div>
       </div>
     </div>`;
 
