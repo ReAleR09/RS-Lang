@@ -1,0 +1,89 @@
+.learn-words {
+  opacity: 0;
+
+  &.visible {
+    opacity: 1;
+  }
+
+  transition: opacity ease-in-out 0.4s;
+
+  width: 100%;
+
+  .word-card {
+    padding: 2rem;
+
+    .card-head {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .card-settings {
+        /* Correct Materialize styles of FAB */
+        position: static !important;
+      }
+    }
+
+    .img-rounded {
+      border-radius: 2vh;
+    }
+
+    .puzzle {
+      * {
+        font-size: 2rem;
+        margin: unset;
+      }
+
+      p {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      #word {
+        width: unset;
+        font-size: 2rem;
+
+        &::placeholder {
+          opacity: 0.7;
+        }
+      }
+    }
+
+    .hints {
+      p {
+        font-size: 1.5rem;
+        margin: unset;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+    }
+  }
+
+  .d-flex {
+    display: flex;
+  }
+
+  .flex-align-center {
+    align-items: center;
+  }
+
+  .p-1 {
+    padding: 1rem;
+  }
+
+  .p-2 {
+    padding: 2rem;
+  }
+
+  .m-1 {
+    margin: 1rem;
+  }
+
+  .m-2 {
+    margin: 2rem;
+  }
+
+  .flex-justify-center {
+    justify-content: center;
+  }
+}
