@@ -3,13 +3,11 @@ import AppNavigator from '../../lib/AppNavigator';
 import Form from '../../Classes/Form';
 import Api from '../../Classes/Api';
 
-// const TIMER_ID = 'current-time';
-// const EXAMPLE_FUNCTIONAL_CLASS = 'example-class';
+const errors = {
+  server: 'Server error',
+  signIn: 'Incorrect e-mail or password',
+};
 
-// const numberClickExample = (element) => {
-//   const { id } = element.target.dataset;
-//   AppNavigator.go('example', null, { id });
-// };
 const logIn = async (e) => {
   e.preventDefault();
   console.log(e);
@@ -21,9 +19,15 @@ const logIn = async (e) => {
   const userData = await api.authorize(user);
   if (userData.error) {
     if (userData.error >= 500) {
-      console.log(userData, 'Server error');
+      document.querySelector('.error').innerHTML = errors.server;
+      setTimeout(() => {
+        document.querySelector('.error').innerHTML = '';
+      }, 2000);
     } else {
-      console.log(userData, 'Incorrect e-mail or password');
+      document.querySelector('.error').innerHTML = errors.signIn;
+      setTimeout(() => {
+        document.querySelector('.error').innerHTML = '';
+      }, 2000);
     }
   } else {
     console.log(userData);
