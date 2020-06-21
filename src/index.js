@@ -40,8 +40,6 @@ function appInit() {
 
   if (localStorage.timeStamp < Date.now()) {
     localStorage.removeItem('token');
-    console.log(localStorage.timeStamp);
-    console.log(Date.now());
   }
   if (!localStorage.token) {
     AppNavigator.go('registration');
