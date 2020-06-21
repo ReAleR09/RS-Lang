@@ -3,19 +3,15 @@ import Form from '../../Classes/Form';
 import Api from '../../Classes/Api';
 import AppNavigator from '../../lib/AppNavigator';
 
-// const TIMER_ID = 'current-time';
-// const EXAMPLE_FUNCTIONAL_CLASS = 'example-class';
-
-// const numberClickExample = (element) => {
-//   const { id } = element.target.dataset;
-//   AppNavigator.go('example', null, { id });
-// };
+const errors = {
+  server: 'Server error',
+  signIn: 'Incorrect e-mail or password',
+};
 
 const validMail = (email) => {
   const re = new RegExp('[^@]+@[^@]+\\.[^@]+');
 
   const valid = re.test(email);
-  // if (valid) output = 'Адрес эл. почты введен правильно!';
   if (!valid) {
     const output = 'Email is wrong!';
     document.querySelector('.email').value = '';
@@ -49,7 +45,6 @@ const validPassword = (password) => {
 
 const register = async (e) => {
   e.preventDefault();
-  console.log(e);
   const user = {
     email: document.querySelector('.email').value,
     password: document.querySelector('.password').value,
@@ -62,9 +57,10 @@ const register = async (e) => {
     const userData = await api.register(user);
     if (userData.error) {
       if (userData.error >= 500) {
-        console.log(userData, 'Server error');
-      } else {
-        console.log(userData, 'Incorrect e-mail or password');
+        document.querySelector('.error').innerHTML = errors.server;
+        setTimeout(() => {
+          document.querySelector('.error').innerHTML = '';
+        }, 2000);
       }
     } else {
       AppNavigator.go('authorization');
@@ -87,11 +83,6 @@ export default class RegistrationView extends View {
 
   // }
 
-  /**
-   * this method is automatically called when navigation to page occured
-   * Must return html markup.
-   * Note that there should only one root element!
-   */
   render() {
     this.registration = new Form('SIGN UP');
     const html = this.registration.render();

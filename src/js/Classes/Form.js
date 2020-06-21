@@ -38,7 +38,6 @@ export default class Form {
     </div>
     </div>`;
 
-    console.log(html);
     return html;
   }
 }

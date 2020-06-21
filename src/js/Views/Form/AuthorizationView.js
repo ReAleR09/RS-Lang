@@ -10,7 +10,6 @@ const errors = {
 
 const logIn = async (e) => {
   e.preventDefault();
-  console.log(e);
   const user = {
     email: document.querySelector('.email').value,
     password: document.querySelector('.password').value,
@@ -30,7 +29,6 @@ const logIn = async (e) => {
       }, 2000);
     }
   } else {
-    console.log(userData);
     localStorage.userId = userData.userId;
     localStorage.token = userData.token;
     const lifeToken = 14400 * 1000;
@@ -55,11 +53,6 @@ export default class AuthorizationView extends View {
 
   // }
 
-  /**
-   * this method is automatically called when navigation to page occured
-   * Must return html markup.
-   * Note that there should only one root element!
-   */
   render() {
     this.authorization = new Form('SIGN IN');
     const html = this.authorization.render();
