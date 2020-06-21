@@ -76,7 +76,7 @@ export default class RegistrationView extends View {
   onMount() {
     this.button = document.querySelector('button');
     this.button.addEventListener('click', register);
-    this.link = document.querySelector('a');
+    this.link = document.querySelector('#form-link');
     this.link.addEventListener('click', logIn);
   }
   // onUnmount() {

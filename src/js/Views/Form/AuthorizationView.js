@@ -46,7 +46,7 @@ export default class AuthorizationView extends View {
   onMount() {
     this.button = document.querySelector('button');
     this.button.addEventListener('click', logIn);
-    this.link = document.querySelector('a');
+    this.link = document.querySelector('#form-link');
     this.link.addEventListener('click', register);
   }
   // onUnmount() {

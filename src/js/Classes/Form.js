@@ -1,7 +1,7 @@
 export default class Form {
   constructor(type) {
     this.type = type; // SIGN UP or SIGN IN
-    this.render = this.render.bind(this);
+    // this.render = this.render.bind(this);
   }
 
   render() {
@@ -34,7 +34,7 @@ export default class Form {
         <button>${this.type}</button>
       </form>
       <p class="error"></p>
-      <p>${question} <a>${offer}</a></p> 
+      <p>${question} <a href="#" id="form-link">${offer}</a></p> 
     </div>
     </div>`;
 
