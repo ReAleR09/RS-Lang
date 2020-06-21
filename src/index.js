@@ -6,6 +6,7 @@ import ExampleController from './js/Controllers/ExampleController';
 import RegistrationController from './js/Controllers/RegistrationController';
 import AuthorizationController from './js/Controllers/AuthorizationController';
 import AppNavigator from './js/lib/AppNavigator';
+import './js/plugins';
 
 function appInit() {
   /**

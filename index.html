@@ -4,12 +4,48 @@
 	<meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link id="page_favicon" href="/assets/favicon.ico" rel="icon" type="image/x-icon" />
-	<title>RS Lang [group #7]</title>
+  <title>RS Lang [group #7]</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 </head>
 <body>
+  <ul class="sidenav #fff3e0 orange lighten-5" id="sidenav-left">
+    <li class="center"><a href="#">Username</a></li>
+    <li><div class="divider"></div></li>
+    <li><a href="#"><i class="material-icons">subject</i>Dictionary</a></li>
+    <li><a href="#"><i class="material-icons">settings_applications</i>Settings</a></li>
+    <li><a href="#"><i class="material-icons">event_note</i>Statistics</a></li>
+    <li><div class="divider bottom"></div></li>
+    <li><a href="#"><i class="material-icons">hearing</i>Audio <span data-audio-side>On</span></a></li>
+    <li class="center"><a href="#"><i class="material-icons">exit_to_app</i>Logout</a></li>
+  </ul>
+  <ul class="sidenav #81d4fa light-blue lighten-3" id="sidenav-right">
+    <li class="center"><a href="#">Username</a></li>
+    <li><div class="divider"></div></li>
+    <li class="center"><i class="large material-icons">insert_chart</i></li>
+  </ul>
+  <nav>
+    <div class="nav-wrapper #ff7043 deep-orange lighten-1">
+      <div class="container">
+        <a data-target="sidenav-left" class="sidenav-trigger btn transparent waves-effect waves-orange vert-align sidenav-trigger-custom"><i class="material-icons">menu</i></a>
+        <span class="brand-logo center">Dashboard</span>
+      </div>  
+    </div>
+  </nav>
   <div id="sidebar"></div>
   <div class="container">   
     <app id='app'></app>
+  </div>
+  <div class="fixed-action-btn">
+    <a class="btn-floating btn-large orange">
+      <i class="large material-icons">more_vert</i>
+    </a>
+    <ul>
+      <li><a class="btn-floating red sidenav-trigger" data-statistics data-target="sidenav-right"><i class="material-icons">equalizer</i></a></li>
+      <li><a class="btn-floating yellow darken-1" data-dictionary><i class="material-icons">g_translate</i></a></li>
+      <li><a class="btn-floating green" data-settings><i class="material-icons">settings_applications</i></a></li>
+      <li><a class="btn-floating blue" data-dashboard><i class="material-icons">dashboard</i></a></li>
+    </ul>
   </div>
 </body>
 </html>
