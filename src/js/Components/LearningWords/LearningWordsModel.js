@@ -1,27 +1,39 @@
 import LearningWordsView from './LearningWordsView';
-import LearningWordsApi from './LearningWordsApi';
-import { wordStartTag, wordEndTag } from './constants';
+import LearnindWordsCards from './LearningWordsCards';
+import { WORD_STATUSES, DIFFICULTY_MODIFIERS } from './constants';
 
 export default class LearningWordsModel {
-  constructor(difficulty = 0) {
-    this.difficulty = difficulty;
+  constructor(settings = {}) {
+    this.settings = settings;
     this.wordsState = [];
     this.view = new LearningWordsView(this);
-    this.currentCard = 0;
-    this.cards = [];
     this.statistics = {}; // mockStatistics
+
+    this.cards = new LearnindWordsCards(
+      this.difficulty,
+      { maxCount: 50, maxCountNewCards: 20 }, /* , statistics */
+    );
+  }
+
+  get difficulty() {
+    return this.settings.difficulty;
   }
 
   get card() {
-    return this.cards[this.currentCard];
+    return this.cards.currentCard;
   }
 
   attach(element) {
     this.view.attach(element);
   }
 
+  detach() {
+    this.view.detach();
+    this.view = null;
+  }
+
   init() {
-    this.addNewCards();
+    this.cards.fillCards();
 
     this.updateWordCard(this.card);
   }
@@ -31,68 +43,92 @@ export default class LearningWordsModel {
   }
 
   getInitialLayout() {
-    return this.view.getCardLayout(this.difficulty);
+    return this.view.getCardLayout(this.settings);
+  }
+
+  acceptInput(value) {
+    if (this.cards.currentStatus === WORD_STATUSES.COMPLITED) {
+      this.goNext();
+      return true;
+    }
+
+    if (!value.trim().length) {
+      return true;
+    }
+
+    const result = this.checkInput(value);
+
+    if (result) {
+      const showWordRate = (this.cards.currentStatus === WORD_STATUSES.NEW);
+      this.cards.currentStatus = WORD_STATUSES.COMPLITED;
+      this.showFilledCard(showWordRate);
+    } else if (!this.cards.currentErrors) {
+      this.cards.sendCardToTrainingEnd();
+      this.cards.currentErrors += 1;
+    }
+    return result;
   }
 
   checkInput(value) {
     const textResult = value.trim();
 
-    const checkResult = (textResult === this.card.word);
+    const checkingResult = (textResult === this.card.word.trim());
 
-    this.updateStatistics(checkResult);
+    this.updateStatistics(checkingResult);
 
-    if (!checkResult) {
-      this.card.errors += 1;
+    if (!checkingResult) {
+      this.cards.CurrentErrors += 1;
     }
     return (textResult === this.card.word);
   }
 
+  showFilledCard(showWordRate = false) {
+    try {
+      // TODO AUDIO SPELLING, TRANSLATES
+      // await this.LearningWordsView.audio.play();
+    } catch (error) {
+      console.error(error);
+    }
+    if (showWordRate) {
+      this.updateStatistics();
+      this.view.showNewWordRateForm(this.card);
+    } else {
+      this.goNext();
+    }
+  }
+
   goNext() {
-    if (this.card.errors) {
-      this.sendCardToTrainingEnd();
+    console.log(this.cards.cards);
+    if (this.cards.getNext()) {
+      console.log(this.card);
+      this.updateWordCard(this.card);
+    } else {
+      this.showResult();
+      console.log(this.cards);
     }
+  }
 
-    if (this.currentCard === this.cards.length - 1) {
-      this.addNewCards();
-    }
-
-    if (this.currentCard < this.cards.length - 1) this.currentCard += 1;
-    this.updateWordCard(this.card);
+  showResult() {
+    this.statistics.ratio = 0;
   }
 
   goPrevious() {
-    if (this.currentCard === 0) return;
-    this.currentCard -= 1;
-    this.updateWordCard(this.card);
+    this.cards.getPrevious();
   }
 
   updateStatistics(result) { // mockStatistics
+    // TODO Общение со статистикой
     this.statistics.word = this.card;
     this.statistics.result = result;
     this.statistics.errors = this.card.errors;
   }
 
-  addNewCards() {
-    let words = LearningWordsApi.getRandomWordsForDifficulty(this.difficulty);
-    // words filter только новых
-    // OldWords получить уже известные слова
-    // положить в порядке сначала повторения, потом новые
-    words = words.map((word) => {
-      const newWord = {};
-      Object.assign(newWord, word);
-      const firstIndexOfWord = word.textExample.indexOf(wordStartTag);
-
-      const lastIndexOfWord = word.textExample.indexOf(wordEndTag) + wordEndTag.length;
-      newWord.exampleStart = word.textExample.slice(0, firstIndexOfWord);
-      newWord.exampleEnd = word.textExample.slice(lastIndexOfWord);
-      newWord.errors = 0;
-      return newWord;
-    });
-
-    this.cards = this.cards.concat(words);
+  updateVocabulary(word, ratio = DIFFICULTY_MODIFIERS.NORMAL) {
+    // TODO Vocabulary interval
+    this.statistics.ratio = ratio;
   }
 
   sendCardToTrainingEnd() {
-    this.cards.push(this.card);
+    this.cards.sendCardToTrainingEnd();
   }
 }

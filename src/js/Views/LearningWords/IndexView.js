@@ -2,8 +2,6 @@ import View from '../../lib/View';
 // import AppNavigator from '../../lib/AppNavigator';
 // import LearningWordsView from '../../Components/LearningWords/LearningWordsView';
 
-const EXAMPLE_FUNCTIONAL_CLASS = 'example-class';
-
 export default class IndexView extends View {
   /**
    * This method will be automatically called oncewhen navigation to the page occured,
@@ -15,8 +13,6 @@ export default class IndexView extends View {
    * it references actual DOM root element of this view
    */
   onMount() {
-    // we will render current datetime every sec
-    this.timer = this.element.querySelectorAll(`.${EXAMPLE_FUNCTIONAL_CLASS}`);
     this.props.model.attach(this.element);
     this.props.model.init();
   }
@@ -26,7 +22,8 @@ export default class IndexView extends View {
    * This is used to release resources: cancel timers, subscriptions, cancel some async actions etc
    */
   onUnmount() {
-    clearInterval(this.timer);
+    this.props.model.detach();
+    this.props.model = null;
   }
 
   /**

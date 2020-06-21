@@ -44,7 +44,18 @@
         font-size: 2rem;
 
         &::placeholder {
-          opacity: 0.7;
+          opacity: 0;
+          transition: opacity ease-in-out 0.5s;
+        }
+
+        &.success::placeholder {
+          opacity: 1;
+          color: green;
+        }
+
+        &.error::placeholder {
+          opacity: 0.8;
+          color: rgb(146, 11, 11);
         }
       }
     }

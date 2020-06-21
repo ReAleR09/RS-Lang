@@ -29,9 +29,37 @@ export default class LearningWordsMaterial {
     elems = this.element.querySelectorAll('.modal');
     Materialize.Modal.init(elems);
 
+    this.assignButtonListeners();
+  }
+
+  assignButtonListeners() {
     const buttonSimple = this.element.querySelector(QUERIES.BUTTONS.SIMPLE);
     const buttonComplicated = this.element.querySelector(QUERIES.BUTTONS.COMPLICATED);
 
+    buttonSimple.addEventListener('click', () => {
+      Materialize.toast({
+        html: '<p>Новое слово добавлено в Словарь/Удаленные</p>',
+        displayLength: 1000,
+      });
+    });
+    buttonComplicated.addEventListener('click', () => {
+      Materialize.toast({
+        html: '<p>Новое слово добавлено в Словарь/Сложные</p>',
+        displayLength: 1000,
+      });
+    });
+
+    const wordStatus = this.element.querySelector(QUERIES.BUTTONS.WORDSTATUS);
+
+    wordStatus.addEventListener('click', () => {
+      const modalInstance = Materialize.Modal.getInstance(this.modals.intervalRepeat);
+      modalInstance.open();
+    });
+
+    this.assignModalFormButtonListeners();
+  }
+
+  assignModalFormButtonListeners() {
     const buttonModalIntervalClose = this.modals.intervalRepeat
       .querySelector(QUERIES.BUTTONS.MODAL_CLOSE);
     const buttonModalWordRateClose = this.modals.wordRate
@@ -45,24 +73,22 @@ export default class LearningWordsMaterial {
       LearningWordsMaterial.closeModal(this.modals.wordRate);
     });
 
-    const wordStatus = this.element.querySelector(QUERIES.BUTTONS.WORDSTATUS);
+    const buttonAgain = this.element.querySelector(QUERIES.BUTTONS.AGAIN);
+    const buttonHard = this.element.querySelector(QUERIES.BUTTONS.HARD);
+    const buttonNormal = this.element.querySelector(QUERIES.BUTTONS.NORMAL);
+    const buttonEasy = this.element.querySelector(QUERIES.BUTTONS.EASY);
 
-    wordStatus.addEventListener('click', () => {
-      const modalInstance = Materialize.Modal.getInstance(this.modals.intervalRepeat);
-      modalInstance.open();
+    buttonAgain.addEventListener('click', () => {
+      LearningWordsMaterial.closeModal(this.modals.wordRate);
     });
-
-    buttonSimple.addEventListener('click', () => {
-      Materialize.toast({
-        html: '<p>Новое слово добавлено в Словарь/Удаленные</p>',
-        displayLength: 1000,
-      });
+    buttonHard.addEventListener('click', () => {
+      LearningWordsMaterial.closeModal(this.modals.wordRate);
     });
-    buttonComplicated.addEventListener('click', () => {
-      Materialize.toast({
-        html: '<p>Новое слово добавлено в Словарь/Сложные</p>',
-        displayLength: 1000,
-      });
+    buttonNormal.addEventListener('click', () => {
+      LearningWordsMaterial.closeModal(this.modals.wordRate);
+    });
+    buttonEasy.addEventListener('click', () => {
+      LearningWordsMaterial.closeModal(this.modals.wordRate);
     });
   }
 

@@ -1,7 +1,7 @@
 import '../../../sass/Components/LearningWords/style.scss';
 import LearningWordsMaterial from './LearningWordsMaterial';
 // import AppNavigator from '../../lib/AppNavigator';
-import { dataURL } from './constants';
+import { dataURL, DIFFICULTY_MODIFIERS } from './constants';
 import * as CONFIGS from './template';
 
 export default class LearningWordsView {
@@ -14,13 +14,58 @@ export default class LearningWordsView {
     this.material = new LearningWordsMaterial(element);
 
     this.assignButtonListeners();
+
+    this.assignInputListeners();
+  }
+
+  detach() {
+    this.model = null;
+    this.element = null;
+    this.material = null;
   }
 
   assignButtonListeners() {
     const buttonNext = this.element.querySelector(CONFIGS.QUERIES.BUTTONS.NEXT);
     const buttonPrev = this.element.querySelector(CONFIGS.QUERIES.BUTTONS.PREV);
+
     buttonNext.addEventListener('click', this.onButtonNext.bind(this));
     buttonPrev.addEventListener('click', this.onButtonPrevious.bind(this));
+
+    this.assignWordRateButtonListeners();
+  }
+
+  assignWordRateButtonListeners() {
+    const buttonAgain = this.element.querySelector(CONFIGS.QUERIES.BUTTONS.AGAIN);
+    const buttonHard = this.element.querySelector(CONFIGS.QUERIES.BUTTONS.HARD);
+    const buttonNormal = this.element.querySelector(CONFIGS.QUERIES.BUTTONS.NORMAL);
+    const buttonEasy = this.element.querySelector(CONFIGS.QUERIES.BUTTONS.EASY);
+
+    buttonAgain.addEventListener('click', () => {
+      this.model.sendCardToTrainingEnd();
+      this.model.goNext();
+    });
+    buttonHard.addEventListener('click', () => {
+      this.model.updateVocabulary(this.rateWord, DIFFICULTY_MODIFIERS.HARD);
+      this.model.goNext();
+    });
+    buttonNormal.addEventListener('click', () => {
+      this.model.updateVocabulary(this.rateWord, DIFFICULTY_MODIFIERS.NORMAL);
+      this.model.goNext();
+    });
+    buttonEasy.addEventListener('click', () => {
+      this.model.updateVocabulary(this.rateWord, DIFFICULTY_MODIFIERS.EASY);
+      this.model.goNext();
+    });
+  }
+
+  assignInputListeners() {
+    const wordInput = this.element.querySelector(CONFIGS.QUERIES.WORD_ELEMENTS.WORD);
+    wordInput.addEventListener('input', () => this.initPlaceHolder());
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  showCardResult() {
+    // TODO Audio translate
   }
 
   onButtonNext() {
@@ -28,14 +73,8 @@ export default class LearningWordsView {
     const inputValue = wordInput.value;
     wordInput.value = '';
 
-    if (this.model.checkInput(inputValue)) {
-      const modalWordRate = this.element.querySelector(CONFIGS.QUERIES.MODALS.WORD_RATE);
-
+    if (this.model.acceptInput(inputValue)) {
       this.placeSuccessPlaceHolder();
-      //  this.model.startAudio();
-
-      LearningWordsMaterial.showModal(modalWordRate);
-      this.model.goNext();
     } else {
       this.placeErrorPlaceHolder();
     }
@@ -45,20 +84,31 @@ export default class LearningWordsView {
     this.model.goPrevious();
   }
 
+  showNewWordRateForm(word) {
+    this.rateWord = word;
+    const modalWordRate = this.element.querySelector(CONFIGS.QUERIES.MODALS.WORD_RATE);
+    LearningWordsMaterial.showModal(modalWordRate);
+  }
+
   placeErrorPlaceHolder() {
+    // TODO Clever placeholder
     const wordInput = this.element.querySelector(CONFIGS.QUERIES.WORD_ELEMENTS.WORD);
-    wordInput.classList.remove('error');
+    this.initPlaceHolder();
+    wordInput.classList.add('error');
   }
 
   placeSuccessPlaceHolder() {
     const wordInput = this.element.querySelector(CONFIGS.QUERIES.WORD_ELEMENTS.WORD);
-
+    this.initPlaceHolder();
     wordInput.classList.add('success');
   }
 
   initPlaceHolder(text) {
     const wordInput = this.element.querySelector(CONFIGS.QUERIES.WORD_ELEMENTS.WORD);
-    wordInput.placeholder = text;
+    if (text) {
+      wordInput.placeholder = text;
+    }
+
     wordInput.classList.remove('success');
     wordInput.classList.remove('error');
   }
@@ -73,7 +123,7 @@ export default class LearningWordsView {
     const wordQueries = CONFIGS.QUERIES.WORD_ELEMENTS;
 
     this.element.classList.remove(CONFIGS.CLASS_VISIBLE);
-    const input = this.element.querySelector(wordQueries.WORD);
+
     const translate = this.element.querySelector(wordQueries.WORD_TRANSLATE);
     const exampleStart = this.element.querySelector(wordQueries.EXAMPLE_START);
     const exampleEnd = this.element.querySelector(wordQueries.EXAMPLE_END);
@@ -83,7 +133,8 @@ export default class LearningWordsView {
     const image = this.element.querySelector(wordQueries.IMAGE);
     const transcription = this.element.querySelector(wordQueries.TRANSCRIPTION);
 
-    input.placeholder = word.word;
+    this.initPlaceHolder(word.word);
+
     translate.innerText = word.wordTranslate;
     exampleStart.innerText = word.exampleStart;
     exampleEnd.innerText = word.exampleEnd;
