@@ -30,7 +30,7 @@ export default class Form {
       <p>${describe}</p>
       <form class="form">
         <input class="email" type="email">
-        <input class="password" type="password">
+        <input class="password" type="password" minlength="8" pattern="(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Password should be > 8 characters and contains ">
         <button>${this.type}</button>
       </form>
       <p>${question} <a>${offer}</a></p> 

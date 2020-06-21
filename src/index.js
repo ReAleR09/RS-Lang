@@ -38,7 +38,12 @@ function appInit() {
   router.route();
   PublisherSubscriber.publish(EVENT_NAVIGATION, { controller: null, action: null, params: null });
 
-  if (!localStorage.userId) {
+  if (localStorage.timeStamp < Date.now()) {
+    localStorage.removeItem('token');
+    console.log(localStorage.timeStamp);
+    console.log(Date.now());
+  }
+  if (!localStorage.token) {
     AppNavigator.go('registration');
   }
 }

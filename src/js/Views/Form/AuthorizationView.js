@@ -29,6 +29,8 @@ const logIn = async (e) => {
     console.log(userData);
     localStorage.userId = userData.userId;
     localStorage.token = userData.token;
+    const lifeToken = 14400 * 1000;
+    localStorage.timeStamp = Date.now() + lifeToken;
 
     AppNavigator.go();
   }
