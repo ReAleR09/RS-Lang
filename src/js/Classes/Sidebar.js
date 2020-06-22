@@ -7,17 +7,10 @@ import AppNavigator from '../lib/AppNavigator';
 const CLASS_LINK_ACTIVE = 'sidebar__item_active';
 
 /* const CATEGORIES = [
+const NAV_LIST = [
   {
-    id: 4,
-    title: 'Click me 4',
-  },
-  {
-    id: 2,
-    title: 'Click me 2',
-  },
-  {
-    id: 0,
-    title: 'Click me 0',
+    controller: 'speakit',
+    title: 'Speak It',
   },
 ]; */
 
@@ -99,18 +92,20 @@ export default class Sidebar {
 
     const ulElement = document.createElement('ul');
 
-    ulElement.innerHTML += '<li data-page="main">Main Page?</li>';
+    ulElement.innerHTML += '<li data-page="main">Main Page</li>';
 
     // TODO replace
-    CATEGORIES.forEach((category) => {
-      ulElement.innerHTML += `<li data-id="${category.id}">${category.title}</li>`;
+    NAV_LIST.forEach((link) => {
+      ulElement.innerHTML += `<li data-controller="${link.controller}">${link.title}</li>`;
     });
 
     ulElement.addEventListener('click', (e) => {
-      if (e.target.dataset.id) {
-        AppNavigator.go('example', null, { id: e.target.dataset.id });
-      } else if (e.target.dataset.page === 'main') {
+      if (e.target.dataset.page === 'main') {
         AppNavigator.go();
+      } else if (e.target.dataset.controller) {
+        const { controller } = e.target.dataset;
+        const action = e.target.dataset.action ? e.target.dataset.action : null;
+        AppNavigator.go(controller, action);
       } else {
         return;
       }

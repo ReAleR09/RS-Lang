@@ -21,6 +21,7 @@ export default class IndexView extends View {
    */
   onMount() {
     // we will render current datetime every sec
+
     this.timer = setInterval(() => {
       const date = new Date();
       const timerEl = this.element.querySelector(`#${TIMER_ID}`);

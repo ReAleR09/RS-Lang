@@ -1,9 +1,19 @@
 const set = (key, value) => {
-  localStorage.setItem(key, value);
+  let savedValue = value;
+  if (typeof savedValue !== 'string') {
+    savedValue = JSON.stringify(savedValue);
+  }
+  localStorage.setItem(key, savedValue);
 };
 
 const get = (key) => {
-  localStorage.getItem(key);
+  const value = localStorage.getItem(key);
+  try {
+    const objectFromJSON = JSON.parse(value);
+    return objectFromJSON;
+  } catch (e) {
+    return value;
+  }
 };
 
 const remove = (key) => {
