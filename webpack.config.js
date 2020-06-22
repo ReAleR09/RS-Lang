@@ -38,6 +38,7 @@ module.exports = (env, options) => {
       }),
       new CopyPlugin([
         { from: 'assets/', to: 'assets/' },
+        { from: '_redirects', to: '' },
       ], {
         context: 'src/',
       }),
@@ -58,11 +59,11 @@ module.exports = (env, options) => {
             {
               loader: 'eslint-loader',
               options: {
-                cache: true,
-                emitError: isProduction,
-                failOnError: isProduction,
-                emitWarning: isProduction,
-                failOnWarning: isProduction,
+                cache: false,
+                emitError: false,
+                failOnError: false,
+                emitWarning: false,
+                failOnWarning: false,
               },
             },
           ],
