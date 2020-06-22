@@ -1,4 +1,3 @@
-/* eslint-disable */
 import PubSub from './PublisherSubscriber';
 import { EVENT_NAVIGATION } from '../Utils/Constants';
 import AppNavigator from '../lib/AppNavigator';
@@ -79,10 +78,7 @@ export default class Sidebar {
   }
 
   sideBarItemClickHandler() {
-   
-    
     this.sideBarElement.addEventListener('click', (e) => {
-      console.log(e.target);
       if (e.target.parentNode.dataset.id) {
         AppNavigator.go('example', null, { id: e.target.parentNode.dataset.id });
       } else if (e.target.parentNode.dataset.page === 'main') {
