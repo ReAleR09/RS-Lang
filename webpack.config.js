@@ -19,6 +19,7 @@ module.exports = (env, options) => {
     devtool: isProduction ? 'none' : 'source-map',
     watch,
     entry: [
+      'babel-polyfill',
       './src/index.js',
       './src/sass/style.scss',
     ],
@@ -72,6 +73,14 @@ module.exports = (env, options) => {
             MiniCssExtractPlugin.loader,
             'css-loader',
             'sass-loader',
+          ],
+        },
+        {
+          test: /\.(png|svg|jpe?g|gif|eot|svg|ttf|woff)$/i,
+          use: [
+            {
+              loader: 'file-loader',
+            },
           ],
         },
         {

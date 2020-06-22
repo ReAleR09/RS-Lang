@@ -4,8 +4,8 @@ import PublisherSubscriber from './js/Classes/PublisherSubscriber';
 import { EVENT_NAVIGATION } from './js/Utils/Constants';
 import ExampleController from './js/Controllers/ExampleController';
 
+import GameSprintController from './js/Controllers/GameSprintController';
 import SpeakitController from './js/Controllers/SpeakitController';
-
 import RegistrationController from './js/Controllers/RegistrationController';
 import AuthorizationController from './js/Controllers/AuthorizationController';
 import AppNavigator from './js/lib/AppNavigator';
@@ -23,6 +23,7 @@ function appInit() {
     registration: RegistrationController,
     authorization: AuthorizationController,
     example: ExampleController,
+    'game-sprint': GameSprintController,
     speakit: SpeakitController,
   };
 
