@@ -28,7 +28,7 @@ export default class GameSprintController extends Controller {
    * Try to do all data aggregation here then pass it to view
    */
   indexAction() {
-    console.log(this);
+    // console.log(this);
     this.props.exampleArray = ['4', '2', '0']; // just passing some data to view
 
     const params = AppNavigator.getRequestParams(); // get GET parameters etc /example/index?id=3
@@ -49,7 +49,7 @@ export default class GameSprintController extends Controller {
     try {
       const response = await fetch(this.wordsUrl);
       this.dataWords = await response.json();
-      console.log(this.dataWords);
+      // console.log(this.dataWords);
       this.sendData();
     } catch (error) {
       throw new Error('Ошибка при получении слов с сервера');
@@ -57,6 +57,7 @@ export default class GameSprintController extends Controller {
   }
 
   sendData() {
+    this.rightAnswersInRow = 0;
     this.numberElement = 0;
     this.multiplier = 1;
     this.checkbox = 0;
@@ -80,17 +81,15 @@ export default class GameSprintController extends Controller {
   }
 
   checkIsRight() {
-    if (
-      this.dataWords[this.numberElement].word === this.dataWords[this.numberElement].wordTranslate
-    ) {
+    if (!this.randomNum) {
       this.rightAnswersInRow += 1;
-      if (this.rightAnswersInRow < 4) {
+      if (this.rightAnswersInRow < 3) {
         this.multiplier = 1;
-      } else if (this.rightAnswersInRow > 4 && this.rightAnswersInRow < 8) {
+      } else if (this.rightAnswersInRow > 3 && this.rightAnswersInRow < 7) {
         this.multiplier = 2;
-      } else if (this.rightAnswersInRow > 8 && this.rightAnswersInRow < 12) {
+      } else if (this.rightAnswersInRow > 7 && this.rightAnswersInRow < 11) {
         this.multiplier = 3;
-      } else if (this.rightAnswersInRow > 12 && this.rightAnswersInRow < 16) {
+      } else if (this.rightAnswersInRow > 11 && this.rightAnswersInRow < 15) {
         this.multiplier = 4;
       }
       if (this.checkbox < 3) {
@@ -123,17 +122,15 @@ export default class GameSprintController extends Controller {
   }
 
   checkIsFalse() {
-    if (
-      this.dataWords[this.numberElement].word !== this.dataWords[this.numberElement].wordTranslate
-    ) {
+    if (this.randomNum) {
       this.rightAnswersInRow += 1;
-      if (this.rightAnswersInRow < 4) {
+      if (this.rightAnswersInRow < 3) {
         this.multiplier = 1;
-      } else if (this.rightAnswersInRow > 4 && this.rightAnswersInRow < 8) {
+      } else if (this.rightAnswersInRow > 3 && this.rightAnswersInRow < 7) {
         this.multiplier = 2;
-      } else if (this.rightAnswersInRow > 8 && this.rightAnswersInRow < 12) {
+      } else if (this.rightAnswersInRow > 7 && this.rightAnswersInRow < 11) {
         this.multiplier = 3;
-      } else if (this.rightAnswersInRow > 12 && this.rightAnswersInRow < 16) {
+      } else if (this.rightAnswersInRow > 11 && this.rightAnswersInRow < 15) {
         this.multiplier = 4;
       }
       if (this.checkbox < 3) {
