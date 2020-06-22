@@ -1,5 +1,5 @@
 import Materialize from 'materialize-css';
-import { QUERIES } from './template';
+import { INDEX_QUERIES as QUERIES } from './IndexTemplate';
 
 export default class LearningWordsMaterial {
   constructor(element) {

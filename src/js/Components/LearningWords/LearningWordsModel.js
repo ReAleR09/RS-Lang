@@ -1,10 +1,17 @@
 import LearningWordsView from './LearningWordsView';
 import LearnindWordsCards from './LearningWordsCards';
-import { WORD_STATUSES, DIFFICULTY_MODIFIERS, DATA_URL } from './constants';
 import LearningWordsSoundPlayer from '../LearningWordsSoundPlayer';
+import AppNavigator from '../../lib/AppNavigator';
+import {
+  WORD_STATUSES,
+  DIFFICULTY_MODIFIERS,
+  DATA_URL,
+  LEARNING_WORDS_CONTROLLER,
+  RESULT_ACTION,
+} from './constants';
 
 export default class LearningWordsModel {
-  constructor(settings = {}, statistics = {}) {
+  constructor(settings, statistics) {
     this.settings = settings;
     this.wordsState = [];
     this.view = new LearningWordsView(this);
@@ -13,8 +20,8 @@ export default class LearningWordsModel {
 
     this.cards = new LearnindWordsCards(
       this.difficulty,
-      { maxCount: 50, maxCountNewCards: 20 }, // settings
-      { totalCount: 0, NewWords: 0 }, // statistics
+      settings, // settings
+      statistics, // statistics
     );
   }
 
@@ -36,6 +43,8 @@ export default class LearningWordsModel {
   }
 
   init() {
+    this.view.init(this.settings);
+
     this.cards.fillCards();
 
     this.updateWordCard(this.card);
@@ -68,14 +77,17 @@ export default class LearningWordsModel {
     }
 
     if (!value.trim().length) {
-      return true;
+      return false;
     }
 
     const result = this.checkInput(value);
 
     if (result) {
       this.view.lockCard();
-      const showWordRate = (this.cards.currentStatus === WORD_STATUSES.NEW);
+      let { showWordRate } = this.settings;
+      if (showWordRate) {
+        showWordRate = (this.cards.currentStatus === WORD_STATUSES.NEW);
+      }
       this.cards.currentStatus = WORD_STATUSES.COMPLITED;
       this.showFilledCard(showWordRate);
     } else if (!this.cards.currentErrors) {
@@ -100,7 +112,9 @@ export default class LearningWordsModel {
 
   showFilledCard(showWordRate = false) {
     // TODO TRANSLATES
-    this.player.play();
+    if (this.settings.turnOnSound) {
+      this.player.play();
+    }
 
     if (showWordRate) {
       this.updateStatistics();
@@ -116,11 +130,6 @@ export default class LearningWordsModel {
     }
   }
 
-  showResult() {
-    // TODO ResultView final page of app
-    this.statistics.ratio = 0;
-  }
-
   goPrevious() {
     this.cards.getPrevious();
     this.updateWordCard(this.card);
@@ -131,6 +140,8 @@ export default class LearningWordsModel {
     this.statistics.word = this.card;
     this.statistics.result = result;
     this.statistics.errors = this.card.errors;
+
+    this.cards.updateStatistics(this.statistics);
   }
 
   updateVocabulary(word, ratio = DIFFICULTY_MODIFIERS.NORMAL) {
@@ -140,5 +151,11 @@ export default class LearningWordsModel {
 
   sendCardToTrainingEnd() {
     this.cards.sendCardToTrainingEnd();
+  }
+
+  showResult() {
+    const params = { ...this.statistics };
+    // TODO ResultView final page of app
+    AppNavigator.go(LEARNING_WORDS_CONTROLLER, RESULT_ACTION, params);
   }
 }

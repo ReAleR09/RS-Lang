@@ -4,8 +4,8 @@ import LearningWordsApi from './LearningWordsApi';
 export default class LearnindWordsCards {
   constructor(
     difficulty = 0,
-    limits = { maxCount: 50, maxCountNewCards: 20 },
-    statistics = { totalCount: 0, NewWords: 0 },
+    limits,
+    statistics,
   ) {
     this.difficulty = difficulty;
 
@@ -18,6 +18,10 @@ export default class LearnindWordsCards {
     this.words = [];
     this.newWords = [];
     this.repeatWords = [];
+  }
+
+  updateStatistics(statistics) {
+    this.counts = statistics;
   }
 
   get restCardsCount() {

@@ -1,19 +1,103 @@
 import '../../../sass/Components/LearningWords/style.scss';
 import LearningWordsMaterial from './LearningWordsMaterial';
 // import AppNavigator from '../../lib/AppNavigator';
-import { DIFFICULTY_MODIFIERS, DATA_URL, lockAttribute } from './constants';
-import * as CONFIGS from './template';
+import {
+  DIFFICULTY_MODIFIERS,
+  DATA_URL,
+  lockAttribute,
+  styleAttribute,
+  ONE_LETTER_WIDTH,
+  WIDTH_ADDITION,
+} from './constants';
+import {
+  INDEX_QUERIES as QUERIES,
+  CLASS_DISABLED,
+  CLASS_ERROR,
+  CLASS_SUCCESS,
+  HTML_COMPONENT,
+  CLASS_VISIBLE,
+} from './IndexTemplate';
 
 export default class LearningWordsView {
   constructor(model) {
     this.model = model;
   }
 
+  init(settings) {
+    this.settings = settings;
+
+    this.settings.showTranslates = true;
+    this.settings.turnOnSound = true;
+
+    this.updateSettings();
+  }
+
+  updateSettings() {
+    const disabledElements = [];
+    const enabledElements = [];
+
+    // const wordQueries = CONFIGS.QUERIES.WORD_ELEMENTS;
+    //  const buttons = CONFIGS.QUERIES.BUTTONS;
+
+    Object.values(QUERIES.WORD_ELEMENTS).forEach((query) => {
+      enabledElements.push(this.element.querySelector(query));
+    });
+
+    Object.values(QUERIES.BUTTONS).forEach((query) => {
+      enabledElements.push(this.element.querySelector(query));
+    });
+
+    enabledElements.forEach((element) => element.classList.remove(CLASS_DISABLED));
+
+    if (!this.settings.showWordTranslate) {
+      disabledElements.push(this.element.querySelector(QUERIES.WORD_ELEMENTS.WORD_TRANSLATE));
+    }
+
+    if (!this.settings.showImage) {
+      disabledElements.push(this.element.querySelector(QUERIES.WORD_ELEMENTS.IMAGE));
+      disabledElements.push(this.element.querySelector(QUERIES.WORD_ELEMENTS.IMAGE_WRAPPER));
+    }
+
+    if (!this.settings.showExample) {
+      disabledElements.push(this.element.querySelector(QUERIES.WORD_ELEMENTS.EXAMPLE_START));
+      disabledElements.push(this.element.querySelector(QUERIES.WORD_ELEMENTS.EXAMPLE_END));
+    }
+
+    if (!this.settings.showTranscription) {
+      disabledElements.push(this.element.querySelector(QUERIES.WORD_ELEMENTS.TRANSCRIPTION));
+    }
+
+    if (!this.settings.showMeaning) {
+      disabledElements.push(this.element.querySelector(QUERIES.WORD_ELEMENTS.DESCRIPTION));
+    }
+
+    if (!this.settings.showButtonSkip) {
+      disabledElements.push(this.element.querySelector(QUERIES.BUTTONS.SKIP));
+    }
+
+    if (!this.settings.showButtonSimple) {
+      disabledElements.push(this.element.querySelector(QUERIES.BUTTONS.SIMPLE));
+    }
+
+    if (!this.settings.showButtonComplicated) {
+      disabledElements.push(this.element.querySelector(QUERIES.BUTTONS.COMPLICATED));
+    }
+
+    if (!this.settings.showTranslates) {
+      disabledElements.push(this.element.querySelector(QUERIES.WORD_ELEMENTS.EXAMPLE_TRANSLATE));
+      disabledElements.push(this.element.querySelector(
+        QUERIES.WORD_ELEMENTS.DESCRIPTION_TRANSLATE,
+      ));
+    }
+
+    disabledElements.forEach((element) => element.classList.add(CLASS_DISABLED));
+  }
+
   attach(element) {
     this.element = element;
     this.material = new LearningWordsMaterial(element);
 
-    this.wordInput = this.element.querySelector(CONFIGS.QUERIES.WORD_ELEMENTS.WORD);
+    this.wordInput = this.element.querySelector(QUERIES.WORD_ELEMENTS.WORD);
     this.isLocked = false;
 
     this.assignButtonListeners();
@@ -28,20 +112,36 @@ export default class LearningWordsView {
   }
 
   assignButtonListeners() {
-    const buttonNext = this.element.querySelector(CONFIGS.QUERIES.BUTTONS.NEXT);
-    const buttonPrev = this.element.querySelector(CONFIGS.QUERIES.BUTTONS.PREV);
+    const buttonNext = this.element.querySelector(QUERIES.BUTTONS.NEXT);
+    const buttonPrev = this.element.querySelector(QUERIES.BUTTONS.PREV);
 
     buttonNext.addEventListener('click', this.onButtonNext.bind(this));
     buttonPrev.addEventListener('click', this.onButtonPrevious.bind(this));
+
+    const buttonSkip = this.element.querySelector(QUERIES.BUTTONS.SKIP);
+    const buttonTranslate = this.element.querySelector(QUERIES.BUTTONS.TRANSLATE);
+    const buttonSwitchSound = this.element.querySelector(QUERIES.BUTTONS.VOLUME);
+
+    buttonSkip.addEventListener('click', () => {
+      // TODO Показать Ответ
+      // Пропускать карточку или дать ввести самому? Если пропускать, то что делать со словарем?
+      this.placeSuccessPlaceHolder();
+    });
+    buttonTranslate.addEventListener('click', () => {
+      this.toggleShowTranslatesSetting();
+    });
+    buttonSwitchSound.addEventListener('click', () => {
+      this.toggleTurnOnSoundSetting();
+    });
 
     this.assignWordRateButtonListeners();
   }
 
   assignWordRateButtonListeners() {
-    const buttonAgain = this.element.querySelector(CONFIGS.QUERIES.BUTTONS.AGAIN);
-    const buttonHard = this.element.querySelector(CONFIGS.QUERIES.BUTTONS.HARD);
-    const buttonNormal = this.element.querySelector(CONFIGS.QUERIES.BUTTONS.NORMAL);
-    const buttonEasy = this.element.querySelector(CONFIGS.QUERIES.BUTTONS.EASY);
+    const buttonAgain = this.element.querySelector(QUERIES.BUTTONS.AGAIN);
+    const buttonHard = this.element.querySelector(QUERIES.BUTTONS.HARD);
+    const buttonNormal = this.element.querySelector(QUERIES.BUTTONS.NORMAL);
+    const buttonEasy = this.element.querySelector(QUERIES.BUTTONS.EASY);
 
     buttonAgain.addEventListener('click', () => {
       this.model.sendCardToTrainingEnd();
@@ -84,46 +184,48 @@ export default class LearningWordsView {
 
   showNewWordRateForm(word) {
     this.rateWord = word;
-    const modalWordRate = this.element.querySelector(CONFIGS.QUERIES.MODALS.WORD_RATE);
+    const modalWordRate = this.element.querySelector(QUERIES.MODALS.WORD_RATE);
     LearningWordsMaterial.showModal(modalWordRate);
   }
 
   placeErrorPlaceHolder() {
     // TODO Clever placeholder
     this.initPlaceHolder();
-    this.wordInput.classList.add(CONFIGS.CLASS_ERROR);
+    this.wordInput.classList.add(CLASS_ERROR);
   }
 
   placeSuccessPlaceHolder() {
     this.initPlaceHolder();
-    this.wordInput.classList.add(CONFIGS.CLASS_SUCCESS);
+    this.wordInput.classList.add(CLASS_SUCCESS);
   }
 
   removePlaceHolder() {
-    this.wordInput.classList.remove(CONFIGS.CLASS_SUCCESS);
-    this.wordInput.classList.remove(CONFIGS.CLASS_ERROR);
+    this.wordInput.classList.remove(CLASS_SUCCESS);
+    this.wordInput.classList.remove(CLASS_ERROR);
   }
 
   initPlaceHolder(text) {
     if (!text) return;
-    const wordInput = this.element.querySelector(CONFIGS.QUERIES.WORD_ELEMENTS.WORD);
+    const wordInput = this.element.querySelector(QUERIES.WORD_ELEMENTS.WORD);
     wordInput.placeholder = text;
   }
 
   // eslint-disable-next-line class-methods-use-this
   getCardLayout() {
-    const html = CONFIGS.HTML_COMPONENT;
+    const html = HTML_COMPONENT;
     return html;
   }
 
   drawWordToDOM(word) {
+    // TODO clever placeholder: input width = placeholder.width
+    this.wordInput.setAttribute(styleAttribute, `width: ${ONE_LETTER_WIDTH * (word.word.length + WIDTH_ADDITION)}rem;`);
     this.removePlaceHolder();
 
     this.initPlaceHolder(word.word);
 
-    const wordQueries = CONFIGS.QUERIES.WORD_ELEMENTS;
+    const wordQueries = QUERIES.WORD_ELEMENTS;
 
-    this.element.classList.remove(CONFIGS.CLASS_VISIBLE);
+    this.element.classList.remove(CLASS_VISIBLE);
 
     const translate = this.element.querySelector(wordQueries.WORD_TRANSLATE);
     const exampleStart = this.element.querySelector(wordQueries.EXAMPLE_START);
@@ -143,7 +245,7 @@ export default class LearningWordsView {
     image.src = `${DATA_URL}${word.image}`;
     transcription.innerText = word.transcription;
 
-    this.element.classList.add(CONFIGS.CLASS_VISIBLE);
+    this.element.classList.add(CLASS_VISIBLE);
   }
 
   lockCard() {
@@ -158,5 +260,13 @@ export default class LearningWordsView {
 
   isCardLocked() {
     return this.isLocked;
+  }
+
+  toggleShowTranslatesSetting() {
+    this.settings.showTranslates = !this.settings.showTranslates;
+  }
+
+  toggleTurnOnSoundSetting() {
+    this.settings.turnOnSound = !this.settings.turnOnSound;
   }
 }

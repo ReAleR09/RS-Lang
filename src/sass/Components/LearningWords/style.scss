@@ -35,6 +35,7 @@
       }
 
       p {
+        white-space: nowrap; // TODO Продумать перенос на вторую строку
         padding-left: 1rem;
         padding-right: 1rem;
       }
@@ -68,6 +69,10 @@
         padding-right: 1rem;
       }
     }
+  }
+
+  .d-none {
+    display: none;
   }
 
   .d-flex {

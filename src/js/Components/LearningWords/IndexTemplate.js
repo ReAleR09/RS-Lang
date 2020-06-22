@@ -1,10 +1,13 @@
 export const CLASS_VISIBLE = 'visible';
+export const CLASS_DISABLED = 'd-none';
 export const CLASS_SUCCESS = 'success';
 export const CLASS_ERROR = 'error';
 
 const ID_WORD = 'word';
 
-const CLASS_COMPONENT = 'learn-words';
+export const TOOLTIP_ATTRIBUTE = 'data-tooltip';
+
+export const CLASS_COMPONENT = 'learn-words';
 
 const CLASS_CARD_SETTINGS = 'card-settings';
 
@@ -50,6 +53,7 @@ const CLASSES = {
     SETTINGS: {
       BUTTON_VOLUME: 'button-volume',
       BUTTON_TRANSLATE: 'button-translate',
+      BUTTON_SKIP: 'button-skip',
     },
     PUZZLE: {
       EXAMPLE_START: 'example-start',
@@ -69,13 +73,14 @@ const CLASSES = {
 };
 
 export const QUERY_WORDCARD = `.${CLASS_COMPONENT} .${CLASSES.COMPONENT.WORDCARD}`;
-export const QUERIES = {};
+export const INDEX_QUERIES = {};
 
-QUERIES.WORD_ELEMENTS = {
+INDEX_QUERIES.WORD_ELEMENTS = {
   WORD: `.${CLASS_COMPONENT} #${ID_WORD}`,
   EXAMPLE_START: `.${CLASS_COMPONENT} .${CLASSES.CARD.PUZZLE.EXAMPLE_START}`,
   EXAMPLE_END: `.${CLASS_COMPONENT} .${CLASSES.CARD.PUZZLE.EXAMPLE_END}`,
   IMAGE: `.${CLASS_COMPONENT} .${CLASSES.CARD.IMG_WRAPPER} img`,
+  IMAGE_WRAPPER: `.${CLASS_COMPONENT} .${CLASSES.CARD.IMG_WRAPPER}`,
   EXAMPLE_TRANSLATE: `.${CLASS_COMPONENT} .${CLASSES.CARD.HINTS.EXAMPLE_TRANSLATE}`,
   WORD_TRANSLATE: `.${CLASS_COMPONENT} .${CLASSES.CARD.HINTS.WORD_TRANSLATE}`,
   DESCRIPTION: `.${CLASS_COMPONENT} .${CLASSES.CARD.HINTS.DESCRIPTION}`,
@@ -83,26 +88,28 @@ QUERIES.WORD_ELEMENTS = {
   DESCRIPTION_TRANSLATE: `.${CLASS_COMPONENT} .${CLASSES.CARD.HINTS.DESCRIPTION_TRANSLATE}`,
 };
 
-QUERIES.MODALS = {
+INDEX_QUERIES.MODALS = {
   INTERVAL_REPEAT: `.${CLASS_COMPONENT} .${CLASS_MODAL_INTERVAL_REPEAT}`,
   WORD_RATE: `.${CLASS_COMPONENT} .${CLASS_MODAL_WORD_RATE}`,
 };
-QUERIES.BUTTONS = {
+
+INDEX_QUERIES.BUTTONS = {
   WORDSTATUS: `.${CLASS_COMPONENT} .${CLASSES.CARD.WORDSTATUS}`,
   SETTINGS: `.${CLASS_COMPONENT} .${CLASS_CARD_SETTINGS}`,
   VOLUME: `.${CLASS_COMPONENT} .${CLASSES.CARD.SETTINGS.BUTTON_VOLUME}`,
   TRANSLATE: `.${CLASS_COMPONENT} .${CLASSES.CARD.SETTINGS.BUTTON_TRANSLATE}`,
+  SKIP: `.${CLASS_COMPONENT} .${CLASSES.CARD.SETTINGS.BUTTON_SKIP}`,
   PREV: `.${CLASS_COMPONENT} .${CLASSES.COMPONENT.ARROW_LEFT} a`,
   NEXT: `.${CLASS_COMPONENT} .${CLASSES.COMPONENT.ARROW_RIGHT} a`,
   SIMPLE: `.${CLASS_COMPONENT} .${CLASSES.CARD.BUTTON_SIMPLE}`,
   COMPLICATED: `.${CLASS_COMPONENT} .${CLASSES.CARD.BUTTON_COMPLICATED}`,
   MODAL_CLOSE: `.${CLASSES.MODALS.CLOSE}`,
-  INTERVAL_REPEAT_CLOSE: `${QUERIES.MODALS.INTERVAL_REPEAT} .${CLASSES.MODALS.CLOSE}`,
-  WORD_RATE_CLOSE: `${QUERIES.MODALS.WORD_RATE} .${CLASSES.MODALS.CLOSE}`,
-  AGAIN: `${QUERIES.MODALS.WORD_RATE} .${CLASSES.MODALS.WORD_RATE.BUTTON_AGAIN}`,
-  HARD: `${QUERIES.MODALS.WORD_RATE} .${CLASSES.MODALS.WORD_RATE.BUTTON_HARD}`,
-  NORMAL: `${QUERIES.MODALS.WORD_RATE} .${CLASSES.MODALS.WORD_RATE.BUTTON_NORMAL}`,
-  EASY: `${QUERIES.MODALS.WORD_RATE} .${CLASSES.MODALS.WORD_RATE.BUTTON_EASY}`,
+  INTERVAL_REPEAT_CLOSE: `${INDEX_QUERIES.MODALS.INTERVAL_REPEAT} .${CLASSES.MODALS.CLOSE}`,
+  WORD_RATE_CLOSE: `${INDEX_QUERIES.MODALS.WORD_RATE} .${CLASSES.MODALS.CLOSE}`,
+  AGAIN: `${INDEX_QUERIES.MODALS.WORD_RATE} .${CLASSES.MODALS.WORD_RATE.BUTTON_AGAIN}`,
+  HARD: `${INDEX_QUERIES.MODALS.WORD_RATE} .${CLASSES.MODALS.WORD_RATE.BUTTON_HARD}`,
+  NORMAL: `${INDEX_QUERIES.MODALS.WORD_RATE} .${CLASSES.MODALS.WORD_RATE.BUTTON_NORMAL}`,
+  EASY: `${INDEX_QUERIES.MODALS.WORD_RATE} .${CLASSES.MODALS.WORD_RATE.BUTTON_EASY}`,
 };
 
 const HTML_CARD_HEADER = `
@@ -115,7 +122,8 @@ const HTML_CARD_HEADER = `
       </a>
       <ul>
         <li><a class="${CLASSES.CARD.SETTINGS.BUTTON_VOLUME} btn-floating blue darken-2 tooltipped" data-position="bottom" data-tooltip="Отключить произношение"><i class="material-icons">volume_up</i></a></li>
-        <li><a class="${CLASSES.CARD.SETTINGS.BUTTON_TRANSLATE} btn-floating green darken-3 tooltipped" data-position="bottom" data-tooltip="Скрыть переводы"><i class="material-icons">visibility</i></a></li>
+        <li><a class="${CLASSES.CARD.SETTINGS.BUTTON_TRANSLATE} btn-floating green darken-3 tooltipped" data-position="bottom" data-tooltip="Скрыть переводы"><i class="material-icons">translate</i></a></li>
+        <li><a class="${CLASSES.CARD.SETTINGS.BUTTON_SKIP} btn-floating red darken-3 tooltipped" data-position="bottom" data-tooltip="Показать Ответ"><i class="material-icons">visibility</i></a></li>
       </ul>
     </div>
   </div>`;
@@ -128,7 +136,7 @@ const HTML_CARD_BODY = `
     <div class="col l8 s12">
       <div class="${CLASS_PUZZLE} d-flex">
         <p class="${CLASSES.CARD.PUZZLE.EXAMPLE_START}"></p>
-        <input id="${ID_WORD}" type="text" placeholder="hate" size="1">
+        <input id="${ID_WORD}" type="text">
         <p class="${CLASSES.CARD.PUZZLE.EXAMPLE_END}"></p>
       </div>
       <div class="${CLASS_HINTS}">

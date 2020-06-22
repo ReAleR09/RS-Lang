@@ -14,7 +14,7 @@ import LearningWordsModel from '../Components/LearningWords/LearningWordsModel';
  * e.g. we navigate to rslang.com/example/someaction, then
  * controller's "someactionAction" metod will be called
  */
-export default class ExampleController extends Controller {
+export default class LearningWordsController extends Controller {
   constructor() {
     const viewClasses = {
       index: IndexView,
@@ -36,15 +36,27 @@ export default class ExampleController extends Controller {
     } else {
       difficulty = 0;
     }
-    this.props.model = new LearningWordsModel(difficulty);
 
-    // get GET parameters etc /example/index?id=3
-    // this.props.exampleId = params.get('id'); // pass the GET param to View to utilize it later
+    const settings = {
+      maxCount: 50,
+      maxCountNewCards: 20,
+      showWordTranslate: true,
+      showExample: true, // TODO СДЕЛАТЬ СОКРЫТИЕ ИСКОМОГО СЛОВА В ПОДСКАЗКАХ
+      showTranscription: true,
+      showMeaning: true,
+      showButtonSkip: true,
+      showButtonSimple: true,
+      showButtonComplicated: true,
+      showImage: true,
+      showWordRate: true,
+
+    };
+    const statistics = { totalCount: 0, NewWords: 0 };
+    // TODO Принять настройки и статистику
+    this.props.model = new LearningWordsModel(settings, statistics);
   }
-/*
+
   resultsAction() {
-//  const params = AppNavigator.getRequestParams();
-//  this.props.gameManager = gameManager;
+    this.statistics = 0;
   }
-  */
 }
