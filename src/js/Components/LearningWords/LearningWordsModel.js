@@ -4,16 +4,17 @@ import { WORD_STATUSES, DIFFICULTY_MODIFIERS, DATA_URL } from './constants';
 import LearningWordsSoundPlayer from '../LearningWordsSoundPlayer';
 
 export default class LearningWordsModel {
-  constructor(settings = {}) {
+  constructor(settings = {}, statistics = {}) {
     this.settings = settings;
     this.wordsState = [];
     this.view = new LearningWordsView(this);
     this.player = new LearningWordsSoundPlayer(this);
-    this.statistics = {}; // mockStatistics
+    this.statistics = statistics; // mockStatistics
 
     this.cards = new LearnindWordsCards(
       this.difficulty,
-      { maxCount: 50, maxCountNewCards: 20 }, /* , statistics */
+      { maxCount: 50, maxCountNewCards: 20 }, // settings
+      { totalCount: 0, NewWords: 0 }, // statistics
     );
   }
 
@@ -47,6 +48,14 @@ export default class LearningWordsModel {
     this.player.addAudioToQueue(DATA_URL + word.audioExample);
 
     this.view.drawWordToDOM(word);
+
+    if (this.currentStatus === WORD_STATUSES.COMPLITED) {
+      this.view.lockCard();
+      this.view.placeSuccessPlaceHolder();
+    } else {
+      this.view.unlockCard();
+    }
+    console.log(this.view.wordInput.classList);
   }
 
   getInitialLayout() {
@@ -66,6 +75,7 @@ export default class LearningWordsModel {
     const result = this.checkInput(value);
 
     if (result) {
+      this.view.lockCard();
       const showWordRate = (this.cards.currentStatus === WORD_STATUSES.NEW);
       this.cards.currentStatus = WORD_STATUSES.COMPLITED;
       this.showFilledCard(showWordRate);
@@ -90,9 +100,8 @@ export default class LearningWordsModel {
   }
 
   showFilledCard(showWordRate = false) {
-    // TODO AUDIO SPELLING, TRANSLATES
-    // await this.LearningWordsView.audio.play();
-    this.player.playThrough();
+    // TODO TRANSLATES
+    this.player.play();
 
     if (showWordRate) {
       this.updateStatistics();
@@ -109,11 +118,13 @@ export default class LearningWordsModel {
   }
 
   showResult() {
+    // TODO ResultView final page of app
     this.statistics.ratio = 0;
   }
 
   goPrevious() {
     this.cards.getPrevious();
+    this.updateWordCard(this.card);
   }
 
   updateStatistics(result) { // mockStatistics

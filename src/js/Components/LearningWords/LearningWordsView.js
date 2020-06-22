@@ -13,6 +13,8 @@ export default class LearningWordsView {
     this.element = element;
     this.material = new LearningWordsMaterial(element);
 
+    this.wordInput = this.element.querySelector(CONFIGS.QUERIES.WORD_ELEMENTS.WORD);
+
     this.assignButtonListeners();
 
     this.assignInputListeners();
@@ -55,24 +57,23 @@ export default class LearningWordsView {
   }
 
   assignInputListeners() {
-    const wordInput = this.element.querySelector(CONFIGS.QUERIES.WORD_ELEMENTS.WORD);
-    wordInput.addEventListener('input', () => this.initPlaceHolder());
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  showCardResult() {
-    // TODO Audio translate
+    this.wordInput.addEventListener('input', () => {
+      this.removePlaceHolder();
+    });
   }
 
   onButtonNext() {
-    const wordInput = this.element.querySelector(CONFIGS.QUERIES.WORD_ELEMENTS.WORD);
-    const inputValue = wordInput.value;
-    wordInput.value = '';
+    const inputValue = this.wordInput.value;
+    this.wordInput.value = '';
 
-    if (this.model.acceptInput(inputValue)) {
-      this.placeSuccessPlaceHolder();
-    } else {
-      this.placeErrorPlaceHolder();
+    const checkResult = this.model.acceptInput(inputValue);
+
+    if (this.isCardLocked()) {
+      if (checkResult) {
+        this.placeSuccessPlaceHolder();
+      } else {
+        this.placeErrorPlaceHolder();
+      }
     }
   }
 
@@ -88,34 +89,37 @@ export default class LearningWordsView {
 
   placeErrorPlaceHolder() {
     // TODO Clever placeholder
-    const wordInput = this.element.querySelector(CONFIGS.QUERIES.WORD_ELEMENTS.WORD);
     this.initPlaceHolder();
-    wordInput.classList.add('error');
+    this.wordInput.classList.add(CONFIGS.CLASS_ERROR);
   }
 
   placeSuccessPlaceHolder() {
-    const wordInput = this.element.querySelector(CONFIGS.QUERIES.WORD_ELEMENTS.WORD);
     this.initPlaceHolder();
-    wordInput.classList.add('success');
+    this.wordInput.classList.add(CONFIGS.CLASS_SUCCESS);
+  }
+
+  removePlaceHolder() {
+    this.wordInput.classList.remove(CONFIGS.CLASS_SUCCESS);
+    this.wordInput.classList.remove(CONFIGS.CLASS_ERROR);
   }
 
   initPlaceHolder(text) {
+    if (!text) return;
     const wordInput = this.element.querySelector(CONFIGS.QUERIES.WORD_ELEMENTS.WORD);
-    if (text) {
-      wordInput.placeholder = text;
-    }
-
-    wordInput.classList.remove('success');
-    wordInput.classList.remove('error');
+    wordInput.placeholder = text;
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getCardLayout(/* difficulty */) {
+  getCardLayout() {
     const html = CONFIGS.HTML_COMPONENT;
     return html;
   }
 
   drawWordToDOM(word) {
+    this.removePlaceHolder();
+
+    this.initPlaceHolder(word.word);
+
     const wordQueries = CONFIGS.QUERIES.WORD_ELEMENTS;
 
     this.element.classList.remove(CONFIGS.CLASS_VISIBLE);
@@ -129,8 +133,6 @@ export default class LearningWordsView {
     const image = this.element.querySelector(wordQueries.IMAGE);
     const transcription = this.element.querySelector(wordQueries.TRANSCRIPTION);
 
-    this.initPlaceHolder(word.word);
-
     translate.innerText = word.wordTranslate;
     exampleStart.innerText = word.exampleStart;
     exampleEnd.innerText = word.exampleEnd;
@@ -141,5 +143,20 @@ export default class LearningWordsView {
     transcription.innerText = word.transcription;
 
     this.element.classList.add(CONFIGS.CLASS_VISIBLE);
+  }
+
+  lockCard() {
+    const wordCard = this.element.querySelector(CONFIGS.QUERY_WORDCARD);
+    wordCard.classList.add(CONFIGS.CLASS_LOCK);
+  }
+
+  unlockCard() {
+    const wordCard = this.element.querySelector(CONFIGS.QUERY_WORDCARD);
+    wordCard.classList.remove(CONFIGS.CLASS_LOCK);
+  }
+
+  isCardLocked() {
+    const wordCard = this.element.querySelector(CONFIGS.QUERY_WORDCARD);
+    return wordCard.classList.contains(CONFIGS.CLASS_LOCK);
   }
 }

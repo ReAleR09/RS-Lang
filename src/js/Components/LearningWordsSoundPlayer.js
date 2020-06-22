@@ -2,9 +2,11 @@ export default class LearningWordsSoundPlayer {
   constructor(model) {
     this.model = model;
     this.sounds = [];
+    this.queue = [];
   }
 
   clearPlayQueue() {
+    this.queue = [];
     this.sounds = [];
   }
 
@@ -12,9 +14,14 @@ export default class LearningWordsSoundPlayer {
     this.sounds.push(new Audio(audioFileLink));
   }
 
+  play() {
+    this.queue = this.sounds.slice();
+    this.playThrough();
+  }
+
   playThrough() {
-    if (!this.sounds.length) return; // Здесь можно обратиться обратно в модель или кинуть событие.
-    const audioInstance = this.sounds.shift();
+    if (!this.queue.length) return; // Здесь можно обратиться обратно в модель или кинуть событие.
+    const audioInstance = this.queue.shift();
     this.playSound(audioInstance);
   }
 

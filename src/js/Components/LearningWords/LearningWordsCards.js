@@ -49,12 +49,12 @@ export default class LearnindWordsCards {
       newWord.WordStatus = WORD_STATUSES.NEW;
       return newWord;
     });
-    // TODO filter только новых
+    // TODO filter только новых (работа со словарем)
     this.newWords = this.filterByLimits(words);
   }
 
   getRepeatWords() {
-    // TODO повторяющиеся слова
+    // TODO повторяющиеся слова (работа с интервальными повторениями)
   //  const words = LearningWordsApi.getRandomWordsForDifficulty(this.difficulty);
     let words = LearningWordsApi.getRandomWordsForDifficulty(this.difficulty);
     words = words.map((word) => {
