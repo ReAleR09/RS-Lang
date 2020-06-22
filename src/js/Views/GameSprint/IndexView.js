@@ -35,9 +35,28 @@ export default class IndexView extends View {
       element.addEventListener('click', numberClickExample);
     });
 
-    this.subscribe('status', ({ score, multiplier }) => {
+    this.subscribe('status', ({
+      score,
+      multiplier,
+      checkbox,
+      currentWord,
+      translateWord,
+    }) => {
       this.element.querySelector('.score').innerHTML = score;
       this.element.querySelector('.number-of-animals').innerHTML = this.multiplier[multiplier];
+      if (checkbox === 1) {
+        this.element.querySelector('#first-checkbox').classList.add('checkbox-true');
+      } else if (checkbox === 2) {
+        this.element.querySelector('#second-checkbox').classList.add('checkbox-true');
+      } else if (checkbox === 3) {
+        this.element.querySelector('#third-checkbox').classList.add('checkbox-true');
+      } else {
+        this.element.querySelectorAll('.checkbox').forEach((el) => {
+          el.classList.remove('checkbox-true');
+        });
+      }
+      this.element.querySelector('.word-in-english').innerHTML = currentWord;
+      this.element.querySelector('.translation-world').innerHTML = translateWord;
     });
     this.element.querySelector('#true-btn').addEventListener('click', () => {
       this.props.onRightClick();
@@ -82,9 +101,9 @@ export default class IndexView extends View {
         <div class="score">0</div>
         <div class="main-game-container">
           <div class="true-answer">
-            <div id="first-checkbox" class="checkbox-false"></div>
-            <div id="second-checkbox" class="checkbox-false"></div>
-            <div id="third-checkbox" class="checkbox-false"></div>
+            <div id="first-checkbox" class="checkbox checkbox-false"></div>
+            <div id="second-checkbox" class="checkbox checkbox-false"></div>
+            <div id="third-checkbox" class="checkbox checkbox-false"></div>
           </div>
           <div class="number-of-animals">Один попугай</div>
           <hr>

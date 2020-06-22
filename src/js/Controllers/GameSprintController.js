@@ -39,7 +39,7 @@ export default class GameSprintController extends Controller {
       this.checkIsRight();
     };
     this.props.onFalseClick = () => {
-      console.log(this.dataWords);
+      this.checkIsFalse();
     };
 
     this.gameTime = 60;
@@ -49,30 +49,119 @@ export default class GameSprintController extends Controller {
     try {
       const response = await fetch(this.wordsUrl);
       this.dataWords = await response.json();
+      console.log(this.dataWords);
+      this.sendData();
     } catch (error) {
       throw new Error('Ошибка при получении слов с сервера');
     }
   }
 
-  fetchData() {
-    // this.words = words;
-    IndexView.publish('status', { score: 0, multiplier: 1, currentWord: this.nextWord() });
+  sendData() {
+    this.numberElement = 0;
+    this.multiplier = 1;
+    this.checkbox = 0;
+    this.score = 0;
+    IndexView.publish('status', {
+      score: this.score,
+      multiplier: 1,
+      checkbox: this.checkbox,
+      currentWord: this.nextWord(),
+      translateWord: this.nextTranslateWord(),
+    });
   }
 
   nextWord() {
-    return this.dataWords.pop();
+    return this.dataWords[this.numberElement].word;
+  }
+
+  nextTranslateWord() {
+    this.randomNum = Math.round(Math.random() * 1);
+    return this.dataWords[this.numberElement + this.randomNum].wordTranslate;
   }
 
   checkIsRight() {
-    if (true) {
-      this.score = 10;
-      this.multiplier = 1;
+    if (
+      this.dataWords[this.numberElement].word === this.dataWords[this.numberElement].wordTranslate
+    ) {
       this.rightAnswersInRow += 1;
-      IndexView.publish('status', { score: this.score, multiplier: this.multiplier, currentWord: this.nextWord() });
+      if (this.rightAnswersInRow < 4) {
+        this.multiplier = 1;
+      } else if (this.rightAnswersInRow > 4 && this.rightAnswersInRow < 8) {
+        this.multiplier = 2;
+      } else if (this.rightAnswersInRow > 8 && this.rightAnswersInRow < 12) {
+        this.multiplier = 3;
+      } else if (this.rightAnswersInRow > 12 && this.rightAnswersInRow < 16) {
+        this.multiplier = 4;
+      }
+      if (this.checkbox < 3) {
+        this.checkbox += 1;
+      } else {
+        this.checkbox = 0;
+      }
+      this.score += 10 * this.multiplier;
+      this.numberElement += 1;
+      IndexView.publish('status', {
+        score: this.score,
+        multiplier: this.multiplier,
+        checkbox: this.checkbox,
+        currentWord: this.nextWord(),
+        translateWord: this.nextTranslateWord(),
+      });
     } else {
       this.multiplier = 1;
       this.rightAnswersInRow = 0;
-      IndexView.publish('status', {});
+      this.checkbox = 0;
+      this.numberElement += 1;
+      IndexView.publish('status', {
+        score: this.score,
+        multiplier: this.multiplier,
+        checkbox: this.checkbox,
+        currentWord: this.nextWord(),
+        translateWord: this.nextTranslateWord(),
+      });
+    }
+  }
+
+  checkIsFalse() {
+    if (
+      this.dataWords[this.numberElement].word !== this.dataWords[this.numberElement].wordTranslate
+    ) {
+      this.rightAnswersInRow += 1;
+      if (this.rightAnswersInRow < 4) {
+        this.multiplier = 1;
+      } else if (this.rightAnswersInRow > 4 && this.rightAnswersInRow < 8) {
+        this.multiplier = 2;
+      } else if (this.rightAnswersInRow > 8 && this.rightAnswersInRow < 12) {
+        this.multiplier = 3;
+      } else if (this.rightAnswersInRow > 12 && this.rightAnswersInRow < 16) {
+        this.multiplier = 4;
+      }
+      if (this.checkbox < 3) {
+        this.checkbox += 1;
+      } else {
+        this.checkbox = 0;
+      }
+      this.score += 10 * this.multiplier;
+      this.numberElement += 1;
+      IndexView.publish('status', {
+        score: this.score,
+        multiplier: this.multiplier,
+        checkbox: this.checkbox,
+        currentWord: this.nextWord(),
+        translateWord: this.nextTranslateWord(),
+      });
+    } else {
+      this.multiplier = 1;
+      this.rightAnswersInRow = 0;
+      this.checkbox = 0;
+      this.numberElement += 1;
+      IndexView.publish('status', {
+        score: this.score,
+        multiplier: this.multiplier,
+        checkbox: this.checkbox,
+        currentWord: this.nextWord(),
+        translateWord: this.nextTranslateWord(),
+      });
     }
   }
 }
