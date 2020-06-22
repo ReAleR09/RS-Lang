@@ -78,7 +78,7 @@ export default class User {
                 <span>Наличие кнопок "Снова", "Трудно", "Хорошо", "Легко" </span>                        
             </label>
             </p>
-            <button class="waves-effect waves-light btn">Сохранить</button>
+            <button class="waves-effect waves-light btn settings_btn">Сохранить</button>
         </form>
     </section>`;
     this.container = document.querySelector('body > .container');
@@ -95,6 +95,7 @@ export default class User {
     this.showDeleteButton = document.querySelector('.show_delete_button');
     this.showHardButton = document.querySelector('.show_hard_button');
     this.showButtons = document.querySelector('.show_buttons');
+    this.settingsBtn = document.querySelector('.settings_btn');
 
     this.newCards.value = Settings.settings.newCards;
     this.cardsPerDay.value = Settings.settings.cardsPerDay;
@@ -107,5 +108,24 @@ export default class User {
     this.showDeleteButton.checked = Settings.settings.showDeleteButton;
     this.showHardButton.checked = Settings.settings.showHardButton;
     this.showButtons.checked = Settings.settings.showButtons;
+
+    this.settingsBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const newSettings = {
+        newCards: +this.newCards.value,
+        cardsPerDay: +this.cardsPerDay.value,
+        translation: this.translation.checked,
+        translationMeaning: this.translationMeaning.checked,
+        wordUse: this.wordUse.checked,
+        wordTranscription: this.wordTranscription.checked,
+        wordPicture: this.wordPicture.checked,
+        showAnswer: this.showAnswer.checked,
+        showDeleteButton: this.showDeleteButton.checked,
+        showHardButton: this.showHardButton.checked,
+        showButtons: this.showButtons.checked,
+      };
+      Settings.settings(newSettings);
+      console.log(newSettings);
+    });
   }
 }

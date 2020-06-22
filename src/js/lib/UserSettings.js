@@ -15,8 +15,8 @@ class UserSettings {
     };
   }
 
-  set settings(settingsObject) {
-    this.settingsObject = settingsObject;
+  set settings(newSettingsObject) {
+    this.settingsObject = newSettingsObject;
   }
 
   get settings() {
