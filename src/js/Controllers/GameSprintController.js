@@ -38,6 +38,7 @@ export default class GameSprintController extends Controller {
   }
 
   startGame() {
+    this.status = 'in-progress';
     this.rightAnswersInRow = 0;
     this.numberElement = 0;
     this.multiplier = 1;
@@ -65,6 +66,7 @@ export default class GameSprintController extends Controller {
 
   updateView() {
     IndexView.publish('status', {
+      status: this.status,
       timer: this.gameTimer,
       score: this.score,
       multiplier: this.multiplier,
@@ -75,7 +77,7 @@ export default class GameSprintController extends Controller {
   }
 
   stopGame() {
-    IndexView.publish('stopGame', this.score);
+    this.status = 'finished';
   }
 
   async getWordsFromDataBase() {
