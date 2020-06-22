@@ -55,7 +55,7 @@ export default class GameSprintController extends Controller {
 
   updateTimer() {
     this.gameTimer -= 1;
-    if (this.gameTimer === -1) {
+    if (this.gameTimer === 0) {
       this.stopGame();
     } else {
       setTimeout(() => this.updateTimer(), 1000);
@@ -72,6 +72,10 @@ export default class GameSprintController extends Controller {
       currentWord: this.currentWord,
       translateWord: this.translateWord,
     });
+  }
+
+  stopGame() {
+    IndexView.publish('stopGame', this.score);
   }
 
   async getWordsFromDataBase() {

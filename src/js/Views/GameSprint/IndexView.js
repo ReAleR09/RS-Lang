@@ -23,22 +23,27 @@ export default class IndexView extends View {
       translateWord,
       timer,
     }) => {
-      this.element.querySelector('.score').innerHTML = score;
-      this.element.querySelector('.timer').innerHTML = timer;
-      this.element.querySelector('.number-of-animals').innerHTML = this.multiplier[multiplier];
+      this.element.querySelector('.game-sprint__score').innerHTML = score;
+      this.element.querySelector('.game-sprint__timer').innerHTML = timer;
+      this.element.querySelector('.game-sprint__number-of-animals').innerHTML = this.multiplier[multiplier];
       if (checkbox === 1) {
-        this.element.querySelector('#first-checkbox').classList.add('checkbox-true');
+        this.element.querySelector('#first-checkbox').classList.add('game-sprint__checkbox-true');
       } else if (checkbox === 2) {
-        this.element.querySelector('#second-checkbox').classList.add('checkbox-true');
+        this.element.querySelector('#second-checkbox').classList.add('game-sprint__checkbox-true');
       } else if (checkbox === 3) {
-        this.element.querySelector('#third-checkbox').classList.add('checkbox-true');
+        this.element.querySelector('#third-checkbox').classList.add('game-sprint__checkbox-true');
       } else {
-        this.element.querySelectorAll('.checkbox').forEach((el) => {
-          el.classList.remove('checkbox-true');
+        this.element.querySelectorAll('.game-sprint__checkbox').forEach((el) => {
+          el.classList.remove('game-sprint__checkbox-true');
         });
       }
-      this.element.querySelector('.word-in-english').innerHTML = currentWord;
-      this.element.querySelector('.translation-world').innerHTML = translateWord;
+      this.element.querySelector('.game-sprint__word-in-english').innerHTML = currentWord;
+      this.element.querySelector('.game-sprint__translation-world').innerHTML = translateWord;
+    });
+
+    this.subscribe('stopGame', (score) => {
+      console.log(score);
+      this.element.querySelector('#game-sprint').innerHTML = `Игра окончена! Набрано очков: ${score}`;
     });
 
     this.element.querySelector('#true-btn').addEventListener('click', () => {
@@ -65,20 +70,20 @@ export default class IndexView extends View {
   render() {
     this.eslint = true;
     const html = `
-      <div class="game-sprint">
-        <div class="score">0</div>
-        <div class="timer">0</div>
-        <div class="main-game-container">
-          <div class="true-answer">
-            <div id="first-checkbox" class="checkbox checkbox-false"></div>
-            <div id="second-checkbox" class="checkbox checkbox-false"></div>
-            <div id="third-checkbox" class="checkbox checkbox-false"></div>
+      <div id="game-sprint" class="game-sprint">
+        <div class="game-sprint__score">0</div>
+        <div class="game-sprint__timer">0</div>
+        <div class="game-sprint__main-game-container">
+          <div class="game-sprint__true-answer">
+            <div id="first-checkbox" class="game-sprint__checkbox game-sprint__checkbox-false"></div>
+            <div id="second-checkbox" class="game-sprint__checkbox game-sprint__checkbox-false"></div>
+            <div id="third-checkbox" class="game-sprint__checkbox game-sprint__checkbox-false"></div>
           </div>
-          <div class="number-of-animals"></div>
+          <div class="game-sprint__number-of-animals"></div>
           <hr>
-          <div class="word-in-english"></div>
-          <div class="translation-world"></div>
-          <div class="btn-wrapper">
+          <div class="game-sprint__word-in-english"></div>
+          <div class="game-sprint__translation-world"></div>
+          <div class="game-sprint__btn-wrapper">
             <a id="false-btn" class="waves-effect waves-light btn-small red">Неверно</a>
             <a id="true-btn" class="waves-effect waves-light btn-small green">Верно</a>
           </div>

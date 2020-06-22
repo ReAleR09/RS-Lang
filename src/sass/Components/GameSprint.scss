@@ -6,51 +6,51 @@
   text-align: center;
   background: #aecae0;
 }
-.score {
+.game-sprint__score {
   padding: 40px;
   padding-bottom: 15px;
   font-weight: 600;
 }
-.timer {
+.game-sprint__timer {
   background: #7dad85;
   width: 40px;
   height: 40px;
   margin: 10px auto;
   border-radius: 50%;
 }
-.main-game-container {
+.game-sprint__main-game-container {
   max-width: 400px;
-  // height: 350px;
+  height: 300px;
   margin: 0 auto;
   background: #52697a;
 }
-.true-answer {
+.game-sprint__true-answer {
   display: flex;
   justify-content: center;
 }
-.checkbox-false {
+.game-sprint__checkbox-false {
   width: 25px;
   height: 25px;
   margin: 10px;
   background: url("../img/checkboxFalse.png") no-repeat center;
   background-size: cover;
 }
-.checkbox-true {
+.game-sprint__checkbox-true {
   background: url("../img/checkboxTrue.png") no-repeat center;
   background-size: cover;
 }
-.number-of-animals {
+.game-sprint__number-of-animals {
   margin: 10px;
 }
-.word-in-english {
+.game-sprint__word-in-english {
   padding-top: 10px;
   font-weight: 600;
   color: #160f0f;
 }
-.translation-world {
+.game-sprint__translation-world {
   padding-bottom: 35px;
   color: #313030;
 }
-.btn-wrapper {
+.game-sprint__btn-wrapper {
   padding-bottom: 25px;
 }
