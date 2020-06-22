@@ -2,12 +2,21 @@
   max-width: 800px;
   height: 500px;
   margin-bottom: 50px;
+  font-size: 25px;
   text-align: center;
   background: #aecae0;
 }
 .score {
   padding: 40px;
+  padding-bottom: 15px;
   font-weight: 600;
+}
+.timer {
+  background: #7dad85;
+  width: 40px;
+  height: 40px;
+  margin: 10px auto;
+  border-radius: 50%;
 }
 .main-game-container {
   max-width: 400px;

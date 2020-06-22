@@ -44,12 +44,18 @@ export default class GameSprintController extends Controller {
     this.checkbox = 0;
     this.score = 0;
     this.gameTimer = 61;
+    this.updateWords();
     this.updateTimer();
+  }
+
+  updateWords() {
+    this.currentWord = this.nextWord();
+    this.translateWord = this.nextTranslateWord();
   }
 
   updateTimer() {
     this.gameTimer -= 1;
-    if (this.gameTimer === 0) {
+    if (this.gameTimer === -1) {
       this.stopGame();
     } else {
       setTimeout(() => this.updateTimer(), 1000);
@@ -63,8 +69,8 @@ export default class GameSprintController extends Controller {
       score: this.score,
       multiplier: this.multiplier,
       checkbox: this.checkbox,
-      currentWord: this.nextWord(),
-      translateWord: this.nextTranslateWord(),
+      currentWord: this.currentWord,
+      translateWord: this.translateWord,
     });
   }
 
@@ -114,6 +120,7 @@ export default class GameSprintController extends Controller {
       this.checkbox = 0;
     }
     this.numberElement += 1;
+    this.updateWords();
     this.updateView();
   }
 }
