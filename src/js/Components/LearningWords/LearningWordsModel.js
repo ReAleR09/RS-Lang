@@ -7,7 +7,7 @@ import {
   DIFFICULTY_MODIFIERS,
   DATA_URL,
   LEARNING_WORDS_CONTROLLER,
-  RESULT_ACTION,
+  RESULTS_ACTION,
 } from './constants';
 
 export default class LearningWordsModel {
@@ -160,6 +160,6 @@ export default class LearningWordsModel {
   showResult() {
     const params = { ...this.statistics };
     // TODO ResultView final page of app
-    AppNavigator.go(LEARNING_WORDS_CONTROLLER, RESULT_ACTION, params);
+    AppNavigator.go(LEARNING_WORDS_CONTROLLER, RESULTS_ACTION, params);
   }
 }
