@@ -4,6 +4,7 @@ import PublisherSubscriber from './js/Classes/PublisherSubscriber';
 import { EVENT_NAVIGATION } from './js/Utils/Constants';
 import ExampleController from './js/Controllers/ExampleController';
 import './js/plugins';
+import User from './js/Utils/User';
 
 function appInit() {
   /**
@@ -30,6 +31,10 @@ function appInit() {
   // styles are broken, so currently it's not a sidebar
   const sideBar = new Sidebar();
   sideBar.attach('sidebar', 'toggleSidebar');
+
+  const settings = new User();
+  this.button = document.querySelector('.settings');
+  this.button.addEventListener('click', settings.render);
 
   router.route();
   PublisherSubscriber.publish(EVENT_NAVIGATION, { controller: null, action: null, params: null });
