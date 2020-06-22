@@ -1,12 +1,14 @@
 import LearningWordsView from './LearningWordsView';
 import LearnindWordsCards from './LearningWordsCards';
-import { WORD_STATUSES, DIFFICULTY_MODIFIERS } from './constants';
+import { WORD_STATUSES, DIFFICULTY_MODIFIERS, DATA_URL } from './constants';
+import LearningWordsSoundPlayer from '../LearningWordsSoundPlayer';
 
 export default class LearningWordsModel {
   constructor(settings = {}) {
     this.settings = settings;
     this.wordsState = [];
     this.view = new LearningWordsView(this);
+    this.player = new LearningWordsSoundPlayer(this);
     this.statistics = {}; // mockStatistics
 
     this.cards = new LearnindWordsCards(
@@ -39,6 +41,11 @@ export default class LearningWordsModel {
   }
 
   updateWordCard(word) {
+    this.player.clearPlayQueue();
+    this.player.addAudioToQueue(DATA_URL + word.audio);
+    this.player.addAudioToQueue(DATA_URL + word.audioMeaning);
+    this.player.addAudioToQueue(DATA_URL + word.audioExample);
+
     this.view.drawWordToDOM(word);
   }
 
@@ -83,28 +90,21 @@ export default class LearningWordsModel {
   }
 
   showFilledCard(showWordRate = false) {
-    try {
-      // TODO AUDIO SPELLING, TRANSLATES
-      // await this.LearningWordsView.audio.play();
-    } catch (error) {
-      console.error(error);
-    }
+    // TODO AUDIO SPELLING, TRANSLATES
+    // await this.LearningWordsView.audio.play();
+    this.player.playThrough();
+
     if (showWordRate) {
       this.updateStatistics();
       this.view.showNewWordRateForm(this.card);
-    } else {
-      this.goNext();
     }
   }
 
   goNext() {
-    console.log(this.cards.cards);
     if (this.cards.getNext()) {
-      console.log(this.card);
       this.updateWordCard(this.card);
     } else {
       this.showResult();
-      console.log(this.cards);
     }
   }
 

@@ -1,7 +1,7 @@
 import '../../../sass/Components/LearningWords/style.scss';
 import LearningWordsMaterial from './LearningWordsMaterial';
 // import AppNavigator from '../../lib/AppNavigator';
-import { dataURL, DIFFICULTY_MODIFIERS } from './constants';
+import { DIFFICULTY_MODIFIERS, DATA_URL } from './constants';
 import * as CONFIGS from './template';
 
 export default class LearningWordsView {
@@ -42,19 +42,15 @@ export default class LearningWordsView {
 
     buttonAgain.addEventListener('click', () => {
       this.model.sendCardToTrainingEnd();
-      this.model.goNext();
     });
     buttonHard.addEventListener('click', () => {
       this.model.updateVocabulary(this.rateWord, DIFFICULTY_MODIFIERS.HARD);
-      this.model.goNext();
     });
     buttonNormal.addEventListener('click', () => {
       this.model.updateVocabulary(this.rateWord, DIFFICULTY_MODIFIERS.NORMAL);
-      this.model.goNext();
     });
     buttonEasy.addEventListener('click', () => {
       this.model.updateVocabulary(this.rateWord, DIFFICULTY_MODIFIERS.EASY);
-      this.model.goNext();
     });
   }
 
@@ -141,7 +137,7 @@ export default class LearningWordsView {
     exampleTranslate.innerText = word.textExampleTranslate;
     description.innerHTML = word.textMeaning;
     descriptionTranslate.innerText = word.textMeaningTranslate;
-    image.src = `${dataURL}${word.image}`;
+    image.src = `${DATA_URL}${word.image}`;
     transcription.innerText = word.transcription;
 
     this.element.classList.add(CONFIGS.CLASS_VISIBLE);

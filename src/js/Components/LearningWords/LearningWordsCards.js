@@ -151,7 +151,7 @@ export default class LearnindWordsCards {
   }
 
   set currentStatus(status) {
-    this.currentCard.wordStatus = status;
+    this.cards[this.currentCardIndex].wordStatus = status;
   }
 
   get currentErrors() {
@@ -159,7 +159,7 @@ export default class LearnindWordsCards {
   }
 
   set currentErrors(errors) {
-    this.currentCard.errors = errors;
+    this.cards[this.currentCardIndex].errors = errors;
   }
 
   get trainingStatus() {
