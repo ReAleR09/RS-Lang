@@ -1,7 +1,7 @@
 import '../../../sass/Components/LearningWords/style.scss';
 import LearningWordsMaterial from './LearningWordsMaterial';
 // import AppNavigator from '../../lib/AppNavigator';
-import { DIFFICULTY_MODIFIERS, DATA_URL } from './constants';
+import { DIFFICULTY_MODIFIERS, DATA_URL, lockAttribute } from './constants';
 import * as CONFIGS from './template';
 
 export default class LearningWordsView {
@@ -14,6 +14,7 @@ export default class LearningWordsView {
     this.material = new LearningWordsMaterial(element);
 
     this.wordInput = this.element.querySelector(CONFIGS.QUERIES.WORD_ELEMENTS.WORD);
+    this.isLocked = false;
 
     this.assignButtonListeners();
 
@@ -69,11 +70,11 @@ export default class LearningWordsView {
     const checkResult = this.model.acceptInput(inputValue);
 
     if (this.isCardLocked()) {
-      if (checkResult) {
-        this.placeSuccessPlaceHolder();
-      } else {
-        this.placeErrorPlaceHolder();
-      }
+      this.placeSuccessPlaceHolder();
+    } else if (checkResult) {
+      this.removePlaceHolder();
+    } else {
+      this.placeErrorPlaceHolder();
     }
   }
 
@@ -146,17 +147,16 @@ export default class LearningWordsView {
   }
 
   lockCard() {
-    const wordCard = this.element.querySelector(CONFIGS.QUERY_WORDCARD);
-    wordCard.classList.add(CONFIGS.CLASS_LOCK);
+    this.isLocked = true;
+    this.wordInput.setAttribute(lockAttribute, '');
   }
 
   unlockCard() {
-    const wordCard = this.element.querySelector(CONFIGS.QUERY_WORDCARD);
-    wordCard.classList.remove(CONFIGS.CLASS_LOCK);
+    this.isLocked = false;
+    this.wordInput.removeAttribute(lockAttribute);
   }
 
   isCardLocked() {
-    const wordCard = this.element.querySelector(CONFIGS.QUERY_WORDCARD);
-    return wordCard.classList.contains(CONFIGS.CLASS_LOCK);
+    return this.isLocked;
   }
 }

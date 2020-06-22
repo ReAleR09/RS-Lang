@@ -1,7 +1,6 @@
 export const CLASS_VISIBLE = 'visible';
 export const CLASS_SUCCESS = 'success';
 export const CLASS_ERROR = 'error';
-export const CLASS_LOCK = 'locked';
 
 const ID_WORD = 'word';
 

@@ -45,7 +45,7 @@
 
         &::placeholder {
           opacity: 0;
-          transition: opacity ease-in-out 0.5s;
+          //transition: opacity ease-in-out 0.5s;  Видно потухание при открытии новой карты
         }
 
         &.success::placeholder {

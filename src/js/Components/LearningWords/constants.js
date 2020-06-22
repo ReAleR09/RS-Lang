@@ -4,6 +4,7 @@ export const DATA_URL = `https://raw.githubusercontent.com/${githubAccount}/rsla
 
 export const wordStartTag = '<b>';
 export const wordEndTag = '</b>';
+export const lockAttribute = 'readonly';
 
 export const WORD_STATUSES = {
   NEW: 'newWord',

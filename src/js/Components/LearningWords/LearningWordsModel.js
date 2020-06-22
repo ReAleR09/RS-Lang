@@ -49,13 +49,12 @@ export default class LearningWordsModel {
 
     this.view.drawWordToDOM(word);
 
-    if (this.currentStatus === WORD_STATUSES.COMPLITED) {
+    if (this.cards.currentStatus === WORD_STATUSES.COMPLITED) {
       this.view.lockCard();
       this.view.placeSuccessPlaceHolder();
     } else {
       this.view.unlockCard();
     }
-    console.log(this.view.wordInput.classList);
   }
 
   getInitialLayout() {
