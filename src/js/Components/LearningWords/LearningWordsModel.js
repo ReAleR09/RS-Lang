@@ -53,8 +53,12 @@ export default class LearningWordsModel {
   updateWordCard(word) {
     this.player.clearPlayQueue();
     this.player.addAudioToQueue(DATA_URL + word.audio);
-    this.player.addAudioToQueue(DATA_URL + word.audioMeaning);
-    this.player.addAudioToQueue(DATA_URL + word.audioExample);
+    if (this.settings.showMeaning) {
+      this.player.addAudioToQueue(DATA_URL + word.audioMeaning);
+    }
+    if (this.settings.showExample) {
+      this.player.addAudioToQueue(DATA_URL + word.audioExample);
+    }
 
     this.view.drawWordToDOM(word);
 
