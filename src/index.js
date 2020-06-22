@@ -12,6 +12,7 @@ import AuthorizationController from './js/Controllers/AuthorizationController';
 import AppNavigator from './js/lib/AppNavigator';
 
 import './js/plugins';
+import { SIDENAV } from './config';
 
 function appInit() {
   /**
@@ -40,10 +41,9 @@ function appInit() {
    */
   const router = new Router(appContainter, routes);
 
-  // styles are broken, so currently it's not a sidebar
-  const sideBarLeft = new Sidebar();
+  const sideBarLeft = new Sidebar(SIDENAV);
   const sideBarFloating = new Sidebar();
-  sideBarLeft.attach('sidenav-left' /* , 'toggleSidebar' */);
+  sideBarLeft.attach('sidenav-left');
   sideBarFloating.attach('sidenav-floatng');
 
   router.route();
