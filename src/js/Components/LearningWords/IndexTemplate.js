@@ -136,7 +136,7 @@ const HTML_CARD_BODY = `
     <div class="col l8 s12">
       <div class="${CLASS_PUZZLE} d-flex">
         <p class="${CLASSES.CARD.PUZZLE.EXAMPLE_START}"></p>
-        <input id="${ID_WORD}" type="text">
+        <input id="${ID_WORD}" type="text" autofocus>
         <p class="${CLASSES.CARD.PUZZLE.EXAMPLE_END}"></p>
       </div>
       <div class="${CLASS_HINTS}">
