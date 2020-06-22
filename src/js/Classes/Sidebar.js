@@ -1,31 +1,25 @@
+import Materilize from 'materialize-css';
 import PubSub from './PublisherSubscriber';
 import { EVENT_NAVIGATION } from '../Utils/Constants';
 import AppNavigator from '../lib/AppNavigator';
 
-const CLASS_SHOW = 'show';
+// const CLASS_SHOW = 'show';
 const CLASS_LINK_ACTIVE = 'sidebar__item_active';
 
-const CATEGORIES = [
+/* const CATEGORIES = [
+const NAV_LIST = [
   {
-    id: 4,
-    title: 'Click me 4',
+    controller: 'speakit',
+    title: 'Speak It',
   },
-  {
-    id: 2,
-    title: 'Click me 2',
-  },
-  {
-    id: 0,
-    title: 'Click me 0',
-  },
-];
+]; */
 
 export default class Sidebar {
   constructor() {
     this.show = false;
   }
 
-  toggle(show) {
+  /*   toggle(show) {
     if (!this.sideBarElement) return;
     this.show = show;
 
@@ -34,12 +28,12 @@ export default class Sidebar {
     } else {
       this.sideBarElement.classList.remove(CLASS_SHOW);
     }
-  }
+  } */
 
   attach(elementId/* , togglerId */) {
     const target = document.getElementById(elementId);
-    const sideBarElement = this.generateSidebarDOM();
-    target.parentNode.replaceChild(sideBarElement, target);
+    const sideBarElement = target;
+    // target.parentNode.replaceChild(sideBarElement, target);
 
     this.sideBarElement = sideBarElement;
 
@@ -50,7 +44,7 @@ export default class Sidebar {
     // On navigation, check links, activate one if inside category
     // and close the sidebar
     PubSub.subscribe(EVENT_NAVIGATION, (navParams) => {
-      this.toggle(false);
+    // this.toggle(false);
       const categoriesElements = this.sideBarElement.querySelectorAll('li');
       const keys = Object.getOwnPropertyNames(categoriesElements);
       for (let i = 0; i < keys.length; i += 1) {
@@ -73,26 +67,45 @@ export default class Sidebar {
         }
       }
     });
+
+    this.sideBarItemClickHandler();
   }
 
-  generateSidebarDOM() {
+  sideBarItemClickHandler() {
+    this.sideBarElement.addEventListener('click', (e) => {
+      if (e.target.parentNode.dataset.id) {
+        AppNavigator.go('example', null, { id: e.target.parentNode.dataset.id });
+      } else if (e.target.parentNode.dataset.page === 'main') {
+        AppNavigator.go();
+      }
+      const sidebar = Materilize.Sidenav.getInstance(this.sideBarElement);
+      if (sidebar) {
+        sidebar.close();
+      }
+      // this.toggle(false);
+    });
+  }
+
+  /* generateSidebarDOM() {
     const sidebarElement = document.createElement('div');
     sidebarElement.id = 'sidebar';
 
     const ulElement = document.createElement('ul');
 
-    ulElement.innerHTML += '<li data-page="main">Main Page?</li>';
+    ulElement.innerHTML += '<li data-page="main">Main Page</li>';
 
     // TODO replace
-    CATEGORIES.forEach((category) => {
-      ulElement.innerHTML += `<li data-id="${category.id}">${category.title}</li>`;
+    NAV_LIST.forEach((link) => {
+      ulElement.innerHTML += `<li data-controller="${link.controller}">${link.title}</li>`;
     });
 
     ulElement.addEventListener('click', (e) => {
-      if (e.target.dataset.id) {
-        AppNavigator.go('example', null, { id: e.target.dataset.id });
-      } else if (e.target.dataset.page === 'main') {
+      if (e.target.dataset.page === 'main') {
         AppNavigator.go();
+      } else if (e.target.dataset.controller) {
+        const { controller } = e.target.dataset;
+        const action = e.target.dataset.action ? e.target.dataset.action : null;
+        AppNavigator.go(controller, action);
       } else {
         return;
       }
@@ -102,5 +115,5 @@ export default class Sidebar {
     sidebarElement.appendChild(ulElement);
 
     return sidebarElement;
-  }
+  } */
 }

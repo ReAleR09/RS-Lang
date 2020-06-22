@@ -1,0 +1,56 @@
+.game-sprint {
+  max-width: 800px;
+  height: 500px;
+  margin-bottom: 50px;
+  font-size: 25px;
+  text-align: center;
+  background: #aecae0;
+}
+.game-sprint__score {
+  padding: 40px;
+  padding-bottom: 15px;
+  font-weight: 600;
+}
+.game-sprint__timer {
+  background: #7dad85;
+  width: 40px;
+  height: 40px;
+  margin: 10px auto;
+  border-radius: 50%;
+}
+.game-sprint__main-game-container {
+  max-width: 400px;
+  height: 300px;
+  margin: 0 auto;
+  background: #52697a;
+}
+.game-sprint__true-answer {
+  display: flex;
+  justify-content: center;
+}
+.game-sprint__checkbox-false {
+  width: 25px;
+  height: 25px;
+  margin: 10px;
+  background: url("../img/checkboxFalse.png") no-repeat center;
+  background-size: cover;
+}
+.game-sprint__checkbox-true {
+  background: url("../img/checkboxTrue.png") no-repeat center;
+  background-size: cover;
+}
+.game-sprint__number-of-animals {
+  margin: 10px;
+}
+.game-sprint__word-in-english {
+  padding-top: 10px;
+  font-weight: 600;
+  color: #160f0f;
+}
+.game-sprint__translation-world {
+  padding-bottom: 35px;
+  color: #313030;
+}
+.game-sprint__btn-wrapper {
+  padding-bottom: 25px;
+}

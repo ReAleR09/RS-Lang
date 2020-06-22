@@ -3,7 +3,14 @@ import Sidebar from './js/Classes/Sidebar';
 import PublisherSubscriber from './js/Classes/PublisherSubscriber';
 import { EVENT_NAVIGATION } from './js/Utils/Constants';
 import ExampleController from './js/Controllers/ExampleController';
+
 import LearningWordsController from './js/Controllers/LearningWordsController';
+import GameSprintController from './js/Controllers/GameSprintController';
+import SpeakitController from './js/Controllers/SpeakitController';
+import RegistrationController from './js/Controllers/RegistrationController';
+import AuthorizationController from './js/Controllers/AuthorizationController';
+import AppNavigator from './js/lib/AppNavigator';
+
 import './js/plugins';
 
 function appInit() {
@@ -14,8 +21,12 @@ function appInit() {
    */
   const routes = {
     '/': ExampleController,
+    registration: RegistrationController,
+    authorization: AuthorizationController,
     example: ExampleController,
     learningWords: LearningWordsController,
+    'game-sprint': GameSprintController,
+    speakit: SpeakitController,
   };
 
   /**
@@ -30,11 +41,20 @@ function appInit() {
   const router = new Router(appContainter, routes);
 
   // styles are broken, so currently it's not a sidebar
-  const sideBar = new Sidebar();
-  sideBar.attach('sidebar', 'toggleSidebar');
+  const sideBarLeft = new Sidebar();
+  const sideBarFloating = new Sidebar();
+  sideBarLeft.attach('sidenav-left' /* , 'toggleSidebar' */);
+  sideBarFloating.attach('sidenav-floatng');
 
   router.route();
   PublisherSubscriber.publish(EVENT_NAVIGATION, { controller: null, action: null, params: null });
+
+  if (localStorage.timeStamp < Date.now()) {
+    localStorage.removeItem('token');
+  }
+  if (!localStorage.token) {
+    AppNavigator.go('registration');
+  }
 }
 
 window.onload = appInit;
