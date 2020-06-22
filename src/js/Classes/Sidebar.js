@@ -1,3 +1,4 @@
+import Materilize from 'materialize-css';
 import PubSub from './PublisherSubscriber';
 import { EVENT_NAVIGATION } from '../Utils/Constants';
 import AppNavigator from '../lib/AppNavigator';
@@ -83,6 +84,10 @@ export default class Sidebar {
         AppNavigator.go('example', null, { id: e.target.parentNode.dataset.id });
       } else if (e.target.parentNode.dataset.page === 'main') {
         AppNavigator.go();
+      }
+      const sidebar = Materilize.Sidenav.getInstance(this.sideBarElement);
+      if (sidebar) {
+        sidebar.close();
       }
       // this.toggle(false);
     });
