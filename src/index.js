@@ -15,7 +15,7 @@ function appInit() {
   const routes = {
     '/': ExampleController,
     example: ExampleController,
-    game: GameSprintController,
+    'game-sprint': GameSprintController,
   };
 
   /**

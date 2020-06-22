@@ -1,5 +1,4 @@
 import Controller from '../lib/Controller';
-import AppNavigator from '../lib/AppNavigator';
 import IndexView from '../Views/GameSprint/IndexView';
 
 /**
@@ -19,7 +18,6 @@ export default class GameSprintController extends Controller {
     };
     super(viewClasses);
     this.wordsUrl = 'https://afternoon-falls-25894.herokuapp.com/words?page=2&group=0';
-    this.getWordsFromDataBase();
   }
 
   /**
@@ -27,48 +25,56 @@ export default class GameSprintController extends Controller {
    * through this.props in the correcponding view as well.
    * Try to do all data aggregation here then pass it to view
    */
-  indexAction() {
-    // console.log(this);
-    this.props.exampleArray = ['4', '2', '0']; // just passing some data to view
-
-    const params = AppNavigator.getRequestParams(); // get GET parameters etc /example/index?id=3
-    this.props.exampleId = params.get('id'); // pass the GET param to View to utilize it later
-
-    this.props.firstName = 'Boris';
+  async indexAction() {
     this.props.onRightClick = () => {
-      this.checkIsRight();
+      this.checkAnswer(0);
     };
     this.props.onFalseClick = () => {
-      this.checkIsFalse();
+      this.checkAnswer(1);
     };
 
-    this.gameTime = 60;
+    await this.getWordsFromDataBase();
+    this.startGame();
+  }
+
+  startGame() {
+    this.rightAnswersInRow = 0;
+    this.numberElement = 0;
+    this.multiplier = 1;
+    this.checkbox = 0;
+    this.score = 0;
+    this.gameTimer = 61;
+    this.updateTimer();
+  }
+
+  updateTimer() {
+    this.gameTimer -= 1;
+    if (this.gameTimer === 0) {
+      this.stopGame();
+    } else {
+      setTimeout(() => this.updateTimer(), 1000);
+    }
+    this.updateView();
+  }
+
+  updateView() {
+    IndexView.publish('status', {
+      timer: this.gameTimer,
+      score: this.score,
+      multiplier: this.multiplier,
+      checkbox: this.checkbox,
+      currentWord: this.nextWord(),
+      translateWord: this.nextTranslateWord(),
+    });
   }
 
   async getWordsFromDataBase() {
     try {
       const response = await fetch(this.wordsUrl);
       this.dataWords = await response.json();
-      // console.log(this.dataWords);
-      this.sendData();
     } catch (error) {
       throw new Error('Ошибка при получении слов с сервера');
     }
-  }
-
-  sendData() {
-    this.rightAnswersInRow = 0;
-    this.numberElement = 0;
-    this.multiplier = 1;
-    this.checkbox = 0;
-    this.score = 0;
-    IndexView.publish('status', {
-      score: this.score,
-      multiplier: 1,
-      checkbox: this.checkbox,
-      currentWord: this.nextWord(),
-      translateWord: this.nextTranslateWord(),
-    });
   }
 
   nextWord() {
@@ -80,85 +86,34 @@ export default class GameSprintController extends Controller {
     return this.dataWords[this.numberElement + this.randomNum].wordTranslate;
   }
 
-  checkIsRight() {
-    if (!this.randomNum) {
-      this.rightAnswersInRow += 1;
-      if (this.rightAnswersInRow < 3) {
-        this.multiplier = 1;
-      } else if (this.rightAnswersInRow > 3 && this.rightAnswersInRow < 7) {
-        this.multiplier = 2;
-      } else if (this.rightAnswersInRow > 7 && this.rightAnswersInRow < 11) {
-        this.multiplier = 3;
-      } else if (this.rightAnswersInRow > 11 && this.rightAnswersInRow < 15) {
-        this.multiplier = 4;
-      }
-      if (this.checkbox < 3) {
-        this.checkbox += 1;
-      } else {
-        this.checkbox = 0;
-      }
-      this.score += 10 * this.multiplier;
-      this.numberElement += 1;
-      IndexView.publish('status', {
-        score: this.score,
-        multiplier: this.multiplier,
-        checkbox: this.checkbox,
-        currentWord: this.nextWord(),
-        translateWord: this.nextTranslateWord(),
-      });
-    } else {
-      this.multiplier = 1;
-      this.rightAnswersInRow = 0;
-      this.checkbox = 0;
-      this.numberElement += 1;
-      IndexView.publish('status', {
-        score: this.score,
-        multiplier: this.multiplier,
-        checkbox: this.checkbox,
-        currentWord: this.nextWord(),
-        translateWord: this.nextTranslateWord(),
-      });
+  static calculateMultiplier(rightAnswersInRow) {
+    let multiplier = 1;
+    if (rightAnswersInRow > 3 && rightAnswersInRow < 7) {
+      multiplier = 2;
+    } else if (rightAnswersInRow > 7 && rightAnswersInRow < 11) {
+      multiplier = 3;
+    } else if (rightAnswersInRow > 11 && rightAnswersInRow < 15) {
+      multiplier = 4;
     }
+    return multiplier;
   }
 
-  checkIsFalse() {
-    if (this.randomNum) {
+  checkAnswer(expectedResult) {
+    if (this.randomNum === expectedResult) {
       this.rightAnswersInRow += 1;
-      if (this.rightAnswersInRow < 3) {
-        this.multiplier = 1;
-      } else if (this.rightAnswersInRow > 3 && this.rightAnswersInRow < 7) {
-        this.multiplier = 2;
-      } else if (this.rightAnswersInRow > 7 && this.rightAnswersInRow < 11) {
-        this.multiplier = 3;
-      } else if (this.rightAnswersInRow > 11 && this.rightAnswersInRow < 15) {
-        this.multiplier = 4;
-      }
+      this.multiplier = GameSprintController.calculateMultiplier(this.rightAnswersInRow);
       if (this.checkbox < 3) {
         this.checkbox += 1;
       } else {
         this.checkbox = 0;
       }
       this.score += 10 * this.multiplier;
-      this.numberElement += 1;
-      IndexView.publish('status', {
-        score: this.score,
-        multiplier: this.multiplier,
-        checkbox: this.checkbox,
-        currentWord: this.nextWord(),
-        translateWord: this.nextTranslateWord(),
-      });
     } else {
-      this.multiplier = 1;
       this.rightAnswersInRow = 0;
+      this.multiplier = GameSprintController.calculateMultiplier(this.rightAnswersInRow);
       this.checkbox = 0;
-      this.numberElement += 1;
-      IndexView.publish('status', {
-        score: this.score,
-        multiplier: this.multiplier,
-        checkbox: this.checkbox,
-        currentWord: this.nextWord(),
-        translateWord: this.nextTranslateWord(),
-      });
     }
+    this.numberElement += 1;
+    this.updateView();
   }
 }
