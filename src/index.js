@@ -29,7 +29,7 @@ function appInit() {
 
   // styles are broken, so currently it's not a sidebar
   const sideBar = new Sidebar();
-  sideBar.attach('sidebar', 'toggleSidebar');
+  sideBar.attach('sidenav-left' /* , 'toggleSidebar' */);
 
   router.route();
   PublisherSubscriber.publish(EVENT_NAVIGATION, { controller: null, action: null, params: null });
