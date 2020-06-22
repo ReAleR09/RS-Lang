@@ -83,7 +83,7 @@ export default class LearningWordsView {
       disabledElements.push(this.element.querySelector(QUERIES.BUTTONS.COMPLICATED));
     }
 
-    if (!this.settings.showTranslates) {
+    if (!this.settings.showTranslates || !this.isCardLocked()) {
       disabledElements.push(this.element.querySelector(QUERIES.WORD_ELEMENTS.EXAMPLE_TRANSLATE));
       disabledElements.push(this.element.querySelector(
         QUERIES.WORD_ELEMENTS.DESCRIPTION_TRANSLATE,
@@ -246,16 +246,19 @@ export default class LearningWordsView {
     transcription.innerText = word.transcription;
 
     this.element.classList.add(CLASS_VISIBLE);
+    this.updateSettings();
   }
 
   lockCard() {
     this.isLocked = true;
     this.wordInput.setAttribute(lockAttribute, '');
+    this.updateSettings();
   }
 
   unlockCard() {
     this.isLocked = false;
     this.wordInput.removeAttribute(lockAttribute);
+    this.updateSettings();
   }
 
   isCardLocked() {
