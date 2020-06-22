@@ -3,9 +3,13 @@ import Router from './js/Router';
 import PublisherSubscriber from './js/Classes/PublisherSubscriber';
 import { EVENT_NAVIGATION } from './js/Utils/Constants';
 import ExampleController from './js/Controllers/ExampleController';
+
+import SpeakitController from './js/Controllers/SpeakitController';
+
 import RegistrationController from './js/Controllers/RegistrationController';
 import AuthorizationController from './js/Controllers/AuthorizationController';
 import AppNavigator from './js/lib/AppNavigator';
+
 import './js/plugins';
 
 function appInit() {
@@ -19,6 +23,7 @@ function appInit() {
     registration: RegistrationController,
     authorization: AuthorizationController,
     example: ExampleController,
+    speakit: SpeakitController,
   };
 
   /**
