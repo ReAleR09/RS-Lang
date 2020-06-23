@@ -9,6 +9,7 @@ import GameSprintController from './js/Controllers/GameSprintController';
 import SpeakitController from './js/Controllers/SpeakitController';
 import RegistrationController from './js/Controllers/RegistrationController';
 import AuthorizationController from './js/Controllers/AuthorizationController';
+import puzzleEnglishControler from './js/Controllers/englishPuzzleController';
 import AppNavigator from './js/lib/AppNavigator';
 
 import './js/plugins';
@@ -28,6 +29,7 @@ function appInit() {
     learningWords: LearningWordsController,
     'game-sprint': GameSprintController,
     speakit: SpeakitController,
+    englishpuzzle: puzzleEnglishControler,
   };
 
   /**
