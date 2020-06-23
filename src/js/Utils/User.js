@@ -124,8 +124,7 @@ export default class User {
         showHardButton: this.showHardButton.checked,
         showButtons: this.showButtons.checked,
       };
-      Settings.settings(newSettings);
-      console.log(newSettings);
+      Settings.settings = newSettings;
     });
   }
 }
