@@ -24,32 +24,34 @@ export default class SpeakitGameManager {
     this.view.attach(element);
   }
 
+  // SpeechREcognition might give several options
   // eslint-disable-next-line class-methods-use-this
-  handleRecognizedPhrase(phrase) {
-    this.view.drawRecognizedTextToDOM(phrase);
-
-    const wordCandidate = phrase.toLowerCase().trim();
-    if (wordCandidate.split(' ').length > 1) {
-      // there are two or more words, na-ah
-      return;
-    }
+  handleRecognizedPhrase(phrases) {
+    let candidate = phrases[0];
 
     this.wordsState.some((wordState, index) => {
-      if (wordState.word === wordCandidate) {
-        if (!wordState.guessed) {
-          this.view.markWordAsRecognized(wordState.id);
-          this.wordsState[index].guessed = true;
-          // TODO play happy sound
-
-          if (this.areAllWordsGuessed()) {
-            this.finishGame();
-          }
+      for (let i = 0; i < phrases.length; i += 1) {
+        const wordCandidate = phrases[i].toLowerCase().trim();
+        if (wordCandidate.split(' ').length > 1) {
+          // there are two or more words, na-ah
+          break;
         }
-
-        return true;
+        if (wordState.word === wordCandidate) {
+          candidate = wordCandidate;
+          if (!wordState.guessed) {
+            this.view.markWordAsRecognized(wordState.id);
+            this.wordsState[index].guessed = true;
+            // TODO play happy sound
+          }
+          return true;
+        }
       }
       return false;
     });
+    this.view.drawRecognizedTextToDOM(candidate);
+    if (this.areAllWordsGuessed()) {
+      this.finishGame();
+    }
   }
 
   areAllWordsGuessed() {
