@@ -42,7 +42,17 @@ export default class IndexView extends View {
         this.element.querySelector('.game-sprint__word-in-english').innerHTML = currentWord;
         this.element.querySelector('.game-sprint__translation-world').innerHTML = translateWord;
       } else {
-        this.element.innerHTML = `Игра окончена! Набрано очков: ${score}`;
+        this.element.innerHTML = `<h2>Игра окончена! Набрано очков: <b>${score}</b></h2>
+          <a id="repeat-game" class="waves-effect waves-light btn-small blue">Играть заново</a>
+          <a id="exit-game" class="waves-effect waves-light btn-small red">Выйти</a>`;
+
+        this.element.querySelector('#repeat-game').addEventListener('click', () => {
+          window.location.reload();
+        });
+        this.element.querySelector('#exit-game').addEventListener('click', () => {
+          this.element.innerHTML += '<h3>Куда выходить, пока х.з.)';
+          // Сюда чего-нибудь вставить, что бы куда-нибудь выйти). Куда выходять, я пока х.з.)
+        });
       }
     });
 
