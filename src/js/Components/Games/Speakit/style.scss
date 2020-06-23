@@ -1,4 +1,5 @@
 .speakit {
+
   &__border {
     border: 1px solid green;
     margin: 2px;
@@ -6,12 +7,13 @@
   }
 
   &__button-hidden {
-    display: none;
+    display: none!important;
   }
 
   &__word-card {
-    &_recognized {
-      background-color: green;
+    width: 20%!important;
+    &_sound-icon {
+      cursor: pointer;
     }
   }
 }

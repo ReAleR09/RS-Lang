@@ -90,13 +90,16 @@ export default class SpeakitGameManager {
       const wordState = {
         id: wordInfo.id,
         guessed: false,
-        word: wordInfo.word,
+        word: wordInfo.word.toLocaleLowerCase(),
+        audio: wordInfo.audio,
+        image: wordInfo.image,
+        transcription: wordInfo.transcription,
       };
 
       return wordState;
     });
     this.wordsState = wordsState;
-    this.displayWords(words);
+    this.displayWords(wordsState);
   }
 
   displayWords(wordsInfoArray) {
