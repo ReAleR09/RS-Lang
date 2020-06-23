@@ -19,6 +19,8 @@ export default class GameSprintController extends Controller {
     super(viewClasses);
     this.wordsUrl = 'https://afternoon-falls-25894.herokuapp.com/words?page=2&group=0';
     this.btnClickSound = '../../audio/piu.mp3';
+    this.correctTranslation = 0;
+    this.wrongTranslation = 1;
   }
 
   /**
@@ -28,10 +30,10 @@ export default class GameSprintController extends Controller {
    */
   async indexAction() {
     this.props.onRightClick = () => {
-      this.checkAnswer(0);
+      this.checkAnswer(this.correctTranslation);
     };
     this.props.onFalseClick = () => {
-      this.checkAnswer(1);
+      this.checkAnswer(this.wrongTranslation);
     };
 
     await this.getWordsFromDataBase();
@@ -51,8 +53,12 @@ export default class GameSprintController extends Controller {
   }
 
   updateWords() {
-    this.currentWord = this.nextWord();
-    this.translateWord = this.nextTranslateWord();
+    if (this.dataWords[this.numberElement + 1]) {
+      this.currentWord = this.nextWord();
+      this.translateWord = this.nextTranslateWord();
+    } else {
+      this.stopGame();
+    }
   }
 
   updateTimer() {
