@@ -2,6 +2,8 @@ export const CONF_ROOT_PATH = '';
 
 export const CONF_MEDIA_BASE_PATH = 'https://raw.github.com/ReAleR09/rslang-data/master/';
 
+export const BACKEND_URL = 'https://afternoon-falls-25894.herokuapp.com/';
+
 export const SIDENAV = [
   {
     title: 'Main page',
