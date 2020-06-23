@@ -1,4 +1,4 @@
-class UserSettings {
+export default class UserSettings {
   constructor() {
     this.settingsObject = {
       newCards: 15,
@@ -16,14 +16,12 @@ class UserSettings {
   }
 
   set settings(newSettingsObject) {
-    this.settingsObject = newSettingsObject;
+    this.settingsObject = { ...newSettingsObject };
   }
 
   get settings() {
-    return this.settingsObject;
+    return { ...this.settingsObject };
   }
+
+  // working with API there or in another class and this is only settings container?
 }
-
-const Settings = new UserSettings();
-
-export default Settings;

@@ -3,6 +3,7 @@ import Sidebar from './js/Classes/Sidebar';
 import PublisherSubscriber from './js/Classes/PublisherSubscriber';
 import { EVENT_NAVIGATION } from './js/Utils/Constants';
 import ExampleController from './js/Controllers/ExampleController';
+import SettingsController from './js/Controllers/SettingsController';
 import './js/plugins';
 import User from './js/Utils/User';
 
@@ -15,6 +16,7 @@ function appInit() {
   const routes = {
     '/': ExampleController,
     example: ExampleController,
+    settings: SettingsController,
   };
 
   /**
