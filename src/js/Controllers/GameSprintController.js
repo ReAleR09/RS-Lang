@@ -18,6 +18,7 @@ export default class GameSprintController extends Controller {
     };
     super(viewClasses);
     this.wordsUrl = 'https://afternoon-falls-25894.herokuapp.com/words?page=2&group=0';
+    this.btnClickSound = '../../audio/piu.mp3';
   }
 
   /**
@@ -128,5 +129,12 @@ export default class GameSprintController extends Controller {
     this.numberElement += 1;
     this.updateWords();
     this.updateView();
+    this.playAudio();
+  }
+
+  playAudio() {
+    const audio = new Audio();
+    audio.src = this.btnClickSound;
+    audio.play();
   }
 }

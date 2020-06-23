@@ -38,6 +38,7 @@ module.exports = (env, options) => {
       }),
       new CopyPlugin([
         { from: 'assets/', to: 'assets/' },
+        { from: 'audio/', to: 'audio/' },
       ], {
         context: 'src/',
       }),
