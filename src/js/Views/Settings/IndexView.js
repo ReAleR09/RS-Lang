@@ -1,6 +1,7 @@
 import View from '../../lib/View';
 // import AppNavigator from '../../lib/AppNavigator';
 import { SETTINGS_HTML, SETTINGS_QUERIES as QUERIES } from '../../Components/Settings/constants';
+import SettingsModel from '../../lib/UserSettings';
 
 export default class IndexView extends View {
   /**
@@ -35,32 +36,31 @@ export default class IndexView extends View {
   }
 
   initSettings() {
-    const settings = this.props.model;
+    this.settings = this.props.model;
 
-    console.log(settings.newCards);
-    const newCards = this.element.querySelector(QUERIES.NEW_CARDS);
-    const cardsPerDay = this.element.querySelector(QUERIES.CARDS_PER_DAY);
-    const translation = this.element.querySelector(QUERIES.TRANSLATION);
-    const translationMeaning = this.element.querySelector(QUERIES.TRANSLATION_MEANING);
-    const wordUse = this.element.querySelector(QUERIES.EXAMPLE);
-    const wordTranscription = this.element.querySelector(QUERIES.TRANSCRIPTION);
-    const wordPicture = this.element.querySelector(QUERIES.SHOW_IMAGE);
-    const showAnswer = this.element.querySelector(QUERIES.SHOW_BUTTON_ANSWER);
-    const showDeleteButton = this.element.querySelector(QUERIES.SHOW_BUTTON_DELETE);
-    const showHardButton = this.element.querySelector(QUERIES.SHOW_BUTTON_HARD);
-    const showButtons = this.element.querySelector(QUERIES.SHOW_RATE);
+    this.newCards = this.element.querySelector(QUERIES.NEW_CARDS);
+    this.cardsPerDay = this.element.querySelector(QUERIES.CARDS_PER_DAY);
+    this.translation = this.element.querySelector(QUERIES.TRANSLATION);
+    this.translationMeaning = this.element.querySelector(QUERIES.TRANSLATION_MEANING);
+    this.wordUse = this.element.querySelector(QUERIES.EXAMPLE);
+    this.wordTranscription = this.element.querySelector(QUERIES.TRANSCRIPTION);
+    this.wordPicture = this.element.querySelector(QUERIES.SHOW_IMAGE);
+    this.showAnswer = this.element.querySelector(QUERIES.SHOW_BUTTON_ANSWER);
+    this.showDeleteButton = this.element.querySelector(QUERIES.SHOW_BUTTON_DELETE);
+    this.showHardButton = this.element.querySelector(QUERIES.SHOW_BUTTON_HARD);
+    this.showButtons = this.element.querySelector(QUERIES.SHOW_RATE);
 
-    newCards.value = settings.newCards;
-    cardsPerDay.value = settings.cardsPerDay;
-    translation.checked = settings.translation;
-    translationMeaning.checked = settings.translationMeaning;
-    wordUse.checked = settings.wordUse;
-    wordTranscription.checked = settings.wordTranscription;
-    wordPicture.checked = settings.wordPicture;
-    showAnswer.checked = settings.showAnswer;
-    showDeleteButton.checked = settings.showDeleteButton;
-    showHardButton.checked = settings.showHardButton;
-    showButtons.checked = settings.showButtons;
+    this.newCards.value = this.settings.newCards;
+    this.cardsPerDay.value = this.settings.cardsPerDay;
+    this.translation.checked = this.settings.translation;
+    this.translationMeaning.checked = this.settings.translationMeaning;
+    this.wordUse.checked = this.settings.wordUse;
+    this.wordTranscription.checked = this.settings.wordTranscription;
+    this.wordPicture.checked = this.settings.wordPicture;
+    this.showAnswer.checked = this.settings.showAnswer;
+    this.showDeleteButton.checked = this.settings.showDeleteButton;
+    this.showHardButton.checked = this.settings.showHardButton;
+    this.showButtons.checked = this.settings.showButtons;
   }
 
   updateSettings() {
@@ -77,7 +77,8 @@ export default class IndexView extends View {
       showHardButton: this.showHardButton.checked,
       showButtons: this.showButtons.checked,
     };
-    this.props.model.settings = newSettings;
+
+    SettingsModel.settings = newSettings;
   }
 
   /**
