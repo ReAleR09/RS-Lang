@@ -13,15 +13,15 @@ export default class IndexView extends View {
    * it references actual DOM root element of this view
    */
   onMount() {
+    this.initSettings();
     const settingsBtn = this.element.querySelector(QUERIES.BUTTON_SAVE);
-    console.log(QUERIES.BUTTON_SAVE);
     settingsBtn.addEventListener('click', (event) => {
       event.preventDefault();
       this.updateSettings(); // запуск метода класса из обработчика
     });
 
     // Или сделать сохранение по событию на изменение любой из настроек... типа...
-
+  /*
     const allSettingsQueries = Object.values(QUERIES);
     const AllSettingsElements = allSettingsQueries.map((query) => {
       const newElement = this.element.querySelector(query);
@@ -29,13 +29,15 @@ export default class IndexView extends View {
     });
 
     AllSettingsElements.forEach((element) => {
-      element.addEventListener('change', this.updateSettings.bind(this)); // еще один метод запуска метода класса из обработчика непосредственно
-    });
+      element.addEventListener('change', this.updateSettings.bind(this));
+      // еще один метод запуска метода класса из обработчика непосредственно
+    }); */
   }
 
   initSettings() {
     const settings = this.props.model;
 
+    console.log(settings.newCards);
     const newCards = this.element.querySelector(QUERIES.NEW_CARDS);
     const cardsPerDay = this.element.querySelector(QUERIES.CARDS_PER_DAY);
     const translation = this.element.querySelector(QUERIES.TRANSLATION);
@@ -48,17 +50,17 @@ export default class IndexView extends View {
     const showHardButton = this.element.querySelector(QUERIES.SHOW_BUTTON_HARD);
     const showButtons = this.element.querySelector(QUERIES.SHOW_RATE);
 
-    newCards.value = settings.settings.newCards;
-    cardsPerDay.value = settings.settings.cardsPerDay;
-    translation.checked = settings.settings.translation;
-    translationMeaning.checked = settings.settings.translationMeaning;
-    wordUse.checked = settings.settings.wordUse;
-    wordTranscription.checked = settings.settings.wordTranscription;
-    wordPicture.checked = settings.settings.wordPicture;
-    showAnswer.checked = settings.settings.showAnswer;
-    showDeleteButton.checked = settings.settings.showDeleteButton;
-    showHardButton.checked = settings.settings.showHardButton;
-    showButtons.checked = settings.settings.showButtons;
+    newCards.value = settings.newCards;
+    cardsPerDay.value = settings.cardsPerDay;
+    translation.checked = settings.translation;
+    translationMeaning.checked = settings.translationMeaning;
+    wordUse.checked = settings.wordUse;
+    wordTranscription.checked = settings.wordTranscription;
+    wordPicture.checked = settings.wordPicture;
+    showAnswer.checked = settings.showAnswer;
+    showDeleteButton.checked = settings.showDeleteButton;
+    showHardButton.checked = settings.showHardButton;
+    showButtons.checked = settings.showButtons;
   }
 
   updateSettings() {
