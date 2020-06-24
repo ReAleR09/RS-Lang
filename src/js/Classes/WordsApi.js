@@ -71,6 +71,8 @@ export default class WordsApi {
     return arrayOfWords;
   }
 
+  // Служебная функция
+
   async getAggregatedWords(count, difficulty, filterString) {
     const params = {
       group: difficulty,
@@ -117,11 +119,13 @@ export default class WordsApi {
   async changeWordDataById(wordId, wordData = {
     difficulty: '0',
     optional: {
-      errors: 0,
-      interval: 0,
-      calculateInterval: 0,
-      iteration: 1,
-      date: 0,
+      difficulty: 0, // Сложность в рамках оценки сложности при изучении
+      vocabularyPage: 0, // Словарь Сложные, Удаленные, ещё как-нибудь
+      errors: 0, // количество ошибок по карточке
+      interval: 0, // текущий реальный интервал для расчета даты
+      calculateInterval: 0, // текущий базовый интервал для расчета интервалов
+      iteration: 1, // текущая итерация
+      date: 0, // дата с которой начинает слово вываливаться в обучение.
     },
   }) {
     let result;
