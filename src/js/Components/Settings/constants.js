@@ -14,6 +14,8 @@ const CLASSES = {
   SHOW_BUTTON_HARD: 'show_hard_button',
   SHOW_RATE: 'show_buttons',
   BUTTON_SAVE: 'settings_btn',
+  WARNING_PARAGRAPH: 'warning_paragraph',
+  WARNING_TEXT: 'red-text',
 };
 
 // export const CLASS_BUTTON_SAVE = `.${CLASSES.COMPONENT} .${CLASSES.BUTTON_SAVE}`;
@@ -31,6 +33,8 @@ export const SETTINGS_QUERIES = {
   SHOW_BUTTON_HARD: `.${CLASSES.COMPONENT} .${CLASSES.SHOW_BUTTON_HARD}`,
   SHOW_RATE: `.${CLASSES.COMPONENT} .${CLASSES.SHOW_RATE}`,
   BUTTON_SAVE: `.${CLASSES.COMPONENT} .${CLASSES.BUTTON_SAVE}`,
+  WARNING_PARAGRAPH: `.${CLASSES.COMPONENT} .${CLASSES.WARNING_PARAGRAPH}`,
+  WARNING_TEXT: `${CLASSES.WARNING_TEXT}`,
 };
 
 export const SETTINGS_HTML = `
@@ -50,6 +54,7 @@ export const SETTINGS_HTML = `
             </label>
             </p>
             <div class="divider"></div>
+            <p class="${CLASSES.WARNING_PARAGRAPH}">Выберите хотя бы один пункт</p>
             <p>
             <label>
                 <input class="${CLASSES.TRANSLATION}" type="checkbox">

@@ -18,7 +18,12 @@ export default class IndexView extends View {
     const settingsBtn = this.element.querySelector(QUERIES.BUTTON_SAVE);
     settingsBtn.addEventListener('click', (event) => {
       event.preventDefault();
-      this.updateSettings(); // запуск метода класса из обработчика
+      if (!this.translation.checked && !this.translationMeaning.checked && !this.wordUse.checked) {
+        this.wraningParagraph.classList.add(QUERIES.WARNING_TEXT);
+      } else {
+        this.wraningParagraph.classList.remove(QUERIES.WARNING_TEXT);
+        this.updateSettings(); // запуск метода класса из обработчика
+      }
     });
 
     // Или сделать сохранение по событию на изменение любой из настроек... типа...
@@ -49,6 +54,7 @@ export default class IndexView extends View {
     this.showDeleteButton = this.element.querySelector(QUERIES.SHOW_BUTTON_DELETE);
     this.showHardButton = this.element.querySelector(QUERIES.SHOW_BUTTON_HARD);
     this.showButtons = this.element.querySelector(QUERIES.SHOW_RATE);
+    this.wraningParagraph = this.element.querySelector(QUERIES.WARNING_PARAGRAPH);
 
     this.newCards.value = this.settings.newCards;
     this.cardsPerDay.value = this.settings.cardsPerDay;
