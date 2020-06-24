@@ -18,6 +18,9 @@ export default class GameSprintController extends Controller {
     };
     super(viewClasses);
     this.wordsUrl = 'https://afternoon-falls-25894.herokuapp.com/words?page=2&group=0';
+    this.btnClickSound = '../../audio/piu.mp3';
+    this.correctTranslation = 0;
+    this.wrongTranslation = 1;
   }
 
   /**
@@ -27,10 +30,10 @@ export default class GameSprintController extends Controller {
    */
   async indexAction() {
     this.props.onRightClick = () => {
-      this.checkAnswer(0);
+      this.checkAnswer(this.correctTranslation);
     };
     this.props.onFalseClick = () => {
-      this.checkAnswer(1);
+      this.checkAnswer(this.wrongTranslation);
     };
 
     await this.getWordsFromDataBase();
@@ -38,6 +41,7 @@ export default class GameSprintController extends Controller {
   }
 
   startGame() {
+    this.status = 'in-progress';
     this.rightAnswersInRow = 0;
     this.numberElement = 0;
     this.multiplier = 1;
@@ -49,8 +53,12 @@ export default class GameSprintController extends Controller {
   }
 
   updateWords() {
-    this.currentWord = this.nextWord();
-    this.translateWord = this.nextTranslateWord();
+    if (this.dataWords[this.numberElement + 1]) {
+      this.currentWord = this.nextWord();
+      this.translateWord = this.nextTranslateWord();
+    } else {
+      this.stopGame();
+    }
   }
 
   updateTimer() {
@@ -65,6 +73,7 @@ export default class GameSprintController extends Controller {
 
   updateView() {
     IndexView.publish('status', {
+      status: this.status,
       timer: this.gameTimer,
       score: this.score,
       multiplier: this.multiplier,
@@ -75,7 +84,7 @@ export default class GameSprintController extends Controller {
   }
 
   stopGame() {
-    IndexView.publish('stopGame', this.score);
+    this.status = 'finished';
   }
 
   async getWordsFromDataBase() {
@@ -126,5 +135,12 @@ export default class GameSprintController extends Controller {
     this.numberElement += 1;
     this.updateWords();
     this.updateView();
+    this.playAudio();
+  }
+
+  playAudio() {
+    const audio = new Audio();
+    audio.src = this.btnClickSound;
+    audio.play();
   }
 }
