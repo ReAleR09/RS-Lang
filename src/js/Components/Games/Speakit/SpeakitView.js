@@ -15,6 +15,8 @@ const CLASS_BUTTON_HIDDEN = 'speakit__button-hidden';
 
 const CLASS_WORDCARD_RECOGNIZED = 'green';
 
+const START_PIC = '/assets/img/speakit_start_pic.jpg';
+
 export default class SpeakitView {
   constructor(wordSoundButtonClickCallback, beginCallback, stopCallback) {
     this.wordSoundButtonClickCallback = wordSoundButtonClickCallback;
@@ -97,11 +99,11 @@ export default class SpeakitView {
         ${difficultyElements}
       </div>
       <div class="row">
-        <img id="${ID_PICTURE}" class="col s6 push-s3" src="https://raw.githubusercontent.com/irinainina/rslang/rslang-data/data/files/12_0223.jpg"/>
+        <img id="${ID_PICTURE}" class="col s4 offset-s4" src="${START_PIC}"/>
       </div>
       <div class="row">
-        <div class="col s6 push-s3">
-          <div readonly id="${ID_TRANSLATION}" class="speakit__translation-input">Translation</div>
+        <div class="col s4 offset-s4">
+          <div readonly id="${ID_TRANSLATION}" class="speakit__translation-input"></div>
         </div>
       </div>
       <div class="row">
@@ -122,9 +124,14 @@ export default class SpeakitView {
     return html;
   }
 
-  drawRecognizedTextToDOM(text) {
+  drawRecognizedWordToDOM(text, imageUrl) {
     const textDiv = this.element.querySelector(`#${ID_RECOGNIZED_TEXT}`);
     textDiv.value = text;
+
+    if (imageUrl) {
+      const imgEl = this.element.querySelector(`#${ID_PICTURE}`);
+      imgEl.src = imageUrl;
+    }
   }
 
   drawWordsToDOM(words) {

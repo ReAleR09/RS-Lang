@@ -43,5 +43,7 @@ export default class SpeakitController extends Controller {
     // that's only for one time use
     LocalStorageAdapter.remove(SPEAKIT_GAME_STATS);
     this.props.stats = stats;
+
+    // TODO global game statistics should be sent there
   }
 }

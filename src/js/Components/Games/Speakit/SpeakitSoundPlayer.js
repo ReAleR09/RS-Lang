@@ -1,6 +1,9 @@
+const GUESSED_SOUND = '';
+
 export default class SpeakitSoundPlayer {
   constructor() {
     this.wordSounds = {};
+    this.guessedAudio = new Audio(GUESSED_SOUND);
   }
 
   initWordsSounds(wordsSet) {
@@ -28,5 +31,9 @@ export default class SpeakitSoundPlayer {
         audioObject.play();
       });
     }
+  }
+
+  playGuessSound() {
+    this.guessedAudio.play();
   }
 }

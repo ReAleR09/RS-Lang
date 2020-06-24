@@ -7,6 +7,8 @@ import LocalStorageAdapter from '../../../Utils/LocalStorageAdapter';
 
 export const SPEAKIT_GAME_STATS = 'SPEAKIT_GAME_STATS';
 
+const FINISH_GAME_DELAY_MS = 3000;
+
 export default class SpeakitGameManager {
   constructor(difficulty = 0) {
     this.difficulty = difficulty;
@@ -28,6 +30,7 @@ export default class SpeakitGameManager {
   // eslint-disable-next-line class-methods-use-this
   handleRecognizedPhrase(phrases) {
     let candidate = phrases[0];
+    let wordPicUrl = null;
 
     this.wordsState.some((wordState, index) => {
       for (let i = 0; i < phrases.length; i += 1) {
@@ -38,17 +41,19 @@ export default class SpeakitGameManager {
         }
         if (wordState.word === wordCandidate) {
           candidate = wordCandidate;
+          wordPicUrl = wordState.image;
           if (!wordState.guessed) {
             this.view.markWordAsRecognized(wordState.id);
             this.wordsState[index].guessed = true;
-            // TODO play happy sound
+
+            this.soundPlayer.playGuessSound();
           }
           return true;
         }
       }
       return false;
     });
-    this.view.drawRecognizedTextToDOM(candidate);
+    this.view.drawRecognizedWordToDOM(candidate, wordPicUrl);
     if (this.areAllWordsGuessed()) {
       this.finishGame();
     }
@@ -69,12 +74,11 @@ export default class SpeakitGameManager {
   finishGame() {
     this.speechRecognizer.stopRecognition();
     const stats = this.calculateStats();
-    // TODO global game statistics should be sent there
 
     // putting stats to storage to use them on /speakit/results page
     LocalStorageAdapter.set(SPEAKIT_GAME_STATS, stats);
-    // and navigatin to results
-    AppNavigator.replace('speakit', 'results');
+    // and navigatin to results, with slight delay
+    setTimeout(() => AppNavigator.replace('speakit', 'results'), FINISH_GAME_DELAY_MS);
   }
 
   calculateStats() {
