@@ -11,7 +11,7 @@ export default class Api {
   constructor() {
     this.url = BACKEND_URL;
 
-    this.updateUserDataFromStorage();
+    this.updateUserData();
   }
 
   static createUrlObject(urlString, endpoint, searchParams) {
@@ -24,9 +24,14 @@ export default class Api {
     return newUrl;
   }
 
-  updateUserDataFromStorage() {
-    this.token = localStorage.token;
-    this.userId = localStorage.userId;
+  updateUserData(userData) {
+    if (userData) {
+      this.token = userData.token;
+      this.userId = userData.userId;
+    } else if (localStorage.token && localStorage.userId) {
+      this.token = localStorage.token;
+      this.userId = localStorage.userId;
+    }
   }
 
   async requestToAPI(type, endpoint, searchParams = undefined, bodyObject = undefined) {
