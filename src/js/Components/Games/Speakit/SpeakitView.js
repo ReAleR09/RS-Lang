@@ -89,8 +89,8 @@ export default class SpeakitView {
   getGameLayout(difficulty) {
     let difficultyElements = '';
     for (let level = 0; level < 6; level += 1) {
-      const enabledClass = (difficulty === level) ? 'speakit__difficulty_enabled' : '';
-      difficultyElements += `<div class="waves-effect waves-light btn col s1 ${enabledClass}" data-level=${level}>[d${level}]</div>`;
+      const enabledClass = (difficulty === level) ? 'purple darken-1' : '';
+      difficultyElements += `<div class="waves-effect waves-light btn col s1 ${enabledClass}" data-level=${level}>${level}</div>`;
     }
 
     const html = `<div>
