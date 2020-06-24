@@ -10,12 +10,12 @@ export default class SettingsApi {
     this.api.updateUserData(userData);
   }
 
-  async initSettings() {
-    const result = await this.updateSettings();
+  async init() {
+    const result = await this.update();
     return result;
   }
 
-  async updateSettings(settings = {
+  async update(settings = {
     wordsPerDay: 50,
     newWordsPerDay: 20,
     showWordTranslate: true,
@@ -37,16 +37,16 @@ export default class SettingsApi {
     return result;
   }
 
-  async checkSettingsValidity() {
-    const settings = await this.getSettings();
+  async checkValidity() {
+    const settings = await this.get();
     let result = Object.prototype.hasOwnProperty.call(settings, TEAM_KEY);
     result = result && (settings[TEAM_KEY] === TEAM_VALUE);
 
     return result;
   }
 
-  async getSettings() {
-    const settingsApiObject = await this.api.getSettings();
+  async get() {
+    const settingsApiObject = await this.api.getUserSettings();
     const settings = settingsApiObject.optional;
     return settings;
   }
