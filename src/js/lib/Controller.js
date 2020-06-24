@@ -1,3 +1,5 @@
+import ControllerCancelException from './ControllerCancelException';
+
 export default class Controller {
   constructor(viewClasses) {
     this.views = viewClasses;
@@ -6,6 +8,11 @@ export default class Controller {
 
   indexAction() {
     throw new Error(`Implement method! In ${this}`);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  cancelAction() {
+    throw new ControllerCancelException('Canceled');
   }
 
   performAction(actionAlias) {
