@@ -1,106 +1,71 @@
+import Materilize from 'materialize-css';
 import PubSub from './PublisherSubscriber';
 import { EVENT_NAVIGATION } from '../Utils/Constants';
 import AppNavigator from '../lib/AppNavigator';
 
-const CLASS_SHOW = 'show';
 const CLASS_LINK_ACTIVE = 'sidebar__item_active';
-
-const CATEGORIES = [
-  {
-    id: 4,
-    title: 'Click me 4',
-  },
-  {
-    id: 2,
-    title: 'Click me 2',
-  },
-  {
-    id: 0,
-    title: 'Click me 0',
-  },
-];
+const ID_ITEMS_CONTAINER = 'sidebar__items_container';
 
 export default class Sidebar {
-  constructor() {
-    this.show = false;
+  constructor(navItems) {
+    this.navItems = navItems;
   }
 
-  toggle(show) {
-    if (!this.sideBarElement) return;
-    this.show = show;
-
-    if (show) {
-      this.sideBarElement.classList.add(CLASS_SHOW);
-    } else {
-      this.sideBarElement.classList.remove(CLASS_SHOW);
-    }
-  }
-
-  attach(elementId/* , togglerId */) {
+  attach(elementId) {
     const target = document.getElementById(elementId);
-    const sideBarElement = this.generateSidebarDOM();
-    target.parentNode.replaceChild(sideBarElement, target);
+    const sideBarElement = target;
 
     this.sideBarElement = sideBarElement;
 
-    // const togglerElement = document.getElementById(togglerId);
-    // togglerElement.addEventListener('click', () => {
-    //   this.toggle(!this.show);
-    // });
-    // On navigation, check links, activate one if inside category
-    // and close the sidebar
+    this.initNavItems();
+
     PubSub.subscribe(EVENT_NAVIGATION, (navParams) => {
-      this.toggle(false);
       const categoriesElements = this.sideBarElement.querySelectorAll('li');
       const keys = Object.getOwnPropertyNames(categoriesElements);
       for (let i = 0; i < keys.length; i += 1) {
         const catEl = categoriesElements[i];
-        if (navParams.controller === 'cards' && navParams.action === 'view' && navParams.params.id) {
-          const { id } = catEl.dataset;
-          if (id === navParams.params.id) {
-            catEl.classList.add(CLASS_LINK_ACTIVE);
-          } else {
-            catEl.classList.remove(CLASS_LINK_ACTIVE);
-          }
-        } else if (navParams.controller === null && navParams.action === null) {
-          if (catEl.dataset.page && catEl.dataset.page === 'main') {
-            catEl.classList.add(CLASS_LINK_ACTIVE);
-          } else {
-            catEl.classList.remove(CLASS_LINK_ACTIVE);
-          }
+        if (catEl.dataset.controller === navParams.controller) {
+          catEl.classList.add(CLASS_LINK_ACTIVE);
         } else {
           catEl.classList.remove(CLASS_LINK_ACTIVE);
         }
       }
     });
+
+    // since we just added some elements to the sidebar, let's wait till rowser init them in DOM
+    setTimeout(() => this.initClickHandler(), 0);
   }
 
-  generateSidebarDOM() {
-    const sidebarElement = document.createElement('div');
-    sidebarElement.id = 'sidebar';
-
-    const ulElement = document.createElement('ul');
-
-    ulElement.innerHTML += '<li data-page="main">Main Page?</li>';
-
-    // TODO replace
-    CATEGORIES.forEach((category) => {
-      ulElement.innerHTML += `<li data-id="${category.id}">${category.title}</li>`;
-    });
-
-    ulElement.addEventListener('click', (e) => {
-      if (e.target.dataset.id) {
-        AppNavigator.go('example', null, { id: e.target.dataset.id });
-      } else if (e.target.dataset.page === 'main') {
-        AppNavigator.go();
-      } else {
-        return;
+  initNavItems() {
+    if (!this.navItems) return;
+    const placeholderEl = this.sideBarElement.querySelector(`#${ID_ITEMS_CONTAINER}`);
+    this.navItems.forEach((item) => {
+      const itemEl = document.createElement('li');
+      [itemEl.dataset.controller] = item.path;
+      if (item.path[1]) {
+        [, itemEl.dataset.action] = item.path;
       }
-      this.toggle(false);
+      itemEl.innerHTML = `<a class="waves-effect waves-green"><i class="material-icons">${item.icon}</i>${item.title}</a>`;
+      this.sideBarElement.insertBefore(itemEl, placeholderEl);
     });
+    placeholderEl.remove();
+  }
 
-    sidebarElement.appendChild(ulElement);
+  initClickHandler() {
+    const liElements = this.sideBarElement.querySelectorAll('li');
+    liElements.forEach((el) => {
+      el.addEventListener('click', (e) => {
+        // close the sidebar
+        const sidebar = Materilize.Sidenav.getInstance(this.sideBarElement);
+        if (sidebar) {
+          sidebar.close();
+        }
 
-    return sidebarElement;
+        const { controller } = e.currentTarget.dataset;
+        const action = e.currentTarget.dataset.action ? e.currentTarget.dataset.action : null;
+        e.stopPropagation();
+        AppNavigator.go(controller, action);
+      });
+    });
   }
 }
