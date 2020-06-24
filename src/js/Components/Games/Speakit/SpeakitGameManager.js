@@ -55,7 +55,7 @@ export default class SpeakitGameManager {
     });
     this.view.drawRecognizedWordToDOM(candidate, wordPicUrl);
     if (this.areAllWordsGuessed()) {
-      this.finishGame();
+      this.finishGame(true);
     }
   }
 
@@ -71,21 +71,22 @@ export default class SpeakitGameManager {
     this.speechRecognizer.startRecognition();
   }
 
-  finishGame() {
+  finishGame(withDelay = false) {
     this.speechRecognizer.stopRecognition();
     const stats = this.calculateStats();
 
     // putting stats to storage to use them on /speakit/results page
     LocalStorageAdapter.set(SPEAKIT_GAME_STATS, stats);
-    // and navigatin to results, with slight delay
-    setTimeout(() => AppNavigator.replace('speakit', 'results'), FINISH_GAME_DELAY_MS);
+    // and navigatin to results, with slight delay in case it was triggeren on last word
+    setTimeout(() => AppNavigator.replace('speakit', 'results'), withDelay ? FINISH_GAME_DELAY_MS : 0);
   }
 
   calculateStats() {
-    // TODO finish stats object properly
+    const guessed = this.wordsState.filter((wordState) => wordState.guessed);
+    const notGuessed = this.wordsState.filter((wordState) => !wordState.guessed);
     return {
-      guessed: [],
-      notGuessed: [],
+      guessed,
+      notGuessed,
       difficulty: this.difficulty,
     };
   }
@@ -100,6 +101,7 @@ export default class SpeakitGameManager {
         audio: wordInfo.audio,
         image: wordInfo.image,
         transcription: wordInfo.transcription,
+        wordTranslate: wordInfo.wordTranslate,
       };
 
       return wordState;

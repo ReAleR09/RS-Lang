@@ -1,4 +1,4 @@
-const GUESSED_SOUND = '';
+const GUESSED_SOUND = '/audio/piu.mp3';
 
 export default class SpeakitSoundPlayer {
   constructor() {
