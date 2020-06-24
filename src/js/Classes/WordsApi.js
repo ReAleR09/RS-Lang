@@ -44,19 +44,21 @@ export default class WordsApi {
     return arrayOfWords;
   }
 
-  async getRandomNewWords(count, difficulty) {
-    let totalCount = await this.api.getAggregatedWords({
+  async getAggregatedWords(count, difficulty, filterString) {
+    const params = {
       group: difficulty,
       wordsPerPage: 1,
-      filter: JSON.stringify({ userWord: null }),
-    });
+    };
+    if (filterString) {
+      params.filter = filterString;
+    }
+    let totalCount = await this.api.getAggregatedWords(params);
+    console.log(totalCount);
     totalCount = totalCount[0].totalCount[0].count;
+    console.log(totalCount);
 
-    let arrayOfResults = await this.api.getAggregatedWords({
-      group: difficulty,
-      wordsPerPage: totalCount,
-      filter: JSON.stringify({ userWord: null }),
-    });
+    params.wordsPerPage = totalCount;
+    let arrayOfResults = await this.api.getAggregatedWords(params);
     arrayOfResults = arrayOfResults[0].paginatedResults;
 
     const arrayOfIndexes = [];
@@ -70,5 +72,46 @@ export default class WordsApi {
     });
 
     return randomNewWords;
+  }
+
+  async getRandomNewWords(count, difficulty) {
+    const filter = JSON.stringify({ userWord: null });
+
+    const newWords = await this.getAggregatedWords(count, difficulty, filter);
+    return newWords;
+  }
+
+  async getRepeatedWords(count, difficulty) {
+    const dateNow = Date.now();
+    const filter = JSON.stringify({ 'userWord.optional.date': { [encodeURIComponent('$gt')]: dateNow } });
+    // console.log(filter);
+    const repeatedWords = await this.getAggregatedWords(count, difficulty, filter);
+    return repeatedWords;
+  }
+
+  async changeWordDataById(wordId, wordData = {
+    difficulty: '0',
+    optional: {
+      errors: 0,
+      interval: 0,
+      calculateInterval: 0,
+      iteration: 1,
+      date: 0,
+    },
+  }) {
+    let result;
+    result = await this.api.getUserWordById(wordId);
+    if (result.error) {
+      result = await this.api.postUserWordById(wordId, wordData);
+    } else {
+      result = await this.api.putUserWordById(wordId, wordData);
+    }
+
+    return result;
+  }
+
+  async deleteWordById(wordId) {
+    const result = await this.api.deleteUserWordById(wordId);
+    return result;
   }
 }
