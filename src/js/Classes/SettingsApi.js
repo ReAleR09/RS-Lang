@@ -11,11 +11,11 @@ export default class SettingsApi {
   }
 
   async initSettings() {
-    const result = await this.changeSettings();
+    const result = await this.updateSettings();
     return result;
   }
 
-  async changeSettings(settings = {
+  async updateSettings(settings = {
     wordsPerDay: 50,
     newWordsPerDay: 20,
     showWordTranslate: true,
