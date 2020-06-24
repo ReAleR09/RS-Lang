@@ -43,4 +43,32 @@ export default class WordsApi {
     }
     return arrayOfWords;
   }
+
+  async getRandomNewWords(count, difficulty) {
+    let totalCount = await this.api.getAggregatedWords({
+      group: difficulty,
+      wordsPerPage: 1,
+      filter: JSON.stringify({ userWord: null }),
+    });
+    totalCount = totalCount[0].totalCount[0].count;
+
+    let arrayOfResults = await this.api.getAggregatedWords({
+      group: difficulty,
+      wordsPerPage: totalCount,
+      filter: JSON.stringify({ userWord: null }),
+    });
+    arrayOfResults = arrayOfResults[0].paginatedResults;
+
+    const arrayOfIndexes = [];
+    for (let number = 0; number < count; number += 1) {
+      arrayOfIndexes.push(Math.round(Math.random() * (totalCount - 1)));
+    }
+
+    const randomNewWords = [];
+    arrayOfIndexes.forEach((index) => {
+      randomNewWords.push(arrayOfResults[index]);
+    });
+
+    return randomNewWords;
+  }
 }

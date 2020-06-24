@@ -26,8 +26,10 @@ export default class Api {
 
   updateUserData(userData) {
     if (userData) {
-      this.token = userData.token;
-      this.userId = userData.userId;
+      if (userData.token && userData.userId) {
+        this.token = userData.token;
+        this.userId = userData.userId;
+      }
     } else if (localStorage.token && localStorage.userId) {
       this.token = localStorage.token;
       this.userId = localStorage.userId;
@@ -85,6 +87,7 @@ export default class Api {
   async authorize(user) {
     const endpoint = 'signin';
     const result = await this.post(endpoint, {}, user);
+    this.updateUserData(result);
     return result;
   }
 
