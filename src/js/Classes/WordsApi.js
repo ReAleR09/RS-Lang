@@ -83,7 +83,7 @@ export default class WordsApi {
 
   async getRepeatedWords(count, difficulty) {
     const dateNow = Date.now();
-    const filter = JSON.stringify({ 'userWord.optional.date': { [encodeURIComponent('$gt')]: dateNow } });
+    const filter = JSON.stringify({ 'userWord.optional.date': { [encodeURIComponent('$gt')]: dateNow } }); // TODO фильтр на допущенные к повторению слова
     // console.log(filter);
     const repeatedWords = await this.getAggregatedWords(count, difficulty, filter);
     return repeatedWords;
