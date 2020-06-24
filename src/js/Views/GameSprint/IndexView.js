@@ -16,6 +16,7 @@ export default class IndexView extends View {
     };
 
     this.subscribe('status', ({
+      status,
       score,
       multiplier,
       checkbox,
@@ -23,27 +24,36 @@ export default class IndexView extends View {
       translateWord,
       timer,
     }) => {
-      this.element.querySelector('.game-sprint__score').innerHTML = score;
-      this.element.querySelector('.game-sprint__timer').innerHTML = timer;
-      this.element.querySelector('.game-sprint__number-of-animals').innerHTML = this.multiplier[multiplier];
-      if (checkbox === 1) {
-        this.element.querySelector('#first-checkbox').classList.add('game-sprint__checkbox-true');
-      } else if (checkbox === 2) {
-        this.element.querySelector('#second-checkbox').classList.add('game-sprint__checkbox-true');
-      } else if (checkbox === 3) {
-        this.element.querySelector('#third-checkbox').classList.add('game-sprint__checkbox-true');
+      if (status === 'in-progress') {
+        this.element.querySelector('.game-sprint__score').innerHTML = score;
+        this.element.querySelector('.game-sprint__timer').innerHTML = timer;
+        this.element.querySelector('.game-sprint__number-of-animals').innerHTML = this.multiplier[multiplier];
+        if (checkbox === 1) {
+          this.element.querySelector('#first-checkbox').classList.add('game-sprint__checkbox-true');
+        } else if (checkbox === 2) {
+          this.element.querySelector('#second-checkbox').classList.add('game-sprint__checkbox-true');
+        } else if (checkbox === 3) {
+          this.element.querySelector('#third-checkbox').classList.add('game-sprint__checkbox-true');
+        } else {
+          this.element.querySelectorAll('.game-sprint__checkbox').forEach((el) => {
+            el.classList.remove('game-sprint__checkbox-true');
+          });
+        }
+        this.element.querySelector('.game-sprint__word-in-english').innerHTML = currentWord;
+        this.element.querySelector('.game-sprint__translation-world').innerHTML = translateWord;
       } else {
-        this.element.querySelectorAll('.game-sprint__checkbox').forEach((el) => {
-          el.classList.remove('game-sprint__checkbox-true');
+        this.element.innerHTML = `<h2>Игра окончена! Набрано очков: <b>${score}</b></h2>
+          <a id="repeat-game" class="waves-effect waves-light btn-small blue">Играть заново</a>
+          <a id="exit-game" class="waves-effect waves-light btn-small red">Выйти</a>`;
+
+        this.element.querySelector('#repeat-game').addEventListener('click', () => {
+          window.location.reload();
+        });
+        this.element.querySelector('#exit-game').addEventListener('click', () => {
+          this.element.innerHTML += '<h3>Куда выходить, пока х.з.)';
+          // Сюда чего-нибудь вставить, что бы куда-нибудь выйти). Куда выходять, я пока х.з.)
         });
       }
-      this.element.querySelector('.game-sprint__word-in-english').innerHTML = currentWord;
-      this.element.querySelector('.game-sprint__translation-world').innerHTML = translateWord;
-    });
-
-    this.subscribe('stopGame', (score) => {
-      console.log(score);
-      this.element.querySelector('#game-sprint').innerHTML = `Игра окончена! Набрано очков: ${score}`;
     });
 
     this.element.querySelector('#true-btn').addEventListener('click', () => {
