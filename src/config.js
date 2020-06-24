@@ -1,3 +1,6 @@
+export const TEAM_KEY = 'team';
+export const TEAM_VALUE = 'team7';
+
 export const CONF_ROOT_PATH = '';
 
 export const CONF_MEDIA_BASE_PATH = 'https://raw.github.com/ReAleR09/rslang-data/master/';
