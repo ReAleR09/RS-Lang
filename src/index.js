@@ -4,13 +4,16 @@ import PublisherSubscriber from './js/Classes/PublisherSubscriber';
 import { EVENT_NAVIGATION } from './js/Utils/Constants';
 import ExampleController from './js/Controllers/ExampleController';
 
+import LearningWordsController from './js/Controllers/LearningWordsController';
 import GameSprintController from './js/Controllers/GameSprintController';
 import SpeakitController from './js/Controllers/SpeakitController';
 import RegistrationController from './js/Controllers/RegistrationController';
 import AuthorizationController from './js/Controllers/AuthorizationController';
 import AppNavigator from './js/lib/AppNavigator';
+import SettingsController from './js/Controllers/SettingsController';
 
 import './js/plugins';
+import { SIDENAV } from './config';
 
 function appInit() {
   /**
@@ -23,6 +26,8 @@ function appInit() {
     registration: RegistrationController,
     authorization: AuthorizationController,
     example: ExampleController,
+    settings: SettingsController,
+    learningWords: LearningWordsController,
     'game-sprint': GameSprintController,
     speakit: SpeakitController,
   };
@@ -38,10 +43,9 @@ function appInit() {
    */
   const router = new Router(appContainter, routes);
 
-  // styles are broken, so currently it's not a sidebar
-  const sideBarLeft = new Sidebar();
+  const sideBarLeft = new Sidebar(SIDENAV);
   const sideBarFloating = new Sidebar();
-  sideBarLeft.attach('sidenav-left' /* , 'toggleSidebar' */);
+  sideBarLeft.attach('sidenav-left');
   sideBarFloating.attach('sidenav-floatng');
 
   router.route();
