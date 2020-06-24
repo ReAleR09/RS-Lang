@@ -1,4 +1,4 @@
-export default class UserSettings {
+class UserSettings {
   constructor() {
     this.settingsObject = {
       newCards: 15,
@@ -25,3 +25,7 @@ export default class UserSettings {
 
   // working with API there or in another class and this is only settings container?
 }
+
+const SettingsModel = new UserSettings();
+
+export default SettingsModel;

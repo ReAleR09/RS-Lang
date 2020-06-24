@@ -16,7 +16,7 @@ const CLASSES = {
   BUTTON_SAVE: 'settings_btn',
 };
 
-export const CLASS_BUTTON_SAVE = `.${CLASSES.COMPONENT} .${CLASSES.BUTTON_SAVE}`;
+// export const CLASS_BUTTON_SAVE = `.${CLASSES.COMPONENT} .${CLASSES.BUTTON_SAVE}`;
 
 export const SETTINGS_QUERIES = {
   NEW_CARDS: `.${CLASSES.COMPONENT} .${CLASSES.NEW_CARDS}`,
@@ -30,6 +30,7 @@ export const SETTINGS_QUERIES = {
   SHOW_BUTTON_DELETE: `.${CLASSES.COMPONENT} .${CLASSES.SHOW_BUTTON_DELETE}`,
   SHOW_BUTTON_HARD: `.${CLASSES.COMPONENT} .${CLASSES.SHOW_BUTTON_HARD}`,
   SHOW_RATE: `.${CLASSES.COMPONENT} .${CLASSES.SHOW_RATE}`,
+  BUTTON_SAVE: `.${CLASSES.COMPONENT} .${CLASSES.BUTTON_SAVE}`,
 };
 
 export const SETTINGS_HTML = `
@@ -104,6 +105,6 @@ export const SETTINGS_HTML = `
                 <span>Наличие кнопок "Снова", "Трудно", "Хорошо", "Легко" </span>
             </label>
             </p>
-            <button class="${CLASS_BUTTON_SAVE} waves-effect waves-light btn">Сохранить</button>
+            <button class="${CLASSES.BUTTON_SAVE} waves-effect waves-light btn">Сохранить</button>
         </form>
     </section>`;

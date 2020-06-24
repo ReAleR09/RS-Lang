@@ -1,7 +1,7 @@
 import Controller from '../lib/Controller';
 // import AppNavigator from '../lib/AppNavigator';
-import IndexView from '../Views/Example/IndexView';
-import UserSettings from '../lib/UserSettings';
+import IndexView from '../Views/Settings/IndexView';
+import SettingsModel from '../lib/UserSettings';
 
 /**
  * Controller is a sctructure that describes a set of "actions",
@@ -27,8 +27,8 @@ export default class SettingsController extends Controller {
    * Try to do all data aggregation here then pass it to view
    */
   indexAction() {
-    const settingsModel = new UserSettings();
-    this.props.model = settingsModel;
+    // const settingsModel = new UserSettings();
+    this.props.model = SettingsModel.settings;
     // const params = AppNavigator.getRequestParams(); // get GET parameters etc /example/index?id=3
   }
 }

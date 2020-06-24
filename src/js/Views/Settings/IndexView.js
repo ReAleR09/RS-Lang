@@ -14,7 +14,7 @@ export default class IndexView extends View {
    */
   onMount() {
     const settingsBtn = this.element.querySelector(QUERIES.BUTTON_SAVE);
-
+    console.log(QUERIES.BUTTON_SAVE);
     settingsBtn.addEventListener('click', (event) => {
       event.preventDefault();
       this.updateSettings(); // запуск метода класса из обработчика
