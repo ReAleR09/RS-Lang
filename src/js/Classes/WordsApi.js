@@ -1,6 +1,6 @@
 import Api from './Api';
 
-const MAX_REQUEST_COUNT = 10;
+const MAX_REQUEST_COUNT = 20;
 const MAX_PAGE_INDEX = 29;
 const MAX_RANDOMPAGE_WORDS_INDEX = 19;
 
@@ -9,18 +9,40 @@ export default class WordsApi {
     this.api = new Api();
   }
 
+  static createArrayOfIndexes(count, maxIndex) {
+    const resultCount = Math.min(count, maxIndex + 1);
+    const arrayOfIndexes = [];
+    for (let n = 0; n < resultCount; n += 1) {
+      let index = Math.round(Math.random() * maxIndex);
+      while (arrayOfIndexes.includes(index)) {
+        index = Math.round(Math.random() * maxIndex);
+      }
+      arrayOfIndexes.push(index);
+    }
+
+    return arrayOfIndexes;
+  }
+
   updateUserData(userData) {
     this.api.updateUserData(userData);
   }
 
   async getRandomWords(count, difficulty) {
-    const requestCount = Math.min(count, MAX_REQUEST_COUNT);
+    let requestCount = Math.min(count, MAX_REQUEST_COUNT);
 
-    const arrayOfRequests = [];
-    for (let index = 0; index < requestCount; index += 1) {
-      const randomPage = Math.round(Math.random() * MAX_PAGE_INDEX);
-      arrayOfRequests.push(this.api.getChunkOfWords({ group: difficulty, page: randomPage }));
+    if (requestCount < (count / (MAX_PAGE_INDEX + 1))) {
+      requestCount = Math.floor(count / (MAX_PAGE_INDEX + 1));
+      if (Math.floor(requestCount) < requestCount) {
+        requestCount += 1;
+      }
     }
+
+    const arrayOfPages = WordsApi.createArrayOfIndexes(requestCount, MAX_PAGE_INDEX);
+    requestCount = arrayOfPages.length;
+
+    const arrayOfRequests = arrayOfPages
+      .map((page) => this.api.getChunkOfWords({ group: difficulty, page }));
+
     const arrayOfResults = await Promise.all(arrayOfRequests);
     let restWordCount = count;
     const arrayOfWords = [];
@@ -32,11 +54,16 @@ export default class WordsApi {
       if (Math.floor(countsByRestRequests) < countsByRestRequests) {
         countByRequest += 1;
       }
+      const arrayOfWordIndexes = WordsApi.createArrayOfIndexes(
+        countByRequest,
+        MAX_RANDOMPAGE_WORDS_INDEX,
+      );
+      countByRequest = arrayOfWordIndexes.length;
 
-      for (let number = 0; number < countByRequest; number += 1) {
-        const indexOfWord = Math.round(Math.random() * MAX_RANDOMPAGE_WORDS_INDEX);
-        arrayOfWords.push(arrayOfResults[indexOfResults][indexOfWord]);
-      }
+      const currentPage = arrayOfResults[indexOfResults];
+      arrayOfWordIndexes.forEach((index) => {
+        arrayOfWords.push(currentPage[index]);
+      });
 
       restWordCount -= countByRequest;
       indexOfResults += 1;
@@ -53,23 +80,17 @@ export default class WordsApi {
       params.filter = filterString;
     }
     let totalCount = await this.api.getAggregatedWords(params);
-    console.log(totalCount);
+
     totalCount = totalCount[0].totalCount[0].count;
-    console.log(totalCount);
 
     params.wordsPerPage = totalCount;
     let arrayOfResults = await this.api.getAggregatedWords(params);
     arrayOfResults = arrayOfResults[0].paginatedResults;
 
-    const arrayOfIndexes = [];
-    for (let number = 0; number < count; number += 1) {
-      arrayOfIndexes.push(Math.round(Math.random() * (totalCount - 1)));
-    }
+    const resultCount = Math.min(count, totalCount);
+    const arrayOfIndexes = WordsApi.createArrayOfIndexes(resultCount, (totalCount - 1));
 
-    const randomNewWords = [];
-    arrayOfIndexes.forEach((index) => {
-      randomNewWords.push(arrayOfResults[index]);
-    });
+    const randomNewWords = arrayOfIndexes.map((index) => arrayOfResults[index]);
 
     return randomNewWords;
   }
@@ -81,10 +102,14 @@ export default class WordsApi {
     return newWords;
   }
 
-  async getRepeatedWords(count, difficulty) {
-    const dateNow = Date.now();
-    const filter = JSON.stringify({ 'userWord.optional.date': { [encodeURIComponent('$gt')]: dateNow } }); // TODO фильтр на допущенные к повторению слова
-    // console.log(filter);
+  async getRepeatedWords(count, difficulty, day) {
+    let dateNow = Date.now();
+    if (day) {
+      dateNow = day.getTime();
+    }
+
+    const filter = JSON.stringify({ 'userWord.optional.date': { $lt: dateNow } });
+
     const repeatedWords = await this.getAggregatedWords(count, difficulty, filter);
     return repeatedWords;
   }
