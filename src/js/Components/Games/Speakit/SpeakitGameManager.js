@@ -7,7 +7,7 @@ import LocalStorageAdapter from '../../../Utils/LocalStorageAdapter';
 
 export const SPEAKIT_GAME_STATS = 'SPEAKIT_GAME_STATS';
 
-const FINISH_GAME_DELAY_MS = 3000;
+const FINISH_GAME_DELAY_MS = 1000;
 
 export default class SpeakitGameManager {
   constructor(difficulty = 0) {
