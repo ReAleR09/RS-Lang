@@ -4,14 +4,17 @@ import SpeakitSoundPlayer from './SpeakitSoundPlayer';
 import SpeakitVoiceRecognizer from './SpeakitVoiceRecognizer';
 import AppNavigator from '../../../lib/AppNavigator';
 import LocalStorageAdapter from '../../../Utils/LocalStorageAdapter';
+import { roundSize } from './const';
 
 export const SPEAKIT_GAME_STATS = 'SPEAKIT_GAME_STATS';
 
 const FINISH_GAME_DELAY_MS = 1000;
 
 export default class SpeakitGameManager {
-  constructor(difficulty = 0) {
+  constructor(userWordsMode = false, difficulty = 0, round = 1) {
+    this.userWords = userWordsMode;
     this.difficulty = difficulty;
+    this.round = round;
     this.wordsState = [];
     this.soundPlayer = new SpeakitSoundPlayer();
     this.view = new SpeakitView(
@@ -26,8 +29,7 @@ export default class SpeakitGameManager {
     this.view.attach(element);
   }
 
-  // SpeechREcognition might give several options
-  // eslint-disable-next-line class-methods-use-this
+  // SpeechRecognition might give several options
   handleRecognizedPhrase(phrases) {
     let candidate = phrases[0];
     let wordPicUrl = null;
@@ -45,6 +47,7 @@ export default class SpeakitGameManager {
           if (!wordState.guessed) {
             this.view.markWordAsRecognized(wordState.id);
             this.wordsState[index].guessed = true;
+            this.view.updateGuessedCount(this.wordsState.filter((word) => word.guessed).length);
 
             this.soundPlayer.playGuessSound();
           }
@@ -91,13 +94,22 @@ export default class SpeakitGameManager {
     };
   }
 
-  init() {
-    const words = SpeakitWordsApi.getRandomWordsForDifficulty(this.difficulty);
+  async init() {
+    let words;
+
+    // TODO do that asynchroniously
+    if (this.userWordsMode) {
+      // TODO replace, get actual user words
+      words = await SpeakitWordsApi.getWordsForDifficultyAndRound(this.difficulty, this.round);
+    } else {
+      words = await SpeakitWordsApi.getWordsForDifficultyAndRound(this.difficulty, this.round);
+    }
+
     const wordsState = words.map((wordInfo) => {
       const wordState = {
         id: wordInfo.id,
         guessed: false,
-        word: wordInfo.word.toLocaleLowerCase(),
+        word: wordInfo.word.toLowerCase(),
         audio: wordInfo.audio,
         image: wordInfo.image,
         transcription: wordInfo.transcription,
@@ -116,6 +128,6 @@ export default class SpeakitGameManager {
   }
 
   getInitialLayout() {
-    return this.view.getGameLayout(this.difficulty);
+    return this.view.getGameLayout(roundSize);
   }
 }

@@ -5,6 +5,7 @@ import PlayView from '../Views/Speakit/PlayView';
 import AppNavigator from '../lib/AppNavigator';
 import ResultsView from '../Views/Speakit/ResultsView';
 import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
+import { difficulties, title, description } from '../Components/Games/Speakit/const';
 
 export default class SpeakitController extends Controller {
   constructor() {
@@ -18,15 +19,9 @@ export default class SpeakitController extends Controller {
 
   indexAction() {
     const game = {
-      title: 'SpeakIt: mini-game',
-      description: 'In this game You have to pronounce words using a microphone!',
-      // TODO fill with actual data
-      // this array describes total amount of rounds per every difficulty
-      // (implicitly index with 0-5 like difficulties)
-      difficulties: [
-        50, 60, 40,
-        30, 10, 20,
-      ],
+      title,
+      description,
+      difficulties,
     };
 
     // TODO вычислить может ли пользовать сыграть с пользовательскими словами
@@ -41,13 +36,22 @@ export default class SpeakitController extends Controller {
 
   playAction() {
     const params = AppNavigator.getRequestParams();
+
     let difficulty = params.get('difficulty');
-    if (difficulty) {
-      difficulty = Number.parseInt(difficulty, 10);
-    } else {
-      difficulty = 0;
+    difficulty = Number.parseInt(difficulty, 10);
+
+    let round = params.get('round');
+    round = Number.parseInt(round, 10);
+    // navigate to main game page if user somehow entered the page with invalid params
+    if (
+      difficulty < 0 || difficulty > 5
+      || round < 1 || round > difficulties[difficulty]
+    ) {
+      AppNavigator.go('speakit');
+      this.cancelAction();
     }
-    const gameManager = new SpeakitGameManager(difficulty);
+
+    const gameManager = new SpeakitGameManager(false, difficulty, round);
     this.props.gameManager = gameManager;
   }
 

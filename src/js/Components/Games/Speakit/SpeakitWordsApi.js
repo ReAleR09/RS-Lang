@@ -1,27 +1,29 @@
-import MockWordsApi from './mockWords';
 import Utils from '../../../Utils/Utils';
 import { CONF_MEDIA_BASE_PATH } from '../../../../config';
+import { roundSize } from './const';
+import WordsApi from '../../../Classes/WordsApi';
 
-const getRandomWordsForDifficulty = (difficulty) => {
-  let words = MockWordsApi.getWordsForDifficulty(difficulty)
-    .map((word) => {
-      const wordMapped = {
-        ...word,
-        audio: `${CONF_MEDIA_BASE_PATH}${word.audio}`,
-        image: `${CONF_MEDIA_BASE_PATH}${word.image}`,
-        audioMeaning: `${CONF_MEDIA_BASE_PATH}${word.audioMeaning}`,
-        audioExample: `${CONF_MEDIA_BASE_PATH}${word.audioExample}`,
-        id: `${word.id}`, // TODO remove, converting int to string for now
-      };
+const wordsApi = new WordsApi();
 
-      return wordMapped;
-    });
+const getWordsForDifficultyAndRound = async (difficulty, round) => {
+  let words = await wordsApi.getWordsForGame(difficulty, roundSize, round);
+  words = words.map((word) => {
+    const wordMapped = {
+      ...word,
+      audio: `${CONF_MEDIA_BASE_PATH}${word.audio}`,
+      image: `${CONF_MEDIA_BASE_PATH}${word.image}`,
+      audioMeaning: `${CONF_MEDIA_BASE_PATH}${word.audioMeaning}`,
+      audioExample: `${CONF_MEDIA_BASE_PATH}${word.audioExample}`,
+    };
+
+    return wordMapped;
+  });
   words = Utils.arrayShuffle(words);
   return words;
 };
 
 const SpeakitWordsApi = {
-  getRandomWordsForDifficulty,
+  getWordsForDifficultyAndRound,
 };
 
 export default SpeakitWordsApi;
