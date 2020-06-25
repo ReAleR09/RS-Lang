@@ -1,5 +1,6 @@
 import DOMUtils from './Utils/DOMUtils';
 import { CONF_ROOT_PATH } from '../config';
+import ControllerCancelException from './lib/ControllerCancelException';
 
 export default class Router {
   constructor(appContainer, routes) {
@@ -48,8 +49,19 @@ export default class Router {
     const ControllerClass = this.routes[controllerAlias];
     const controllerInstance = new ControllerClass();
 
+    let viewInstance;
     // run cotroller's method
-    const viewInstance = controllerInstance.performAction(actionAlias);
+    try {
+      viewInstance = controllerInstance.performAction(actionAlias);
+    } catch (e) {
+      // cancel navigation if no view instance received
+      if (e instanceof ControllerCancelException) {
+        return;
+      }
+
+      throw e;
+    }
+
     const viewHtml = viewInstance.render(actionAlias);
     const viewElement = DOMUtils.createElementFromHTML(viewHtml);
 

@@ -1,34 +1,25 @@
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
 
-// FC stands for Funcional Class - the one that IS NOT responsible for styles
 const START_BUTTON = 'speakit__start-button';
-const START_BUTTON_USERWORDS = 'speakit__start-button-userwords';
 
 export default class IndexView extends View {
-  // when we are visiting this view, we will modify someParamPassToView
-  // (which is passed from the controller)
   onMount() {
     const startButtonEl = this.element.querySelector(`#${START_BUTTON}`);
     startButtonEl.addEventListener('click', () => {
       AppNavigator.go('speakit', 'play');
     });
-
-    const startButtonUserWordsEl = this.element.querySelector(`#${START_BUTTON_USERWORDS}`);
-    startButtonUserWordsEl.addEventListener('click', () => {
-      AppNavigator.go('speakit', 'play');
-    });
   }
 
-  // onUnmount() {
-  // }
-
-  // creating markup of the view and returning it
   // eslint-disable-next-line class-methods-use-this
   render() {
-    const html = `<div>
-      <div id="${START_BUTTON}">Start game</div>
-      <div id="${START_BUTTON_USERWORDS}">Start game with user hard words</div>
+    const html = `
+    <div>
+      <div class='row'><h2>SpeakIt: mini-game</h2></div>
+      <p>
+        In this game you have to pronounce words using a microphone!
+      </p>
+      <div class='row'><div class="waves-effect waves-light btn col s12" id="${START_BUTTON}">Start game</div></div>
     </div>`;
 
     return html;

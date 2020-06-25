@@ -7,6 +7,8 @@ import LocalStorageAdapter from '../../../Utils/LocalStorageAdapter';
 
 export const SPEAKIT_GAME_STATS = 'SPEAKIT_GAME_STATS';
 
+const FINISH_GAME_DELAY_MS = 3000;
+
 export default class SpeakitGameManager {
   constructor(difficulty = 0) {
     this.difficulty = difficulty;
@@ -24,32 +26,37 @@ export default class SpeakitGameManager {
     this.view.attach(element);
   }
 
+  // SpeechREcognition might give several options
   // eslint-disable-next-line class-methods-use-this
-  handleRecognizedPhrase(phrase) {
-    this.view.drawRecognizedTextToDOM(phrase);
-
-    const wordCandidate = phrase.toLowerCase().trim();
-    if (wordCandidate.split(' ').length > 1) {
-      // there are two or more words, na-ah
-      return;
-    }
+  handleRecognizedPhrase(phrases) {
+    let candidate = phrases[0];
+    let wordPicUrl = null;
 
     this.wordsState.some((wordState, index) => {
-      if (wordState.word === wordCandidate) {
-        if (!wordState.guessed) {
-          this.view.markWordAsRecognized(wordState.id);
-          this.wordsState[index].guessed = true;
-          // TODO play happy sound
-
-          if (this.areAllWordsGuessed()) {
-            this.finishGame();
-          }
+      for (let i = 0; i < phrases.length; i += 1) {
+        const wordCandidate = phrases[i].toLowerCase().trim();
+        if (wordCandidate.split(' ').length > 1) {
+          // there are two or more words, na-ah
+          break;
         }
+        if (wordState.word === wordCandidate) {
+          candidate = wordCandidate;
+          wordPicUrl = wordState.image;
+          if (!wordState.guessed) {
+            this.view.markWordAsRecognized(wordState.id);
+            this.wordsState[index].guessed = true;
 
-        return true;
+            this.soundPlayer.playGuessSound();
+          }
+          return true;
+        }
       }
       return false;
     });
+    this.view.drawRecognizedWordToDOM(candidate, wordPicUrl);
+    if (this.areAllWordsGuessed()) {
+      this.finishGame(true);
+    }
   }
 
   areAllWordsGuessed() {
@@ -64,22 +71,22 @@ export default class SpeakitGameManager {
     this.speechRecognizer.startRecognition();
   }
 
-  finishGame() {
+  finishGame(withDelay = false) {
     this.speechRecognizer.stopRecognition();
     const stats = this.calculateStats();
-    // TODO global game statistics should be sent there
 
     // putting stats to storage to use them on /speakit/results page
     LocalStorageAdapter.set(SPEAKIT_GAME_STATS, stats);
-    // and navigatin to results
-    AppNavigator.replace('speakit', 'results');
+    // and navigatin to results, with slight delay in case it was triggeren on last word
+    setTimeout(() => AppNavigator.replace('speakit', 'results'), withDelay ? FINISH_GAME_DELAY_MS : 0);
   }
 
   calculateStats() {
-    // TODO finish stats object properly
+    const guessed = this.wordsState.filter((wordState) => wordState.guessed);
+    const notGuessed = this.wordsState.filter((wordState) => !wordState.guessed);
     return {
-      guessed: [],
-      notGuessed: [],
+      guessed,
+      notGuessed,
       difficulty: this.difficulty,
     };
   }
@@ -90,13 +97,17 @@ export default class SpeakitGameManager {
       const wordState = {
         id: wordInfo.id,
         guessed: false,
-        word: wordInfo.word,
+        word: wordInfo.word.toLocaleLowerCase(),
+        audio: wordInfo.audio,
+        image: wordInfo.image,
+        transcription: wordInfo.transcription,
+        wordTranslate: wordInfo.wordTranslate,
       };
 
       return wordState;
     });
     this.wordsState = wordsState;
-    this.displayWords(words);
+    this.displayWords(wordsState);
   }
 
   displayWords(wordsInfoArray) {

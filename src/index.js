@@ -11,6 +11,7 @@ import RegistrationController from './js/Controllers/RegistrationController';
 import AuthorizationController from './js/Controllers/AuthorizationController';
 import EnglishPuzzleController from './js/Controllers/EnglishPuzzleController';
 import AppNavigator from './js/lib/AppNavigator';
+import SettingsController from './js/Controllers/SettingsController';
 
 import './js/plugins';
 import { SIDENAV } from './config';
@@ -26,6 +27,7 @@ function appInit() {
     registration: RegistrationController,
     authorization: AuthorizationController,
     example: ExampleController,
+    settings: SettingsController,
     learningWords: LearningWordsController,
     'game-sprint': GameSprintController,
     speakit: SpeakitController,

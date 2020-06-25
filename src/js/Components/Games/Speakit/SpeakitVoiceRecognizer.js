@@ -13,12 +13,13 @@ export default class SpeakitVoiceRecognizer {
     let recognizer = new SpeechApi();
     recognizer.interimResults = false;
     recognizer.lang = DEFAULT_LOCALE;
+    recognizer.maxAlternatives = 2;
 
     // storing link to the handler to remove it later
     const onPhraseFullyRecognized = (event) => {
-      const resultPhrase = event.results[0][0].transcript;
+      const resultPhrases = Array.from(event.results[0]).map((obj) => obj.transcript.toLowerCase());
 
-      this.phraseRecognizedCallback(resultPhrase);
+      this.phraseRecognizedCallback(resultPhrases);
     };
     recognizer.addEventListener('result', onPhraseFullyRecognized);
 
