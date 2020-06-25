@@ -101,8 +101,7 @@ export default class SpeakitGameManager {
 
     // TODO do that asynchroniously
     if (this.userWordsMode) {
-      // TODO replace, get actual user words
-      words = await SpeakitWordsApi.getWordsForDifficultyAndRound(this.difficulty, this.round);
+      words = await SpeakitWordsApi.getUserWords();
     } else {
       words = await SpeakitWordsApi.getWordsForDifficultyAndRound(this.difficulty, this.round);
     }

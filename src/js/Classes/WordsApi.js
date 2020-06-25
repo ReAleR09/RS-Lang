@@ -73,11 +73,16 @@ export default class WordsApi {
 
   // Служебная функция
 
-  async getAggregatedWords(count, difficulty, filterString) {
+  async getAggregatedWords(count, difficulty = false, filterString) {
     const params = {
-      group: difficulty,
       wordsPerPage: 1,
     };
+
+    // difficulty is optional
+    if (difficulty !== false) {
+      params.group = difficulty;
+    }
+
     if (filterString) {
       params.filter = filterString;
     }
@@ -104,7 +109,12 @@ export default class WordsApi {
     return newWords;
   }
 
-  async getRepeatedWords(count, difficulty, day) {
+  /**
+   * @param {int} count - self-explained
+   * @param {int} difficulty - words api group 0-5 or false
+   * @param {int} day - epoch (if false - defaults to current timestamp)
+   */
+  async getRepeatedWords(count, difficulty = false, day = false) {
     let dateNow = Date.now();
     if (day) {
       dateNow = day.getTime();

@@ -5,9 +5,8 @@ import WordsApi from '../../../Classes/WordsApi';
 
 const wordsApi = new WordsApi();
 
-const getWordsForDifficultyAndRound = async (difficulty, round) => {
-  let words = await wordsApi.getWordsForGame(difficulty, roundSize, round);
-  words = words.map((word) => {
+const mapAndShuffleApiWords = (words) => {
+  const mappedWords = words.map((word) => {
     const wordMapped = {
       ...word,
       audio: `${CONF_MEDIA_BASE_PATH}${word.audio}`,
@@ -18,12 +17,26 @@ const getWordsForDifficultyAndRound = async (difficulty, round) => {
 
     return wordMapped;
   });
-  words = Utils.arrayShuffle(words);
-  return words;
+  const shuffledWords = Utils.arrayShuffle(mappedWords);
+  return shuffledWords;
+};
+
+const getWordsForDifficultyAndRound = async (difficulty, round) => {
+  const words = await wordsApi.getWordsForGame(difficulty, roundSize, round);
+  return mapAndShuffleApiWords(words);
+};
+
+/**
+ * берёт слова, которые уже находятся у юзера на изучении
+ */
+const getUserWords = async () => {
+  const words = await wordsApi.getRepeatedWords(roundSize);
+  return mapAndShuffleApiWords(words);
 };
 
 const SpeakitWordsApi = {
   getWordsForDifficultyAndRound,
+  getUserWords,
 };
 
 export default SpeakitWordsApi;
