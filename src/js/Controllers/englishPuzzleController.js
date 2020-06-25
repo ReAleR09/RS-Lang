@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import Controller from '../lib/Controller';
 import AppNavigator from '../lib/AppNavigator';
+import EnglishPuzzleManager from '../Components/EnglishPuzzle/EnglishPuzzleManager';
 // import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
 import IndexView from '../Views/englishPuzzle/indexView';
 import PlayView from '../Views/englishPuzzle/playView';
@@ -29,8 +30,8 @@ export default class EnglishPuzzleController extends Controller {
       difficulty = 0;
     }
 
-    // const gameManager = new SpeakitGameManager(difficulty);
-    // this.props.gameManager = gameManager;
+    const gameManager = new EnglishPuzzleManager();
+    this.props.gameManager = gameManager;
   }
 
   resultsAction() {

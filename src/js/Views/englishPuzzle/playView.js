@@ -3,7 +3,7 @@ import View from '../../lib/View';
 
 export default class PlayView extends View {
   onMount() {
-    // this.props.gameManager.attach(this.element);
+    this.props.gameManager.attach(this.element);
     // this.props.gameManager.init();
   }
 
@@ -13,7 +13,6 @@ export default class PlayView extends View {
   }
 
   render() {
-    // return this.props.gameManager.getInitialLayout();
-    return '<h2>Play view goes here</h2>';
+    return this.props.gameManager.getInitialLayout();
   }
 }
