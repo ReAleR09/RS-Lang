@@ -91,6 +91,8 @@ export default class SpeakitGameManager {
       guessed,
       notGuessed,
       difficulty: this.difficulty,
+      round: this.round,
+      isUserWordsMode: this.userWordsMode,
     };
   }
 

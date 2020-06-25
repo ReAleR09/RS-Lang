@@ -67,6 +67,18 @@ export default class SpeakitController extends Controller {
     LocalStorageAdapter.remove(SPEAKIT_GAME_STATS);
     this.props.stats = stats;
 
+    // if not user words, we can proceed to the next round
+    // here we decide if to show "next round" button by setting two params:
+    if (!stats.isUserWordsMode) {
+      if (stats.round < difficulties[stats.difficulty]) {
+        this.props.nextDifficulty = stats.difficulty;
+        this.props.nextRound = stats.round + 1;
+      } else if (stats.difficulty < difficulties.length - 1) {
+        this.props.nextDifficulty = stats.difficulty + 1;
+        this.props.nextRound = 1;
+      }
+    }
+
     // TODO global game statistics should be sent there
   }
 }
