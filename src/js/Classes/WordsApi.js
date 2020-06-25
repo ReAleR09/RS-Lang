@@ -92,7 +92,12 @@ export default class WordsApi {
     let arrayOfResults = await this.api.getAggregatedWords(params);
     arrayOfResults = arrayOfResults[0].paginatedResults;
 
-    const resultCount = Math.min(count, totalCount);
+    let resultCount = totalCount;
+
+    if (count) {
+      resultCount = Math.min(count, totalCount);
+    }
+
     const arrayOfIndexes = WordsApi.createArrayOfIndexes(resultCount, (totalCount - 1));
 
     const randomNewWords = arrayOfIndexes.map((index) => arrayOfResults[index]);
@@ -119,26 +124,27 @@ export default class WordsApi {
     return repeatedWords;
   }
 
-  async changeWordDataById(wordId, wordData = {
-    difficulty: '0',
-    optional: {
-      difficulty: DIFFICULTIES.NORMAL, // Сложность в рамках оценки сложности при изучении
-      dictCategory: DICT_CATEGORIES.MAIN, // Словарь Сложные, Удаленные, ещё как-нибудь
-      errors: 0, // количество ошибок по карточке
-      interval: 0, // текущий реальный интервал для расчета даты
-      success: 0, // текущий базовый интервал для расчета интервалов
-      bestResult: 0, // текущая итерация
-      curSuccessCosistency: 0,
-      lastDate: 0,
-      nextDate: 0,
-    },
+  async changeWordDataById(wordId, userWordData = {
+    difficulty: DIFFICULTIES.NORMAL, // Сложность в рамках оценки сложности слова
+    dictCategory: DICT_CATEGORIES.MAIN, // Словарь Сложные, Удаленные, Основные
+    errors: 0, // количество ошибок по карточке
+    interval: 0, // текущий расчета даты
+    success: 0, // количество успехов
+    bestResult: 0, // лучший результат
+    curSuccessCosistency: 0, // текущая серия
+    lastDate: 0, // последняя дата
+    nextDate: 0, // дата повторения
   }) {
-    let result;
-    result = await this.api.getUserWordById(wordId);
+    const userWordStructure = {
+      difficulty: '0',
+      optional: userWordData,
+    };
+
+    let result = await this.api.getUserWordById(wordId);
     if (result.error) {
-      result = await this.api.postUserWordById(wordId, wordData);
+      result = await this.api.postUserWordById(wordId, userWordStructure);
     } else {
-      result = await this.api.putUserWordById(wordId, wordData);
+      result = await this.api.putUserWordById(wordId, userWordStructure);
     }
 
     return result;
