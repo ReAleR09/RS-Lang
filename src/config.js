@@ -28,4 +28,9 @@ export const SIDENAV = [
     path: ['speakit'],
     icon: 'accessibility',
   },
+  {
+    title: 'EnglishPuzzle [mini-game]',
+    path: ['englishpuzzle'],
+    icon: 'extension',
+  },
 ];
