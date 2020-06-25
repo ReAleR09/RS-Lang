@@ -8,14 +8,35 @@ const ID_DIFFICULTY_SELECTOR = 'speakit__difficulty-selector';
 const ID_ROUND_SELECTOR = 'speakit__round-selector';
 
 export default class GameStartView extends View {
+  initSliders() {
+    const rangeDomEls = document.querySelectorAll('input[type=range]');
+    Materialize.Range.init(rangeDomEls);
+
+    this.roundSlider = document.querySelector(`#${ID_ROUND_SELECTOR}`);
+
+    this.difficultySlider = document.querySelector(`#${ID_DIFFICULTY_SELECTOR}`);
+    this.difficultySlider.addEventListener('change', (e) => {
+      const newDifficultyVal = e.target.value;
+      const maxRoundsForDifficulty = this.props.game.difficulties[newDifficultyVal];
+      this.roundSlider.max = maxRoundsForDifficulty; // update rounds countm depends on difficulty
+      this.roundSlider.value = 1; // default round to 1
+    });
+  }
+
   onMount() {
     const startButtonEl = this.element.querySelector(`#${ID_START_BUTTON}`);
     startButtonEl.addEventListener('click', () => {
-      AppNavigator.go('speakit', 'play');
+      const difficulty = parseInt(this.difficultySlider.value, 10);
+      const round = parseInt(this.roundSlider.value, 10);
+      AppNavigator.go('speakit', 'play', { difficulty, round });
     });
 
-    const rangeDomEls = document.querySelectorAll('input[type=range]');
-    Materialize.Range.init(rangeDomEls);
+    const startButtonUserEl = this.element.querySelector(`#${ID_START_BUTTON_USER}`);
+    startButtonUserEl.addEventListener('click', () => {
+      AppNavigator.go('speakit', 'play', { userWords: 1 });
+    });
+
+    this.initSliders();
   }
 
   render() {
@@ -48,6 +69,7 @@ export default class GameStartView extends View {
             max="5"
             step="1"
             value="${game.currentDifficulty}"
+            list="tickmarks"
           />
         </p>
         <p class="range-field col s12">
