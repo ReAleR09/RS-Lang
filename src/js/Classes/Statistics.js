@@ -1,8 +1,8 @@
-import StatisticsApi from './StatisticsApi';
+import StatisticsApi from './Api/StatisticsApi';
 import { GAMES, MODES } from '../../config';
 import SpacedRepititions from './SpacedRepititions';
 import { GAME_RESULTS_KEY, WORDS_LEARNING_RESULTS_KEY } from './Api/constants';
-import WordsApi from './WordsApi';
+import WordsApi from './Api/WordsApi';
 import Utils from '../Utils/Utils';
 
 export default class Statistics {

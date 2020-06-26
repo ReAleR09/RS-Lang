@@ -5,7 +5,7 @@ import {
   MAX_RANDOMPAGE_WORDS_INDEX,
   MAX_REQUEST_COUNT,
   MAX_PAGE_INDEX,
-} from './Api/constants';
+} from './constants';
 
 export default class WordsApi {
   constructor() {

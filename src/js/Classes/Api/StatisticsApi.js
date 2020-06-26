@@ -1,5 +1,5 @@
 import Api from './Api';
-import { TEAM_KEY, TEAM_VALUE } from '../../config';
+import { TEAM_KEY, TEAM_VALUE } from '../../../config';
 
 export default class StatisticsApi {
   constructor() {
