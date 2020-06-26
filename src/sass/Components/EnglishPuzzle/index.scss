@@ -13,3 +13,21 @@
 .EP-start__buttons {
   margin-top: 60px;
 }
+.canvas-item:not(:first-child) {
+  margin-left: -8px;
+}
+
+.canvas-item {
+  height: 48px;
+  cursor: pointer;
+}
+
+.group-words {
+  display: flex;
+}
+.engPuz__drop-section {
+  min-height: 400px;
+}
+.engPuz__drag-section {
+  min-height: 50px;
+}

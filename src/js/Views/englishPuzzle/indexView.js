@@ -2,7 +2,7 @@ import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
 
 // FC stands for Funcional Class - the one that IS NOT responsible for styles
-const START_BUTTON = 'EP__start-button';
+const START_BUTTON = 'engPuz__start-button';
 
 export default class IndexView extends View {
   // when we are visiting this view, we will modify someParamPassToView

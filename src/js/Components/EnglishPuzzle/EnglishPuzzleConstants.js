@@ -1,4 +1,4 @@
-const engPuz = {
+const engPuzConst = {
   switchers: {
     AUTOPLAY: 'engPuz__tooltips-autoPlay',
     TRANSLATION: 'engPuz__tooltips-translation',
@@ -8,12 +8,17 @@ const engPuz = {
   content: {
     PLAY: 'engPuz__audio',
     TRANSLATION: 'engPuz__translation',
-    DRAGANDDROP: 'engPuz__dragdrop',
+    DROPSECTION: 'engPuz__drop-section',
+    DRAGSECTION: 'engPuz__drag-section',
   },
   buttons: {
     DONTKNOW: 'engPuz__bottom-idk',
     CHECK: 'engPuz__bottom-check',
   },
+  selects: {
+    DIFFICULTY: 'engPuz__difficulty',
+    PAGE: 'engPuz__page',
+  },
 };
 
-export default engPuz;
+export default engPuzConst;
