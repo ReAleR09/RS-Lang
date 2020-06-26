@@ -6,13 +6,15 @@ import WordsApi from './Api/WordsApi';
 import Utils from '../Utils/Utils';
 
 export default class Statistics {
-  constructor(game = GAMES.LEARNING, mode = MODES.REPITITION) {
+  constructor(game = GAMES.LEARNING, mode = MODES.REPITITION, wordsSendAtEnd = false) {
     this.statisticsApi = new StatisticsApi();
     this.wordsApi = new WordsApi();
     this.statistics = {};
     this.spacedRepititions = new SpacedRepititions();
     this.game = game;
     this.mode = mode;
+    this.wordsSendAtEnd = wordsSendAtEnd;
+    this.wordStat = [];
     this.results = {
       success: 0,
       errors: 0,
@@ -46,10 +48,11 @@ export default class Statistics {
     } else {
       this.results.errors += 1;
     }
-    if (this.mode === MODES.REPITITION) {
+    if (this.mode === MODES.REPITITION && !(this.wordsSendAtEnd)) {
+      await this.updateRepititionsStatistics(wordId);
       await this.spacedRepititions.putTrainingData(wordId, result);
-      await this.updateRepititionsStatistics();
     }
+    this.wordStat.push({ wordId, result });
   }
 
   async sendGameResults() {
@@ -63,6 +66,19 @@ export default class Statistics {
     this.statistics[GAME_RESULTS_KEY][this.game].push(gameResult);
 
     const report = await this.statisticsApi.update(this.statistics);
+
+    if (this.wordsSendAtEnd && this.mode === MODES.REPITITION) {
+      const requestStatArrays = [];
+      const requestRepitArrays = [];
+      this.wordStat.forEach(({ wordId, result }) => {
+        requestStatArrays.push(this.updateRepititionsStatistics(wordId));
+        requestRepitArrays.push(this.spacedRepititions.putTrainingData(wordId, result));
+      });
+
+      await Promise.all(requestStatArrays);
+      await Promise.all(requestRepitArrays);
+    }
+
     return report;
   }
 
