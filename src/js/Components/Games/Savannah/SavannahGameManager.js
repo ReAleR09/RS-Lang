@@ -45,7 +45,7 @@ export default class SavannahGameManager {
     /* eslint-enable no-param-reassign */
     this.saveCurrentWordsState();
   }
-  
+
   init() {
     const words = SavannahWordsApi.getRandomWordsForDifficulty(this.difficulty);
     const wordsState = words.map((wordInfo) => {

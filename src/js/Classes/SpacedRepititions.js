@@ -1,4 +1,4 @@
-import WordsApi from './WordsApi';
+import WordsApi from './Api/WordsApi';
 import { MILLIS_PER_MINUTE, MILLIS_PER_DAY, DIFFICULTIES } from './Api/constants';
 
 const SETTINGS = {
