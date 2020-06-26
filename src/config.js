@@ -1,13 +1,18 @@
 export const TEAM_KEY = 'team';
 export const TEAM_VALUE = 'team7';
 
-export const MODES = {
+export const GAMES = {
   LEARNING: 'learningWords',
   SPEAKIT: 'speakIt',
   SAVANNAH: 'savannah',
   AUDIOCALL: 'audioCall',
   SPRINT: 'sprint',
   PUZZLE: 'puzzle',
+};
+
+export const MODES = {
+  GAME: 'game',
+  REPITITION: 'repitition',
 };
 
 export const CONF_ROOT_PATH = '';

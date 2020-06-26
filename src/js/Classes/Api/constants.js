@@ -8,6 +8,8 @@ export const DIFFICULTIES = {
 
 export const GAME_RESULTS_KEY = 'gameResults';
 
+export const WORDS_LEARNING_RESULTS_KEY = 'learningWordsByDays';
+
 export const MAX_REQUEST_COUNT = 20;
 export const MAX_PAGE_INDEX = 29;
 export const MAX_RANDOMPAGE_WORDS_INDEX = 19;
