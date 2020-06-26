@@ -1,5 +1,7 @@
 import EnglishPuzzleView from './EnglishPuzzleView';
 import EnglisPuzzleMaterial from './EnglishPuzzleMaterial';
+import EnglisPuzzleDragDrop from './EnglishPuzzleDragDrop';
+import engPuzConst from './EnglishPuzzleConstants';
 // import engPuzConst from './EnglishPuzzleConstants';
 
 export const EP_GAME_STATS = 'EP_GAME_STATS';
@@ -8,6 +10,7 @@ export default class EnglishPuzzleManager {
   constructor(difficulty = 0, page = 1) {
     this.difficulty = difficulty;
     this.page = page;
+    this.puzzleLineIndex = 0;
     this.isAutoPlay = true;
     this.isTranslation = true;
     this.isPlayActive = true;
@@ -33,8 +36,22 @@ export default class EnglishPuzzleManager {
     this.material = new EnglisPuzzleMaterial();
   }
 
-  init() {
-    this.view.renderPuzzleElementsToDom(this.imgSrc, this.sentences);
+  async init() {
+    await this.getPuzzleElements();
+    this.puzzleLineRender(this.puzzleLineIndex);
+  }
+
+  puzzleLineRender(lineIndex) {
+    // todo shuffle sentences array
+    const dragZone = document.querySelector(`.${engPuzConst.content.DRAGSECTION}`);
+    dragZone.appendChild(this.puzzle[lineIndex]);
+    // eslint-disable-next-line no-new
+    new EnglisPuzzleDragDrop();
+  }
+
+  async getPuzzleElements() {
+    this.puzzle = await this.view.getPuzzleElements(this.imgSrc, this.sentences);
+    console.log(this.puzzle[0]);
   }
 
   getInitialLayout() {

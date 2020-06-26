@@ -5,8 +5,9 @@ import engPuzConst from './EnglishPuzzleConstants';
 
 export default class EnglisPuzzleDragDrop {
   constructor() {
-    this.dragZone = document.querySelector(`.${engPuzConst.content.DRAGSECTION}`);
+    this.dragZone = document.querySelector(`.${engPuzConst.content.DRAGSECTION} .group-words`);
     this.dropZone = document.querySelector(`.${engPuzConst.content.DROPSECTION}`);
+    this.init();
   }
 
   init() {
