@@ -68,9 +68,18 @@ export default class Statistics {
     const report = await this.statisticsApi.update(this.statistics);
 
     if (this.wordsSendAtEnd && this.mode === MODES.REPITITION) {
+      let words = this.wordStat.map(({ wordId }) => wordId);
+      const bestResults = [];
+      words = Array.from(new Set(words));
+      words.forEach((word) => {
+        const results = this.wordStat.filter(({ wordId }) => wordId === word);
+        const bestResult = (results.find((result) => result) !== -1);
+        bestResults.push({ word, bestResult });
+      });
+
       const requestStatArrays = [];
       const requestRepitArrays = [];
-      this.wordStat.forEach(({ wordId, result }) => {
+      this.bestResults.forEach(({ wordId, result }) => {
         requestStatArrays.push(this.updateRepititionsStatistics(wordId));
         requestRepitArrays.push(this.spacedRepititions.putTrainingData(wordId, result));
       });
