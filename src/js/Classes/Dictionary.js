@@ -1,7 +1,7 @@
 import WordsApi from './WordsApi';
 import { DICT_CATEGORIES, GROUPS } from './Api/constants';
 
-export default class Dicionary {
+export default class Dictionary {
   constructor() {
     this.wordsApi = new WordsApi();
   }

@@ -52,6 +52,10 @@ export default class SpacedRepititions {
     return steps;
   }
 
+  /**
+   * return word learning status in percents
+   * @param {*} wordId
+   */
   async getTrainingStatus(wordId) {
     let status = 0;
     if (!this.wordsApi.checkUserWordInBase(wordId)) return status;
