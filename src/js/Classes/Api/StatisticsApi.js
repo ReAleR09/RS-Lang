@@ -1,7 +1,7 @@
 import Api from './Api';
-import { TEAM_KEY, TEAM_VALUE } from '../../config';
+import { TEAM_KEY, TEAM_VALUE } from '../../../config';
 
-export default class SettingsApi {
+export default class StatisticsApi {
   constructor() {
     this.api = new Api();
   }
@@ -36,6 +36,7 @@ export default class SettingsApi {
 
   async get() {
     const statisticsApiObject = await this.api.getUserStatistics();
+    if (statisticsApiObject.error) return statisticsApiObject;
     const statistics = statisticsApiObject.optional;
     return statistics;
   }

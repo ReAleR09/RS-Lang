@@ -1,7 +1,7 @@
 import Utils from '../../../Utils/Utils';
 import { CONF_MEDIA_BASE_PATH } from '../../../../config';
 import { roundSize } from './const';
-import WordsApi from '../../../Classes/WordsApi';
+import WordsApi from '../../../Classes/Api/WordsApi';
 
 const wordsApi = new WordsApi();
 

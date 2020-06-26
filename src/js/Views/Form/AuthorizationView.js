@@ -1,7 +1,7 @@
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
 import Form from '../../Classes/Form';
-import Api from '../../Classes/Api';
+import Api from '../../Classes/Api/Api';
 
 const errors = {
   server: 'Server error',
