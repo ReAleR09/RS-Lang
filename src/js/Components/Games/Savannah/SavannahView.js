@@ -1,5 +1,8 @@
 import AppNavigator from '../../../lib/AppNavigator';
 
+const GUESSED_SOUND = '/audio/savannah-right.mp3';
+const NOT_GUESSED_SOUND = '/audio/savannah-wrong.mp3';
+
 const CLASS_LIVES = 'savannah__lives';
 const CLASS_LIFE = 'savannah-life';
 const CLASS_ENGLISH_CARD = 'savannah__english-word';
@@ -18,6 +21,8 @@ export default class SavannahView {
     this.keyHandler = this.keyHandler.bind(this);
 
     this.top = -50;
+    this.trueAudio = new Audio(GUESSED_SOUND);
+    this.falseAudio = new Audio(NOT_GUESSED_SOUND);
   }
 
   attach(element) {
@@ -50,6 +55,7 @@ export default class SavannahView {
       translateWordsBlock.append(...translateWords);
     } else {
       clearInterval(this.interval);
+      window.removeEventListener('keyup', this.keyHandler);
       AppNavigator.replace('savannah', 'results');
     }
   }
@@ -118,14 +124,15 @@ export default class SavannahView {
   }
 
   goGuessedStep() {
-    // Здесь проиграть радужную музычку
+    this.trueAudio.play();
     const englishWord = this.element.querySelector(`.${CLASS_ENGLISH_CARD}`).innerHTML;
     this.changeState(englishWord);
   }
 
   goNotGuessedStep() {
     this.mistakes += 1;
-    // Здесь проиграть грустную музычку
+
+    this.falseAudio.play();
     const lives = Array.from(this.element.querySelectorAll(`.${CLASS_LIFE}`));
     lives.shift();
     const livesBlock = this.element.querySelector(`.${CLASS_LIVES}`);
@@ -136,7 +143,7 @@ export default class SavannahView {
   // eslint-disable-next-line class-methods-use-this
   getGameLayout() {
     const html = `
-    <div class="savannah"> 
+    <div class="savannah">
       <div class="${CLASS_LIVES}">
         <div class="${CLASS_LIFE}">♥</div>
         <div class="${CLASS_LIFE}">♥</div>

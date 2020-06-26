@@ -1,5 +1,6 @@
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
+import LocalStorageAdapter from '../../Utils/LocalStorageAdapter';
 
 const CLASS_BUTTON_PLAY_AGAIN = 'savannah__play-again-button';
 const CLASS_GUESSED_WORDS_BLOCK = 'savannah__guessed-words';
@@ -13,12 +14,12 @@ export default class ResultsView extends View {
     const playAgainButton = this.element.querySelector(`.${CLASS_BUTTON_PLAY_AGAIN}`);
     playAgainButton.addEventListener('click', () => {
       AppNavigator.replace('savannah');
-      localStorage.setItem('savannah-current-words-state', '');
+      LocalStorageAdapter.set('savannah-current-words-state', '');
     });
     const finishButton = this.element.querySelector(`.${CLASS_FINISH_BUTTON}`);
     finishButton.addEventListener('click', () => {
       AppNavigator.go();
-      localStorage.setItem('savannah-current-words-state', '');
+      LocalStorageAdapter.set('savannah-current-words-state', '');
     });
   }
 

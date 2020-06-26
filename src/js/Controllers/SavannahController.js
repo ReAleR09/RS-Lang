@@ -3,6 +3,7 @@ import IndexView from '../Views/Savannah/IndexView';
 import PlayView from '../Views/Savannah/PlayView';
 import ResultsView from '../Views/Savannah/ResultsView';
 import SavannahGameManager from '../Components/Games/Savannah/SavannahGameManager';
+import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
 
 export default class SavannahController extends Controller {
   constructor() {
@@ -24,7 +25,7 @@ export default class SavannahController extends Controller {
   }
 
   resultsAction() {
-    const stats = JSON.parse(localStorage.getItem('savannah-current-words-state')) || {};
+    const stats = LocalStorageAdapter.get('savannah-current-words-state') || {};
     this.props.stats = stats;
   }
 }

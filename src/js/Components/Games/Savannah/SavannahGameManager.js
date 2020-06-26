@@ -1,6 +1,7 @@
 import SavannahView from './SavannahView';
 import SavannahWordsApi from './SavannahWordsApi';
 import Utils from '../../../Utils/Utils';
+import LocalStorageAdapter from '../../../Utils/LocalStorageAdapter';
 
 export default class SavannahGameManager {
   constructor(difficulty = 0) {
@@ -64,7 +65,8 @@ export default class SavannahGameManager {
   }
 
   saveCurrentWordsState() {
-    localStorage.setItem('savannah-current-words-state', JSON.stringify(this.wordsState));
+    LocalStorageAdapter.set('savannah-current-words-state', this.wordsState);
+    // localStorage.setItem('savannah-current-words-state', JSON.stringify(this.wordsState));
   }
 
   getInitialLayout() {
