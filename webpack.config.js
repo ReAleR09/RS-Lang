@@ -19,6 +19,7 @@ module.exports = (env, options) => {
     devtool: isProduction ? 'none' : 'source-map',
     watch,
     entry: [
+      'babel-polyfill',
       './src/index.js',
       './src/sass/style.scss',
     ],
@@ -37,6 +38,8 @@ module.exports = (env, options) => {
       }),
       new CopyPlugin([
         { from: 'assets/', to: 'assets/' },
+        { from: 'audio/', to: 'audio/' },
+        { from: '_redirects', to: '' },
       ], {
         context: 'src/',
       }),
@@ -51,16 +54,17 @@ module.exports = (env, options) => {
               loader: 'babel-loader',
               options: {
                 presets: ['@babel/preset-env'],
+                plugins: ['@babel/plugin-transform-runtime'],
               },
             },
             {
               loader: 'eslint-loader',
               options: {
-                cache: true,
-                emitError: isProduction,
-                failOnError: isProduction,
-                emitWarning: isProduction,
-                failOnWarning: isProduction,
+                cache: false,
+                emitError: false,
+                failOnError: false,
+                emitWarning: false,
+                failOnWarning: false,
               },
             },
           ],
@@ -71,6 +75,14 @@ module.exports = (env, options) => {
             MiniCssExtractPlugin.loader,
             'css-loader',
             'sass-loader',
+          ],
+        },
+        {
+          test: /\.(png|svg|jpe?g|gif|eot|svg|ttf|woff)$/i,
+          use: [
+            {
+              loader: 'file-loader',
+            },
           ],
         },
         {

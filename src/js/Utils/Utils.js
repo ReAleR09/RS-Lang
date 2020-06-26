@@ -14,9 +14,18 @@ function arrayShuffle(oldArray) {
   return array;
 }
 
+function getDateNoTime(date) {
+  let result = new Date();
+  if (date) result = date;
+
+  result = new Date(result.getFullYear(), result.getMonth(), result.getDate());
+  return result;
+}
+
 const Utils = {
   arrayShuffle,
   getRandomInt,
+  getDateNoTime,
 };
 
 export default Utils;
