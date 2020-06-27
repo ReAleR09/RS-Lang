@@ -1,5 +1,6 @@
 import Controller from '../lib/Controller';
 import IndexView from '../Views/GameSprint/IndexView';
+import { inProgressSprintGame, finishedSprintGame, eventNameSprintGame } from '../Utils/ConstantsGameSprint';
 
 /**
  * Controller is a sctructure that describes a set of "actions",
@@ -17,10 +18,11 @@ export default class GameSprintController extends Controller {
       index: IndexView,
     };
     super(viewClasses);
-    this.wordsUrl = 'https://afternoon-falls-25894.herokuapp.com/words?page=2&group=0';
-    this.btnClickSound = '../../audio/piu.mp3';
+    this.wordsUrl = 'https://afternoon-falls-25894.herokuapp.com/words?page=1&group=0';
     this.correctTranslation = 0;
     this.wrongTranslation = 1;
+
+    this.audioClickBtn = new Audio('../../audio/piu.mp3');
   }
 
   /**
@@ -41,7 +43,7 @@ export default class GameSprintController extends Controller {
   }
 
   startGame() {
-    this.status = 'in-progress';
+    this.status = inProgressSprintGame;
     this.rightAnswersInRow = 0;
     this.numberElement = 0;
     this.multiplier = 1;
@@ -68,11 +70,13 @@ export default class GameSprintController extends Controller {
     } else {
       setTimeout(() => this.updateTimer(), 1000);
     }
-    this.updateView();
+    if (this.dataWords[this.numberElement + 1]) {
+      this.updateView();
+    }
   }
 
   updateView() {
-    IndexView.publish('status', {
+    IndexView.publish(eventNameSprintGame, {
       status: this.status,
       timer: this.gameTimer,
       score: this.score,
@@ -84,7 +88,7 @@ export default class GameSprintController extends Controller {
   }
 
   stopGame() {
-    this.status = 'finished';
+    this.status = finishedSprintGame;
   }
 
   async getWordsFromDataBase() {
@@ -139,8 +143,8 @@ export default class GameSprintController extends Controller {
   }
 
   playAudio() {
-    const audio = new Audio();
-    audio.src = this.btnClickSound;
-    audio.play();
+    this.audioClickBtn.pause();
+    this.audioClickBtn.currentTime = 0.0;
+    this.audioClickBtn.play();
   }
 }
