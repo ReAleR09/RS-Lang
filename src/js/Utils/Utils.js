@@ -1,3 +1,7 @@
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
 // Fisher-Yates shuffle
 function arrayShuffle(oldArray) {
   const array = oldArray.slice(0); // shallow copy
@@ -20,6 +24,7 @@ function getDateNoTime(date) {
 
 const Utils = {
   arrayShuffle,
+  getRandomInt,
   getDateNoTime,
 };
 
