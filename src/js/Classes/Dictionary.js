@@ -1,5 +1,5 @@
 import WordsApi from './Api/WordsApi';
-import { DICT_CATEGORIES, GROUPS } from './Api/constants';
+import { DICT_CATEGORIES, GROUPS, DIFFICULTIES } from './Api/constants';
 
 export default class Dictionary {
   constructor() {
@@ -13,6 +13,17 @@ export default class Dictionary {
 
     const userWordData = await this.wordsApi.getWordDataById(wordId);
     userWordData.dictCategory = category;
+    const report = await this.changeWordDataById(wordId, userWordData);
+    return report;
+  }
+
+  async setUserDifficulty(wordId, userDifficulty = DIFFICULTIES.NORMAL) {
+    if (!this.wordsApi.checkUserWordInBase(wordId)) {
+      await this.wordsApi.changeWordDataById(wordId);
+    }
+
+    const userWordData = await this.wordsApi.getWordDataById(wordId);
+    userWordData.difficulty = userDifficulty;
     const report = await this.changeWordDataById(wordId, userWordData);
     return report;
   }
