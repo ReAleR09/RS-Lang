@@ -1,4 +1,4 @@
-import WordsApi from './WordsApi';
+import WordsApi from './Api/WordsApi';
 import { DICT_CATEGORIES, GROUPS } from './Api/constants';
 
 export default class Dictionary {
