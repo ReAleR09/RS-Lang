@@ -5,6 +5,8 @@ import SpeakitVoiceRecognizer from './SpeakitVoiceRecognizer';
 import AppNavigator from '../../../lib/AppNavigator';
 import LocalStorageAdapter from '../../../Utils/LocalStorageAdapter';
 import { roundSize } from './const';
+import Statistics from '../../../Classes/Statistics';
+import { GAMES, MODES } from '../../../../config';
 
 export const SPEAKIT_GAME_STATS = 'SPEAKIT_GAME_STATS';
 
@@ -23,6 +25,8 @@ export default class SpeakitGameManager {
       this.finishGame.bind(this),
     );
     this.speechRecognizer = new SpeakitVoiceRecognizer(this.handleRecognizedPhrase.bind(this));
+    const mode = userWordsMode ? MODES.REPITITION : MODES.GAME;
+    this.statistics = new Statistics(GAMES.SPEAKIT, mode);
   }
 
   attach(element) {
@@ -50,6 +54,8 @@ export default class SpeakitGameManager {
             this.view.updateGuessedCount(this.wordsState.filter((word) => word.guessed).length);
 
             this.soundPlayer.playGuessSound();
+            // send statistics about the fact that word was recognized (async)
+            this.statistics.updateWordStatistics(wordState.id, true);
           }
           return true;
         }
@@ -78,6 +84,9 @@ export default class SpeakitGameManager {
     this.speechRecognizer.stopRecognition();
     const stats = this.calculateStats();
 
+    // sending stats for the game async
+    this.statistics.sendGameResults();
+
     // putting stats to storage to use them on /speakit/results page
     LocalStorageAdapter.set(SPEAKIT_GAME_STATS, stats);
     // and navigatin to results, with slight delay in case it was triggeren on last word
@@ -97,30 +106,36 @@ export default class SpeakitGameManager {
   }
 
   async init() {
-    let words;
+    // TODO show load animation?
+    let wordsPromise;
 
-    // TODO do that asynchroniously
     if (this.userWordsMode) {
-      words = await SpeakitWordsApi.getUserWords();
+      wordsPromise = SpeakitWordsApi.getUserWords();
     } else {
-      words = await SpeakitWordsApi.getWordsForDifficultyAndRound(this.difficulty, this.round);
+      wordsPromise = SpeakitWordsApi.getWordsForDifficultyAndRound(
+        this.difficulty,
+        this.round,
+      );
     }
 
-    const wordsState = words.map((wordInfo) => {
-      const wordState = {
-        id: wordInfo.id,
-        guessed: false,
-        word: wordInfo.word.toLowerCase(),
-        audio: wordInfo.audio,
-        image: wordInfo.image,
-        transcription: wordInfo.transcription,
-        wordTranslate: wordInfo.wordTranslate,
-      };
+    wordsPromise
+      .then((words) => {
+        const wordsState = words.map((wordInfo) => {
+          const wordState = {
+            id: wordInfo.id,
+            guessed: false,
+            word: wordInfo.word.toLowerCase(),
+            audio: wordInfo.audio,
+            image: wordInfo.image,
+            transcription: wordInfo.transcription,
+            wordTranslate: wordInfo.wordTranslate,
+          };
 
-      return wordState;
-    });
-    this.wordsState = wordsState;
-    this.displayWords(wordsState);
+          return wordState;
+        });
+        this.wordsState = wordsState;
+        this.displayWords(wordsState);
+      });
   }
 
   displayWords(wordsInfoArray) {
