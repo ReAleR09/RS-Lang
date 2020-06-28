@@ -1,6 +1,8 @@
 export const TEAM_KEY = 'team';
 export const TEAM_VALUE = 'team7';
 
+export const TOKEN_LIFE = 14400 * 1000;
+
 export const GAMES = {
   LEARNING: 'learningWords',
   SPEAKIT: 'speakIt',

@@ -1,7 +1,9 @@
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
+import LocalStorageAdapter from '../../Utils/LocalStorageAdapter';
 import Form from '../../Classes/Form';
 import Api from '../../Classes/Api/Api';
+import { TOKEN_LIFE } from '../../../config';
 
 const errors = {
   server: 'Server error',
@@ -29,10 +31,9 @@ const logIn = async (e) => {
       }, 2000);
     }
   } else {
-    localStorage.userId = userData.userId;
-    localStorage.token = userData.token;
-    const lifeToken = 14400 * 1000;
-    localStorage.timeStamp = Date.now() + lifeToken;
+    LocalStorageAdapter.set('userId', userData.userId);
+    LocalStorageAdapter.set('token', userData.token);
+    LocalStorageAdapter.set('timeStamp', Date.now() + TOKEN_LIFE);
 
     AppNavigator.go();
   }
@@ -49,9 +50,6 @@ export default class AuthorizationView extends View {
     this.link = document.querySelector('#form-link');
     this.link.addEventListener('click', register);
   }
-  // onUnmount() {
-
-  // }
 
   render() {
     this.authorization = new Form('SIGN IN');

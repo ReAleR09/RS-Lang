@@ -1,4 +1,5 @@
 import { BACKEND_URL } from '../../../config';
+import LocalStorageAdapter from '../../Utils/LocalStorageAdapter';
 
 const REQUESTS = {
   PUT: 'PUT',
@@ -30,9 +31,9 @@ export default class Api {
         this.token = userData.token;
         this.userId = userData.userId;
       }
-    } else if (localStorage.token && localStorage.userId) {
-      this.token = localStorage.token;
-      this.userId = localStorage.userId;
+    } else if (LocalStorageAdapter.get('token') && LocalStorageAdapter.get('userId')) {
+      this.token = LocalStorageAdapter.get('token');
+      this.userId = LocalStorageAdapter.get('userId');
     }
   }
 

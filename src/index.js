@@ -2,15 +2,15 @@ import Router from './js/Router';
 import Sidebar from './js/Classes/Sidebar';
 import PublisherSubscriber from './js/Classes/PublisherSubscriber';
 import { EVENT_NAVIGATION } from './js/Utils/Constants';
-import ExampleController from './js/Controllers/ExampleController';
-import SavannahController from './js/Controllers/SavannahController';
+import AppNavigator from './js/lib/AppNavigator';
+import LocalStorageAdapter from './js/Utils/LocalStorageAdapter';
 
+import SavannahController from './js/Controllers/SavannahController';
 import LearningWordsController from './js/Controllers/LearningWordsController';
 import GameSprintController from './js/Controllers/GameSprintController';
 import SpeakitController from './js/Controllers/SpeakitController';
 import RegistrationController from './js/Controllers/RegistrationController';
 import AuthorizationController from './js/Controllers/AuthorizationController';
-import AppNavigator from './js/lib/AppNavigator';
 import SettingsController from './js/Controllers/SettingsController';
 
 import './js/plugins';
@@ -23,13 +23,12 @@ function appInit() {
    * THIS TO BE REPLACED IN THE PROCESS OF CREATING NEW CONTROLLERS
    */
   const routes = {
-    '/': ExampleController,
+    '/': LearningWordsController,
     registration: RegistrationController,
     authorization: AuthorizationController,
-    example: ExampleController,
     savannah: SavannahController,
     settings: SettingsController,
-    learningWords: LearningWordsController,
+    // learningWords: LearningWordsController,
     'game-sprint': GameSprintController,
     speakit: SpeakitController,
   };
@@ -53,11 +52,11 @@ function appInit() {
   router.route();
   PublisherSubscriber.publish(EVENT_NAVIGATION, { controller: null, action: null, params: null });
 
-  if (localStorage.timeStamp < Date.now()) {
-    localStorage.removeItem('token');
+  if (LocalStorageAdapter.get('timeStamp') < Date.now()) {
+    LocalStorageAdapter.remove('token');
   }
-  if (!localStorage.token) {
-    AppNavigator.go('registration');
+  if (!LocalStorageAdapter.get('token')) {
+    AppNavigator.go('authorization');
   }
 }
 
