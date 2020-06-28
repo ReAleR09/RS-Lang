@@ -53,6 +53,7 @@ export default class Statistics {
       await this.spacedRepititions.putTrainingData(wordId, result);
     }
     this.wordStat.push({ wordId, result });
+    await this.get();
   }
 
   async sendGameResults() {
@@ -140,5 +141,13 @@ export default class Statistics {
     }
 
     return results;
+  }
+
+  get limits() {
+    const dateNow = Utils.getDateNoTime();
+    return {
+      totalWordsCount: this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].totalWordsCount,
+      newWordsCount: this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].newWordsCount,
+    };
   }
 }

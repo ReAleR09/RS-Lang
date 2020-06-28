@@ -1,5 +1,11 @@
-import { wordStartTag, wordEndTag, WORD_STATUSES } from './constants';
-import LearningWordsApi from './LearningWordsApi';
+import {
+  wordStartTag,
+  wordEndTag,
+  WORD_STATUSES,
+  chunkCount,
+  difficultyMax,
+} from './constants';
+import WordsApi from '../../Classes/Api/WordsApi';
 
 export default class LearnindWordsCards {
   constructor(
@@ -18,6 +24,7 @@ export default class LearnindWordsCards {
     this.words = [];
     this.newWords = [];
     this.repeatWords = [];
+    this.wordsApi = new WordsApi();
   }
 
   updateStatistics(statistics) {
@@ -45,9 +52,19 @@ export default class LearnindWordsCards {
     return ((this.length - 1) - this.currentCardIndex);
   }
 
+  changeDifficultyLevel() {
+    if (this.difficulty < difficultyMax) {
+      this.difficulty += 1;
+      this.settings.difficultyLevel = this.difficulty;
+    }
+  }
+
   getNewWords() {
     // TODO WORDS API
-    let words = LearningWordsApi.getRandomWordsForDifficulty(this.difficulty);
+    let words = this.wordsApi.getRandomNewWords(chunkCount, this.difficulty);
+    if (!words.length) {
+      this.changeDifficultyLevel();
+    }
     words = words.map((word) => {
       const newWord = word;
       newWord.WordStatus = WORD_STATUSES.NEW;
@@ -60,10 +77,10 @@ export default class LearnindWordsCards {
   getRepeatWords() {
     // TODO повторяющиеся слова (работа с интервальными повторениями)
   //  const words = LearningWordsApi.getRandomWordsForDifficulty(this.difficulty);
-    let words = LearningWordsApi.getRandomWordsForDifficulty(this.difficulty);
+    let words = this.wordsApi.getRepeatedWords(chunkCount);
     words = words.map((word) => {
       const newWord = word;
-      newWord.wordStatus = WORD_STATUSES.NEW;
+      newWord.wordStatus = WORD_STATUSES.OLD;
       return newWord;
     });
     this.repeatWords = this.filterByLimits(words);

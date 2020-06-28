@@ -2,7 +2,6 @@ import '../../../sass/Components/LearningWords/style.scss';
 import LearningWordsMaterial from './LearningWordsMaterial';
 // import AppNavigator from '../../lib/AppNavigator';
 import {
-  DIFFICULTY_MODIFIERS,
   DATA_URL,
   lockAttribute,
   styleAttribute,
@@ -17,6 +16,7 @@ import {
   HTML_COMPONENT,
   CLASS_VISIBLE,
 } from './IndexTemplate';
+import { DIFFICULTIES, DICT_CATEGORIES } from '../../Classes/Api/constants';
 
 export default class LearningWordsView {
   constructor(model) {
@@ -135,6 +135,16 @@ export default class LearningWordsView {
     });
 
     this.assignWordRateButtonListeners();
+
+    const buttonDelete = this.element.querySelector(QUERIES.BUTTONS.DELETE);
+    const buttonComplicated = this.element.querySelector(QUERIES.BUTTONS.COMPLICATED);
+
+    buttonDelete.addEventListener('click', () => {
+      this.model.updateDictionary(DICT_CATEGORIES.DELETE);
+    });
+    buttonComplicated.addEventListener('click', () => {
+      this.model.updateDictionary(DICT_CATEGORIES.COMPLICATED);
+    });
   }
 
   assignWordRateButtonListeners() {
@@ -147,13 +157,13 @@ export default class LearningWordsView {
       this.model.sendCardToTrainingEnd();
     });
     buttonHard.addEventListener('click', () => {
-      this.model.updateVocabulary(this.rateWord, DIFFICULTY_MODIFIERS.HARD);
+      this.model.updateUserDifficulty(DIFFICULTIES.HARD);
     });
     buttonNormal.addEventListener('click', () => {
-      this.model.updateVocabulary(this.rateWord, DIFFICULTY_MODIFIERS.NORMAL);
+      this.model.updateUserDifficulty(DIFFICULTIES.NORMAL);
     });
     buttonEasy.addEventListener('click', () => {
-      this.model.updateVocabulary(this.rateWord, DIFFICULTY_MODIFIERS.EASY);
+      this.model.updateUserDifficulty(DIFFICULTIES.SIMPLE);
     });
   }
 
@@ -163,11 +173,11 @@ export default class LearningWordsView {
     });
   }
 
-  onButtonNext() {
+  async onButtonNext() {
     const inputValue = this.wordInput.value;
     this.wordInput.value = '';
 
-    const checkResult = this.model.acceptInput(inputValue);
+    const checkResult = await this.model.acceptInput(inputValue);
 
     if (this.isCardLocked()) {
       this.placeSuccessPlaceHolder();
@@ -182,8 +192,7 @@ export default class LearningWordsView {
     this.model.goPrevious();
   }
 
-  showNewWordRateForm(word) {
-    this.rateWord = word;
+  showNewWordRateForm() {
     const modalWordRate = this.element.querySelector(QUERIES.MODALS.WORD_RATE);
     LearningWordsMaterial.showModal(modalWordRate);
   }
