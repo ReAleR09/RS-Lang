@@ -17,10 +17,25 @@ export default class EnglisPuzzleView {
     }
   }
 
+  renameCheckButton() {
+    const checkBtn = document.querySelector(`.${engPuzConst.buttons.CHECK}`);
+    console.log(document.querySelector(`.${engPuzConst.buttons.CHECK}`));
+    if (checkBtn.innerText === 'CHECK') {
+      checkBtn.innerText = 'CONTINUE';
+    } else {
+      checkBtn.innerText = 'CHECK';
+    }
+  }
+
+  toggleDisableButton() {
+    const idkBtn = this.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`);
+    idkBtn.classList.toggle('disabled');
+  }
+
   addCanvasHighlight(puzzleLineIndex) {
     const canvasDropToCheck = document.querySelectorAll(`.${engPuzConst.content.DROPSECTION} .canvas-row-${puzzleLineIndex + 1}`);
     [...canvasDropToCheck].forEach((canvas, i) => {
-      canvas.dataset.item === `1-${i + 1}`
+      canvas.dataset.item === `${puzzleLineIndex + 1}-${i + 1}`
         ? canvas.classList.add('canvas-green') : canvas.classList.add('canvas-red');
     });
   }
@@ -28,8 +43,7 @@ export default class EnglisPuzzleView {
   removeCanvasHighlight(puzzleLineIndex) {
     const canvasDropToCheck = document.querySelectorAll(`.${engPuzConst.content.DROPSECTION} .canvas-row-${puzzleLineIndex + 1}`);
     [...canvasDropToCheck].forEach((canvas) => {
-      canvas.classList.remove('canvas-red');
-      canvas.classList.remove('canvas-green');
+      canvas.classList.remove('canvas-red', 'canvas-green');
     });
   }
 
@@ -76,20 +90,20 @@ export default class EnglisPuzzleView {
     </div>
     <div id="engPuz__drop-section" class="engPuz__drop-section card-panel">
       <div class="engPuz__drop-section--line row-0 flex-center"></div>
-      <div class="engPuz__drop-section--line row-1"></div>
-      <div class="engPuz__drop-section--line row-2"></div>
-      <div class="engPuz__drop-section--line row-3"></div>
-      <div class="engPuz__drop-section--line row-4"></div>
-      <div class="engPuz__drop-section--line row-5"></div>
-      <div class="engPuz__drop-section--line row-6"></div>
-      <div class="engPuz__drop-section--line row-7"></div>
-      <div class="engPuz__drop-section--line row-8"></div>
-      <div class="engPuz__drop-section--line row-9"></div>
+      <div class="engPuz__drop-section--line row-1 flex-center"></div>
+      <div class="engPuz__drop-section--line row-2 flex-center"></div>
+      <div class="engPuz__drop-section--line row-3 flex-center"></div>
+      <div class="engPuz__drop-section--line row-4 flex-center"></div>
+      <div class="engPuz__drop-section--line row-5 flex-center"></div>
+      <div class="engPuz__drop-section--line row-6 flex-center"></div>
+      <div class="engPuz__drop-section--line row-7 flex-center"></div>
+      <div class="engPuz__drop-section--line row-8 flex-center"></div>
+      <div class="engPuz__drop-section--line row-9 flex-center"></div>
     </div>
     <div id="engPuz__drag-section" class="engPuz__drag-section card-panel flex-between"></div>
       <div class="engPuz__bottom-btn flex-center">
-      <a class="engPuz__bottom-idk #fce4ec pink lighten-3 btn waves-effect"><i class="material-icons">cancel</i>don't know</a>
-      <a class="engPuz__bottom-check #81c784 green lighten-1 btn waves-effect"><i class="material-icons">done_all</i>Check</a>
+      <a class="engPuz__bottom-idk #fce4ec pink lighten-3 btn waves-effect">don't know</a>
+      <a class="engPuz__bottom-check #81c784 green lighten-1 btn waves-effect">Check</a>
       </div>
     </div>
     `;

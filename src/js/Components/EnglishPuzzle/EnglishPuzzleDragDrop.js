@@ -17,6 +17,8 @@ export default class EnglisPuzzleDragDrop {
       ghostClass: 'blue-background-class',
       swap: true,
       swapClass: 'highlight',
+      dragoverBubble: true,
+      removeCloneOnHide: true,
     });
 
     new Sortable(this.dropZone, {
@@ -25,21 +27,24 @@ export default class EnglisPuzzleDragDrop {
       ghostClass: 'blue-background-class',
       swap: true,
       swapClass: 'highlight',
+      dragoverBubble: true,
+      removeCloneOnHide: true,
       onEnd(evt) {
         if (evt.to.classList.contains('group-words')) {
-          evt.item.classList.remove('canvas.green', 'canvas-red');
+          evt.item.classList.remove('canvas-green', 'canvas-red');
         }
       },
     });
   }
 
   static activateNextLineDND(rowIndex) {
-    if (document.querySelector(`.${this.dragZone} .row-${rowIndex - 1}`)) {
-      new Sortable(`.${this.dragZone} .row-${rowIndex - 1}`, {
+    console.log(document.querySelector(`.${engPuzConst.content.DROPSECTION} .row-${rowIndex - 1}`));
+    if (document.querySelector(`.${engPuzConst.content.DROPSECTION} .row-${rowIndex - 1}`)) {
+      new Sortable(document.querySelector(`.${engPuzConst.content.DROPSECTION} .row-${rowIndex - 1}`), {
         disabled: true,
       });
     }
-    new Sortable(`.${this.dragZone} .row-${rowIndex}`, {
+    new Sortable(document.querySelector(`.${engPuzConst.content.DROPSECTION} .row-${rowIndex}`), {
       group: 'shared',
       animation: 150,
     });
