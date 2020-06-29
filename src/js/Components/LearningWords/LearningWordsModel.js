@@ -12,25 +12,29 @@ import Statistics from '../../Classes/Statistics';
 import { GAMES, MODES } from '../../../config';
 import Dictionary from '../../Classes/Dictionary';
 import { DICT_CATEGORIES, DIFFICULTIES } from '../../Classes/Api/constants';
+import LearningWordsGameMode from './LearningWordsGameMode';
 
 export default class LearningWordsModel {
-  constructor(settings, statistics) {
+  constructor(settings, statistics, mode = MODES.REPITITION) {
     this.statistics = new Statistics(GAMES.LEARNING, MODES.REPITITION);
     this.dictionary = new Dictionary();
     this.settings = settings;
+    this.difficulty = this.settings.difficulty;
     this.wordsState = [];
     this.view = new LearningWordsView(this);
     this.player = new LearningWordsSoundPlayer(this);
 
-    this.cards = new LearnindWordsCards(
-      this.difficulty,
-      settings, // settings
-      statistics, // statistics
-    );
+    this.game = new LearningWordsGameMode();
+
+    this.mode = mode;
+    this.cards = new LearnindWordsCards();
+
+    this.cards.init(this.difficulty, settings, statistics.limits, mode);
   }
 
-  get difficulty() {
-    return this.settings.difficulty;
+  changeDifficulty(newDifficulty) {
+    this.difficulty = newDifficulty;
+    this.cards.difficulty = newDifficulty;
   }
 
   get card() {
@@ -47,6 +51,11 @@ export default class LearningWordsModel {
   }
 
   init() {
+    if (this.mode === MODES.GAME) {
+      this.view.turnOnGameMode();
+      this.game.startGame();
+      this.changeDifficulty(this.game.level);
+    }
     this.view.init(this.settings);
 
     this.cards.fillCards();
@@ -55,13 +64,15 @@ export default class LearningWordsModel {
   }
 
   updateWordCard(word) {
-    this.player.clearPlayQueue();
-    this.player.addAudioToQueue(DATA_URL + word.audio);
-    if (this.settings.showMeaning) {
-      this.player.addAudioToQueue(DATA_URL + word.audioMeaning);
-    }
-    if (this.settings.showExample) {
-      this.player.addAudioToQueue(DATA_URL + word.audioExample);
+    if (this.mode === MODES.REPITITION) {
+      this.player.clearPlayQueue();
+      this.player.addAudioToQueue(DATA_URL + word.audio);
+      if (this.settings.showMeaning) {
+        this.player.addAudioToQueue(DATA_URL + word.audioMeaning);
+      }
+      if (this.settings.showExample) {
+        this.player.addAudioToQueue(DATA_URL + word.audioExample);
+      }
     }
 
     this.view.drawWordToDOM(word);
@@ -89,6 +100,20 @@ export default class LearningWordsModel {
     }
 
     const result = this.checkInput(value);
+
+    if (this.mode === MODES.GAME) {
+      this.game.inputResult(result);
+      if (this.game.isEnded) {
+        this.settings.setDifficulty(this.game.level);
+        this.showResult();
+      } else {
+        if (this.game.level !== this.difficulty) {
+          this.changeDifficulty(this.game.level);
+        }
+        this.goNext();
+      }
+      return true;
+    }
 
     if (result) {
       this.view.lockCard();
@@ -119,7 +144,6 @@ export default class LearningWordsModel {
   }
 
   showFilledCard(showWordRate = false) {
-    // TODO TRANSLATES
     if (this.settings.turnOnSound) {
       this.player.play();
     }

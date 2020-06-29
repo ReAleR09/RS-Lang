@@ -3,6 +3,10 @@ const githubAccount = 'yafimchik';
 export const chunkCount = 10;
 export const difficultyMax = 5;
 
+export const gameRoundsCount = 10;
+export const minBestResult = 4;
+export const gameLevelCount = 7;
+
 export const RESULTS_ACTION = 'results';
 export const LEARNING_WORDS_CONTROLLER = 'learningWords';
 

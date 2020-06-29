@@ -21,6 +21,7 @@ import { DIFFICULTIES, DICT_CATEGORIES } from '../../Classes/Api/constants';
 export default class LearningWordsView {
   constructor(model) {
     this.model = model;
+    this.mode = this.model.mode;
   }
 
   init(settings) {
@@ -35,9 +36,6 @@ export default class LearningWordsView {
   updateSettings() {
     const disabledElements = [];
     const enabledElements = [];
-
-    // const wordQueries = CONFIGS.QUERIES.WORD_ELEMENTS;
-    //  const buttons = CONFIGS.QUERIES.BUTTONS;
 
     Object.values(QUERIES.WORD_ELEMENTS).forEach((query) => {
       enabledElements.push(this.element.querySelector(query));
@@ -75,8 +73,8 @@ export default class LearningWordsView {
       disabledElements.push(this.element.querySelector(QUERIES.BUTTONS.SKIP));
     }
 
-    if (!this.settings.showButtonSimple) {
-      disabledElements.push(this.element.querySelector(QUERIES.BUTTONS.SIMPLE));
+    if (!this.settings.showButtonDelete) {
+      disabledElements.push(this.element.querySelector(QUERIES.BUTTONS.DELETE));
     }
 
     if (!this.settings.showButtonComplicated) {
@@ -123,8 +121,6 @@ export default class LearningWordsView {
     const buttonSwitchSound = this.element.querySelector(QUERIES.BUTTONS.VOLUME);
 
     buttonSkip.addEventListener('click', () => {
-      // TODO Показать Ответ
-      // Пропускать карточку или дать ввести самому? Если пропускать, то что делать со словарем?
       this.placeSuccessPlaceHolder();
     });
     buttonTranslate.addEventListener('click', () => {
@@ -280,5 +276,17 @@ export default class LearningWordsView {
 
   toggleTurnOnSoundSetting() {
     this.settings.turnOnSound = !this.settings.turnOnSound;
+  }
+
+  turnOnGameMode() {
+    const buttonPrev = this.element.querySelector(QUERIES.BUTTONS.PREV);
+    buttonPrev.setAttribute('disabled', '');
+
+    this.settings.turnOnSound = false;
+    this.settings.showButtonDelete = false;
+    this.settings.showButtonComplicated = false;
+    this.settings.showButtonSkip = false;
+
+    this.updateSettings();
   }
 }
