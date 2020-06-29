@@ -11,6 +11,7 @@ import RegistrationController from './js/Controllers/RegistrationController';
 import AuthorizationController from './js/Controllers/AuthorizationController';
 import AppNavigator from './js/lib/AppNavigator';
 import SettingsController from './js/Controllers/SettingsController';
+import AudioCallController from './js/Controllers/AudioCallController';
 
 import './js/plugins';
 import { SIDENAV } from './config';
@@ -30,6 +31,7 @@ function appInit() {
     learningWords: LearningWordsController,
     'game-sprint': GameSprintController,
     speakit: SpeakitController,
+    'game-audio-call': AudioCallController,
   };
 
   /**
