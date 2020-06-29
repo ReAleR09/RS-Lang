@@ -51,8 +51,8 @@ export default class EnglisPuzzleView {
     <div class="flex-center">
     <blockquote class="engPuz__translation center flex-center">Sentes translation</blockquote>
     </div>
-    <div id="engPuz__drop-section" class="engPuz__drop-section card-panel flex-center"></div>
-    <div id="engPuz__drag-section" class="engPuz__drag-section card-panel flex-center"></div>
+    <div id="engPuz__drop-section" class="engPuz__drop-section card-panel"></div>
+    <div id="engPuz__drag-section" class="engPuz__drag-section card-panel flex-between"></div>
       <div class="engPuz__bottom-btn flex-center">
       <a class="engPuz__bottom-idk #fce4ec pink lighten-3 btn waves-effect"><i class="material-icons">cancel</i>don't know</a>
       <a class="engPuz__bottom-check #81c784 green lighten-1 btn waves-effect"><i class="material-icons">done_all</i>Check</a>
@@ -68,9 +68,11 @@ export default class EnglisPuzzleView {
 
       img.src = imgSrc;
 
+      const dropZoneWidth = parseInt(document.querySelector(`.${engPuzConst.content.DROPSECTION}`).offsetWidth, 10) - 30;
+
       img.onload = () => {
         // const extraWidthValue = 3;
-        const imgWidth = img.width;
+        const imgWidth = img.width > dropZoneWidth ? dropZoneWidth : img.width;
         const imgHeight = img.height;
         const groupsWords = wordsList.map((word) => word.split(' '));
         const groupsRow = groupsWords.length;
@@ -84,7 +86,7 @@ export default class EnglisPuzzleView {
           const wordCount = words.length;
           const letterCounts = words.reduce((acc, val) => acc + val.replace(/<[^>]*>/g, '').length, 0);
           const reduceLength = letterCounts * EXTRA_WIDTH_VALUE;
-          const extraWidth = Math.round(reduceLength / wordCount) - 10;
+          const extraWidth = Math.round(reduceLength / wordCount);
           const onePart = Math.round((imgWidth - reduceLength) / letterCounts);
           const canvasHeight = Math.round(imgHeight / groupsRow) - 20;
 
@@ -119,7 +121,30 @@ export default class EnglisPuzzleView {
             const centerY = canvasHeight / 2;
             const radius = Math.round((canvasHeight / 3) / 2);
             const startXPointCropImage = widthCount - canvasWidth;
-            const fontSize = Math.round(canvasHeight / 4);
+
+            const windoWidth = window.innerWidth;
+            let fontSize;
+
+            switch (true) {
+              case windoWidth < 370:
+                fontSize = Math.round(canvasHeight / 9);
+                break;
+              case windoWidth < 450:
+                fontSize = Math.round(canvasHeight / 8);
+                break;
+              case windoWidth < 650:
+                fontSize = Math.round(canvasHeight / 7);
+                break;
+              case windoWidth < 750:
+                fontSize = Math.round(canvasHeight / 6);
+                break;
+              case windoWidth < 850:
+                fontSize = Math.round(canvasHeight / 5);
+                break;
+              default:
+                fontSize = Math.round(canvasHeight / 4);
+                break;
+            }
 
             ctx.canvas.width = canvasWidth + radius;
             ctx.canvas.height = canvasHeight;
@@ -164,11 +189,11 @@ export default class EnglisPuzzleView {
             ctx.beginPath();
             // ctx.shadowColor = '#b2ebf2 ';
             ctx.shadowBlur = 10;
-            ctx.lineWidth = 1;
+            ctx.lineWidth = 2;
             ctx.strokeStyle = '#0277bd';
-            const fontType = 'bold';
+            const fontType = 'normal';
             const fontRatio = 1;
-            const fontFamily = 'Verdana';
+            const fontFamily = 'Arial';
             const solidTextColor = '#81d4fa';
             const fontStyle = 'fillText';
             ctx.font = `${fontType} ${fontSize * fontRatio}pt ${fontFamily}`;
