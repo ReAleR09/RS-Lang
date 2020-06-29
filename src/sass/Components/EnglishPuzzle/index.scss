@@ -34,8 +34,13 @@
 }
 .engPuz__drop-section {
   min-height: 400px;
-  display: flex;
 }
 .engPuz__drag-section {
   min-height: 50px;
+}
+.engPuz__drop-section--line {
+  min-height: 50px;
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
 }

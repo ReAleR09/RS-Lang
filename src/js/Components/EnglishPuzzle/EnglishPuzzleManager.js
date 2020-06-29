@@ -1,8 +1,8 @@
+/* eslint-disable class-methods-use-this */
 import EnglishPuzzleView from './EnglishPuzzleView';
 import EnglisPuzzleMaterial from './EnglishPuzzleMaterial';
 import EnglisPuzzleDragDrop from './EnglishPuzzleDragDrop';
 import engPuzConst from './EnglishPuzzleConstants';
-// import engPuzConst from './EnglishPuzzleConstants';
 
 export const EP_GAME_STATS = 'EP_GAME_STATS';
 
@@ -39,14 +39,49 @@ export default class EnglishPuzzleManager {
   async init() {
     await this.getPuzzleElements();
     this.puzzleLineRender(this.puzzleLineIndex);
+    this.eventListenersInit();
+  }
+
+  canvasClickHandler(e) {
+    if (e.target.parentNode.classList.contains('engPuz__drop-section--line', `row-${this.puzzleLineIndex}`)) {
+      console.log('hello');
+      const drapSection = document.querySelector('.group-words');
+      drapSection.appendChild(e.target);
+      return;
+    }
+    if (e.target.parentNode.classList.contains('group-words')) {
+      console.log(`.row-${this.puzzleLineIndex}`);
+      const dragSection = document.querySelector(`.engPuz__drop-section--line.row-${this.puzzleLineIndex}`);
+      console.log('hi');
+      console.log(dragSection);
+      dragSection.appendChild(e.target);
+    }
+  }
+
+  eventListenersInit() {
+    this.view.element.addEventListener('click', (e) => {
+      this.checkButtonHandler(e);
+      this.canvasClickHandler(e);
+    });
+  }
+
+  checkButtonHandler() {
+  /*  if (e.classList.contains(engPuzConst.buttons.CHECK)) {
+     const dragSection = document.querySelector(`.${engPuzConst.content.DROPSECTION} .group-words`);
+
+    } */
   }
 
   puzzleLineRender(lineIndex) {
     // todo shuffle sentences array
+    const dragContainer = document.querySelector(engPuzConst.content.DRAGSECTION);
+    console.log(dragContainer);
+    // this.view.clearContainer(dragContainer);
     const dragZone = document.querySelector(`.${engPuzConst.content.DRAGSECTION}`);
     dragZone.appendChild(this.puzzle[lineIndex]);
     // eslint-disable-next-line no-new
     new EnglisPuzzleDragDrop();
+    // EnglisPuzzleDragDrop.activateNextLineDND(lineIndex);
   }
 
   async getPuzzleElements() {

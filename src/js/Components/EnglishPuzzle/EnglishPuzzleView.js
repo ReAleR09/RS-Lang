@@ -10,6 +10,12 @@ export default class EnglisPuzzleView {
     // this.initFinishButton();
   }
 
+  clearContainer(container) {
+    while (container.firstChild) {
+      container.removeChild(container.lastChild);
+    }
+  }
+
   getGameLayout() {
     const html = `
     <div>
@@ -51,7 +57,18 @@ export default class EnglisPuzzleView {
     <div class="flex-center">
     <blockquote class="engPuz__translation center flex-center">Sentes translation</blockquote>
     </div>
-    <div id="engPuz__drop-section" class="engPuz__drop-section card-panel"></div>
+    <div id="engPuz__drop-section" class="engPuz__drop-section card-panel">
+      <div class="engPuz__drop-section--line row-0 flex-center"></div>
+      <div class="engPuz__drop-section--line row-1"></div>
+      <div class="engPuz__drop-section--line row-2"></div>
+      <div class="engPuz__drop-section--line row-3"></div>
+      <div class="engPuz__drop-section--line row-4"></div>
+      <div class="engPuz__drop-section--line row-5"></div>
+      <div class="engPuz__drop-section--line row-6"></div>
+      <div class="engPuz__drop-section--line row-7"></div>
+      <div class="engPuz__drop-section--line row-8"></div>
+      <div class="engPuz__drop-section--line row-9"></div>
+    </div>
     <div id="engPuz__drag-section" class="engPuz__drag-section card-panel flex-between"></div>
       <div class="engPuz__bottom-btn flex-center">
       <a class="engPuz__bottom-idk #fce4ec pink lighten-3 btn waves-effect"><i class="material-icons">cancel</i>don't know</a>
