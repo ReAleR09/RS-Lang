@@ -36,11 +36,20 @@
   min-height: 400px;
 }
 .engPuz__drag-section {
-  min-height: 50px;
+  min-height: 106px;
 }
 .engPuz__drop-section--line {
   min-height: 50px;
   display: flex;
   width: 100%;
   flex-wrap: wrap;
+}
+
+.canvas-red {
+  box-shadow: 0 0 14px red;
+  background-color: red;
+}
+.canvas-green {
+  box-shadow: 0 0 14px green;
+  background-color: green;
 }

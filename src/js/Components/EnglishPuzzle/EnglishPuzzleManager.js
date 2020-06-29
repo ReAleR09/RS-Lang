@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable no-undef */
 /* eslint-disable class-methods-use-this */
 import EnglishPuzzleView from './EnglishPuzzleView';
 import EnglisPuzzleMaterial from './EnglishPuzzleMaterial';
@@ -42,43 +44,64 @@ export default class EnglishPuzzleManager {
     this.eventListenersInit();
   }
 
+  isLastCanvasInDragSection() {
+    const dragContainer = document.querySelector('.group-words');
+    if (!dragContainer.firstChild) {
+      console.log('hellloooo');
+      this.checkLineAnswers();
+    }
+  }
+
+  checkLineAnswers() {
+    const canvasDropToCheck = document.querySelectorAll(`.canvas-row-${this.puzzleLineIndex + 1}`);
+    console.log(canvasDropToCheck);
+    [...canvasDropToCheck].forEach((canvas) => {
+      if (canvas.classList.contains('canvas-red')) {
+        console.log('IDK or skip!');
+      }
+    });
+  }
+
   canvasClickHandler(e) {
     if (e.target.parentNode.classList.contains('engPuz__drop-section--line', `row-${this.puzzleLineIndex}`)) {
-      console.log('hello');
       const drapSection = document.querySelector('.group-words');
+      e.target.classList.contains('canvas-green') ? e.target.classList.remove('canvas-green') : null;
+      e.target.classList.contains('canvas-red') ? e.target.classList.remove('canvas-red') : null;
       drapSection.appendChild(e.target);
+      this.isLastCanvasInDragSection();
       return;
     }
     if (e.target.parentNode.classList.contains('group-words')) {
-      console.log(`.row-${this.puzzleLineIndex}`);
       const dragSection = document.querySelector(`.engPuz__drop-section--line.row-${this.puzzleLineIndex}`);
-      console.log('hi');
-      console.log(dragSection);
       dragSection.appendChild(e.target);
     }
+    this.isLastCanvasInDragSection();
   }
 
   eventListenersInit() {
     this.view.element.addEventListener('click', (e) => {
-      this.checkButtonHandler(e);
       this.canvasClickHandler(e);
+      this.checkButtonHandler(e);
     });
   }
 
-  checkButtonHandler() {
-  /*  if (e.classList.contains(engPuzConst.buttons.CHECK)) {
-     const dragSection = document.querySelector(`.${engPuzConst.content.DROPSECTION} .group-words`);
-
-    } */
+  checkButtonHandler(e) {
+    if (e.target.classList.contains(engPuzConst.buttons.CHECK)) {
+      this.view.removeCanvasHighlight(this.puzzleLineIndex);
+      // const dragSection = document.querySelector(`.${engPuzConst.content.DRAGSECTION}
+      // .group-words`);
+      this.view.addCanvasHighlight(this.puzzleLineIndex);
+    }
   }
 
   puzzleLineRender(lineIndex) {
-    // todo shuffle sentences array
+    // todo shuffle sentences array this.puzzle[lineIndex]
     const dragContainer = document.querySelector(engPuzConst.content.DRAGSECTION);
     console.log(dragContainer);
-    // this.view.clearContainer(dragContainer);
+
     const dragZone = document.querySelector(`.${engPuzConst.content.DRAGSECTION}`);
-    dragZone.appendChild(this.puzzle[lineIndex]);
+    const puzzleLine = this.puzzle[lineIndex];
+    dragZone.appendChild(puzzleLine);
     // eslint-disable-next-line no-new
     new EnglisPuzzleDragDrop();
     // EnglisPuzzleDragDrop.activateNextLineDND(lineIndex);

@@ -25,6 +25,11 @@ export default class EnglisPuzzleDragDrop {
       ghostClass: 'blue-background-class',
       swap: true,
       swapClass: 'highlight',
+      onEnd(evt) {
+        if (evt.to.classList.contains('group-words')) {
+          evt.item.classList.remove('canvas.green', 'canvas-red');
+        }
+      },
     });
   }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable class-methods-use-this */
 import engPuzConst from './EnglishPuzzleConstants';
 
@@ -14,6 +15,22 @@ export default class EnglisPuzzleView {
     while (container.firstChild) {
       container.removeChild(container.lastChild);
     }
+  }
+
+  addCanvasHighlight(puzzleLineIndex) {
+    const canvasDropToCheck = document.querySelectorAll(`.${engPuzConst.content.DROPSECTION} .canvas-row-${puzzleLineIndex + 1}`);
+    [...canvasDropToCheck].forEach((canvas, i) => {
+      canvas.dataset.item === `1-${i + 1}`
+        ? canvas.classList.add('canvas-green') : canvas.classList.add('canvas-red');
+    });
+  }
+
+  removeCanvasHighlight(puzzleLineIndex) {
+    const canvasDropToCheck = document.querySelectorAll(`.${engPuzConst.content.DROPSECTION} .canvas-row-${puzzleLineIndex + 1}`);
+    [...canvasDropToCheck].forEach((canvas) => {
+      canvas.classList.remove('canvas-red');
+      canvas.classList.remove('canvas-green');
+    });
   }
 
   getGameLayout() {
