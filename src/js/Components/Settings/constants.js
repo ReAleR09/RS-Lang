@@ -59,78 +59,78 @@ export const SETTINGS_QUERIES = {
 
 const MAIN_SETTINGS = `
 <p>
-<label>
-    <input class="${CLASSES.DIFFICULTY}" type="number" value="20" style="width: 40px">
-    <span>Новых карточек в день</span>
+<label class="range-field">
+  <input class="${CLASSES.DIFFICULTY}" type="range" min="0" max="5" value="0">
+  <span>Уровень сложности изучаемых слов</span>
 </label>
 </p>
 <p>
 <label>
-    <input class="${CLASSES.NEW_CARDS}" type="number" value="20" style="width: 40px">
-    <span>Новых карточек в день</span>
+  <input class="${CLASSES.NEW_CARDS}" type="range" min="5" max="50" step="5" value="10">
+  <span>Новых карточек в день</span>
 </label>
 </p>
 <p>
 <label>
-    <input class="${CLASSES.CARDS_PER_DAY}" type="number" value="50" style="width: 40px">
-    <span>Количество карточек в день</span>
+  <input class="${CLASSES.CARDS_PER_DAY}" type="range" min="10" max="200" step="10" value="40">
+  <span>Количество карточек в день</span>
 </label>
 </p>
 <div class="divider"></div>
 <p class="${CLASSES.WARNING_PARAGRAPH}">Выберите хотя бы один пункт</p>
 <p>
 <label>
-    <input class="${CLASSES.TRANSLATION}" type="checkbox">
-    <span>Перевод слова</span>
+  <input class="${CLASSES.TRANSLATION}" type="checkbox">
+  <span>Перевод слова</span>
 </label>
 </p>
 <p>
 <label>
-    <input class="${CLASSES.MEANING}" type="checkbox">
-    <span>Предложение с объяснением значения слова</span>
+  <input class="${CLASSES.MEANING}" type="checkbox">
+  <span>Предложение с объяснением значения слова</span>
 </label>
 </p>
 <p>
 <label>
-    <input class="${CLASSES.EXAMPLE}" type="checkbox">
-    <span>Предложение с примером использования изучаемого слова</span>
+  <input class="${CLASSES.EXAMPLE}" type="checkbox">
+  <span>Предложение с примером использования изучаемого слова</span>
 </label>
 </p>
 <div class="divider"></div>
 <p>
 <label>
-    <input class="${CLASSES.TRANSCRIPTION}" type="checkbox">
-    <span>Показывать транскрипцию слова</span>
+  <input class="${CLASSES.TRANSCRIPTION}" type="checkbox">
+  <span>Показывать транскрипцию слова</span>
 </label>
 </p>
 <p>
 <label>
-    <input class="${CLASSES.SHOW_IMAGE}" type="checkbox">
-    <span>Показывать картинку-ассоциацию</span>
+  <input class="${CLASSES.SHOW_IMAGE}" type="checkbox">
+  <span>Показывать картинку-ассоциацию</span>
 </label>
 </p>
 <p>
 <label>
-    <input class="${CLASSES.SHOW_BUTTON_ANSWER}" type="checkbox">
-    <span>Наличие кнопки "Показать ответ"</span>
+  <input class="${CLASSES.SHOW_BUTTON_ANSWER}" type="checkbox">
+  <span>Наличие кнопки "Показать ответ"</span>
 </label>
 </p>
 <p>
 <label>
-    <input class="${CLASSES.SHOW_BUTTON_DELETE}" type="checkbox">
-    <span>Наличие кнопки "Удалить"</span>
+  <input class="${CLASSES.SHOW_BUTTON_DELETE}" type="checkbox">
+  <span>Наличие кнопки "Удалить"</span>
 </label>
 </p>
 <p>
 <label>
-    <input class="${CLASSES.SHOW_BUTTON_HARD}" type="checkbox">
-    <span>Наличие кнопки "Сложные"</span>
+  <input class="${CLASSES.SHOW_BUTTON_HARD}" type="checkbox">
+  <span>Наличие кнопки "Сложные"</span>
 </label>
 </p>
 <p>
 <label>
-    <input class="${CLASSES.SHOW_RATE}" type="checkbox">
-    <span>Наличие кнопок "Снова", "Трудно", "Хорошо", "Легко" </span>
+  <input class="${CLASSES.SHOW_RATE}" type="checkbox">
+  <span>Наличие кнопок "Снова", "Трудно", "Хорошо", "Легко" </span>
 </label>
 </p>
 `;
@@ -138,73 +138,74 @@ const MAIN_SETTINGS = `
 const INTERVAL_SETTINGS = `
 <p>
 <label>
-    <input class="${CLASSES.FIRST_INTERVAL}" type="number" value="5" style="width: 40px">
-    <span>Первый интервал между повторениями (в минутах)</span>
+  <input class="${CLASSES.FIRST_INTERVAL}" type="number" value="5">
+  <span>Первый интервал между повторениями (в минутах)</span>
 </label>
 </p>
 <p>
 <label>
-    <input class="${CLASSES.BASE_INTERVAL}" type="number" value="20" style="width: 40px">
-    <span>Базовый интервал между повторениями (в днях)</span>
+  <input class="${CLASSES.BASE_INTERVAL}" type="number" value="1">
+  <span>Базовый интервал между повторениями (в днях)</span>
 </label>
 </p>
 <p>
 <label>
-    <input class="${CLASSES.BASE_MULTIPLIER}" type="number" value="20" style="width: 40px">
-    <span>Базовый множитель увеличения интервала (в процентах)</span>
+  <input class="${CLASSES.BASE_MULTIPLIER}" type="number" value="120">
+  <span>Базовый множитель увеличения интервала (в процентах)</span>
 </label>
 </p>
 <p>
 <label>
-    <input class="${CLASSES.HARD_MULTIPLIER}" type="number" value="20" style="width: 40px">
-    <span>Дополнительный множитель интервала для сложных слов (в процентах)</span>
+  <input class="${CLASSES.HARD_MULTIPLIER}" type="number" value="110">
+  <span>Дополнительный множитель интервала для сложных слов (в процентах)</span>
 </label>
 </p>
 <p>
 <label>
-    <input class="${CLASSES.SIMPLE_MULTIPLIER}" type="number" value="20" style="width: 40px">
-    <span>Дополнительный множитель интервала для легких слов (в процентах)</span>
+  <input class="${CLASSES.SIMPLE_MULTIPLIER}" type="number" value="150">
+  <span>Дополнительный множитель интервала для легких слов (в процентах)</span>
 </label>
 </p>
 <p>
 <label>
-    <input class="${CLASSES.MAX_INTERVAL}" type="number" value="20" style="width: 40px">
-    <span>Максимальный интервал, после которого слово перестанет добавляться в выдачу</span>
+  <input class="${CLASSES.MAX_INTERVAL}" type="number" value="250">
+  <span>Максимальный интервал, после которого слово перестанет добавляться в выдачу</span>
 </label>
 </p>
 <p>
 <label>
-    <input class="${CLASSES.ANNOYING_LIMIT}" type="number" value="20" style="width: 40px">
-    <span>Количество ошибок, после которых слово будет считаться надоедливым</span>
+  <input class="${CLASSES.ANNOYING_LIMIT}" type="number" value="7">
+  <span>Количество ошибок, после которых слово будет считаться надоедливым</span>
 </label>
 </p>
-<p>
-<label>
-    <input class="${CLASSES.ANNOYING_ACTION}" type="number" value="20" style="width: 40px">
-    <span>Действие с надоедливыми картами</span>
-</label>
-</p>
+<div class="input-field col s12">
+  <select class="${CLASSES.ANNOYING_ACTION}">
+    <option value="0" selected>Отправить в Сложные</option>
+    <option value="1">Отправить в Удаленные</option>
+  </select>
+  <label>Действие с надоедливыми картами</label>
+</div>
 `;
 
 export const SETTINGS_HTML = `
-    <section class="${CLASSES.COMPONENT}">
+<section class="${CLASSES.COMPONENT}">
 
-      <form action="#" class="center-align">
-        <h2>Настройки приложения</h2>
-        <div class="row">
-          <div class="col s12">
-            <ul class="${CLASSES.TABS} tabs">
-              <li class="tab col offset-s2 s4"><a class="active" href="#main-settings">Основные</a></li>
-              <li class="tab col s4"><a href="#interval-settings">Интервальные повторения</a></li>
-            </ul>
-          </div>
-          <div id="main-settings" class="col offset-s2 s8 left-align">
-            ${MAIN_SETTINGS}
-          </div>
-          <div id="interval-settings" class="col offset-s2 s8 left-align">
-            ${INTERVAL_SETTINGS}
-          </div>
-        </div>
-        <button class="${CLASSES.BUTTON_SAVE} waves-effect waves-light btn">Сохранить</button>
-      </form>
-    </section>`;
+  <form action="#" class="center-align">
+    <h2>Настройки приложения</h2>
+    <div class="row">
+      <div class="col s12">
+        <ul class="${CLASSES.TABS} tabs">
+          <li class="tab col offset-s2 s4"><a class="active" href="#main-settings">Основные</a></li>
+          <li class="tab col s4"><a href="#interval-settings">Интервальные повторения</a></li>
+        </ul>
+      </div>
+      <div id="main-settings" class="col offset-s2 s8 left-align">
+        ${MAIN_SETTINGS}
+      </div>
+      <div id="interval-settings" class="col offset-s2 s8 left-align">
+        ${INTERVAL_SETTINGS}
+      </div>
+    </div>
+    <button class="${CLASSES.BUTTON_SAVE} waves-effect waves-light btn">Сохранить</button>
+  </form>
+</section>`;

@@ -3,6 +3,7 @@ import '../../../sass/Components/Settings.scss';
 import View from '../../lib/View';
 // import AppNavigator from '../../lib/AppNavigator';
 import { SETTINGS_HTML, SETTINGS_QUERIES as QUERIES } from '../../Components/Settings/constants';
+import { DICT_CATEGORIES } from '../../Classes/Api/constants';
 
 export default class IndexView extends View {
   /**
@@ -16,8 +17,12 @@ export default class IndexView extends View {
    */
   onMount() {
     this.tabs = Materialize.Tabs.init(this.element.querySelector(QUERIES.TABS), {
-      swipeable: true,
+      swipeable: false,
     });
+
+    const selects = this.element.querySelectorAll('select');
+    Materialize.FormSelect.init(selects);
+
     this.initSettings();
     const buttonSaveSettings = this.element.querySelector(QUERIES.BUTTON_SAVE);
     buttonSaveSettings.addEventListener('click', (event) => {
@@ -26,16 +31,15 @@ export default class IndexView extends View {
         this.warningParagraph.classList.add(QUERIES.WARNING_TEXT);
       } else {
         this.warningParagraph.classList.remove(QUERIES.WARNING_TEXT);
-        this.updateSettings(); // запуск метода класса из обработчика
+        this.updateSettings();
       }
     });
   }
 
-  initSettings() {
-    this.settings = this.props.model.settings;
-
-    this.newCards = this.element.querySelector(QUERIES.NEW_CARDS);
-    this.cardsPerDay = this.element.querySelector(QUERIES.CARDS_PER_DAY);
+  initElements() {
+    this.difficulty = this.element.querySelector(QUERIES.DIFFICULTY);
+    this.newWordsPerDay = this.element.querySelector(QUERIES.NEW_CARDS);
+    this.wordsPerDay = this.element.querySelector(QUERIES.CARDS_PER_DAY);
     this.showWordTranslate = this.element.querySelector(QUERIES.TRANSLATION);
     this.showMeaning = this.element.querySelector(QUERIES.MEANING);
     this.showExample = this.element.querySelector(QUERIES.EXAMPLE);
@@ -47,8 +51,24 @@ export default class IndexView extends View {
     this.showWordRate = this.element.querySelector(QUERIES.SHOW_RATE);
     this.warningParagraph = this.element.querySelector(QUERIES.WARNING_PARAGRAPH);
 
-    this.newWordsPerDay.value = this.settings.newCards;
-    this.wordsPerDay.value = this.settings.cardsPerDay;
+    this.firstInterval = this.element.querySelector(QUERIES.FIRST_INTERVAL);
+    this.baseInterval = this.element.querySelector(QUERIES.BASE_INTERVAL);
+    this.baseMultiplier = this.element.querySelector(QUERIES.BASE_MULTIPLIER);
+    this.hardMultiplier = this.element.querySelector(QUERIES.HARD_MULTIPLIER);
+    this.simpleMultiplier = this.element.querySelector(QUERIES.SIMPLE_MULTIPLIER);
+    this.maxInterval = this.element.querySelector(QUERIES.MAX_INTERVAL);
+    this.annoyingLimit = this.element.querySelector(QUERIES.ANNOYING_LIMIT);
+    this.annoyingAction = this.element.querySelector(QUERIES.ANNOYING_ACTION);
+  }
+
+  initSettings() {
+    this.settings = this.props.model.settings;
+
+    this.initElements();
+
+    this.difficulty = this.settings.difficulty;
+    this.newWordsPerDay.value = this.settings.newWordsPerDay;
+    this.wordsPerDay.value = this.settings.wordsPerDay;
     this.showWordTranslate.checked = this.settings.showWordTranslate;
     this.showMeaning.checked = this.settings.showMeaning;
     this.showExample.checked = this.settings.showExample;
@@ -58,21 +78,55 @@ export default class IndexView extends View {
     this.showDeleteButton.checked = this.settings.showDeleteButton;
     this.showButtonComplicated.checked = this.settings.showButtonComplicated;
     this.showWordRate.checked = this.settings.showWordRate;
+
+    this.firstInterval.value = this.settings.firstIntervalMinutes;
+    this.baseInterval.value = this.settings.baseIntervalDays;
+    this.baseMultiplier.value = this.settings.baseMultiplierPercents;
+    this.hardMultiplier.value = this.settings.hardMultiplierPercents;
+    this.simpleMultiplier.value = this.settings.simpleMultiplierPercents;
+    this.maxInterval.value = this.settings.maxIntervalDays;
+    this.annoyingLimit.value = this.settings.annoyinglimit;
+    this.annoyingAction.value = IndexView.transformCategoriesToSelectValues(
+      this.settings.annoyingAction,
+    );
+  }
+
+  static transformCategoriesToSelectValues(category) {
+    if (category === DICT_CATEGORIES.COMPLICATED) {
+      return 0;
+    }
+    return 1;
+  }
+
+  static transformSelectValuesToCategories(value) {
+    if (value === 0) {
+      return DICT_CATEGORIES.COMPLICATED;
+    }
+    return DICT_CATEGORIES.DELETE;
   }
 
   updateSettings() {
     const newSettings = {
-      newCards: +this.newCards.value,
-      cardsPerDay: +this.cardsPerDay.value,
-      translation: this.translation.checked,
-      translationMeaning: this.translationMeaning.checked,
-      wordUse: this.wordUse.checked,
-      wordTranscription: this.wordTranscription.checked,
-      wordPicture: this.wordPicture.checked,
-      showAnswer: this.showAnswer.checked,
-      showDeleteButton: this.showDeleteButton.checked,
-      showHardButton: this.showHardButton.checked,
-      showButtons: this.showButtons.checked,
+      difficulty: +this.difficulty,
+      newWordsPerDay: +this.newWordsPerDay.value,
+      wordsPerDay: +this.wordsPerDay.value,
+      showWordTranslate: this.showWordTranslate.checked,
+      showMeaning: this.showMeaning.checked,
+      showExample: this.showExample.checked,
+      showTranscription: this.showTranscription.checked,
+      showImage: this.showImage.checked,
+      showButtonAnswer: this.showButtonAnswer.checked,
+      showButtonDelete: this.showButtonDelete.checked,
+      showButtonComplicated: this.showButtonComplicated.checked,
+      showWordRate: this.showWordRate.checked,
+      firstIntervalMinutes: +this.firstInterval.value,
+      baseIntervalDays: +this.baseInterval.value,
+      baseMultiplierPercents: +this.baseMultiplier.value,
+      hardMultiplierPercents: +this.hardMultiplier.value,
+      simpleMultiplierPercents: +this.simpleMultiplierPercents.value,
+      maxIntervalDays: +this.maxInterval.value,
+      annoyinglimit: +this.annoyinglimit.value,
+      annoyingAction: IndexView.transformSelectValuesToCategories(this.annoyingAction.value),
     };
 
     this.props.model.settings = newSettings;

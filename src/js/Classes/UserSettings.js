@@ -4,7 +4,6 @@ import { GAMES } from '../../config';
 class UserSettings {
   constructor() {
     this.settingsObject = {};
-
     this.settingsApi = new SettingsApi();
   }
 

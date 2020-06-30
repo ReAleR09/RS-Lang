@@ -37,7 +37,7 @@ export default class SettingsApi {
     simpleMultiplierPercents: 120,
     maxIntervalDays: 250,
     annoyinglimit: 5,
-    annoyingAction: DICT_CATEGORIES.DELETE,
+    annoyingAction: DICT_CATEGORIES.COMPLICATED,
   }) {
     const settingStructure = {
       wordsPerDay: 50,
