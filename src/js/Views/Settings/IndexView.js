@@ -1,7 +1,8 @@
+import Materialize from 'materialize-css';
+import '../../../sass/Components/Settings.scss';
 import View from '../../lib/View';
 // import AppNavigator from '../../lib/AppNavigator';
 import { SETTINGS_HTML, SETTINGS_QUERIES as QUERIES } from '../../Components/Settings/constants';
-import SettingsModel from '../../lib/UserSettings';
 
 export default class IndexView extends View {
   /**
@@ -14,59 +15,49 @@ export default class IndexView extends View {
    * it references actual DOM root element of this view
    */
   onMount() {
+    this.tabs = Materialize.Tabs.init(this.element.querySelector(QUERIES.TABS), {
+      swipeable: true,
+    });
     this.initSettings();
-    const settingsBtn = this.element.querySelector(QUERIES.BUTTON_SAVE);
-    settingsBtn.addEventListener('click', (event) => {
+    const buttonSaveSettings = this.element.querySelector(QUERIES.BUTTON_SAVE);
+    buttonSaveSettings.addEventListener('click', (event) => {
       event.preventDefault();
       if (!this.translation.checked && !this.translationMeaning.checked && !this.wordUse.checked) {
-        this.wraningParagraph.classList.add(QUERIES.WARNING_TEXT);
+        this.warningParagraph.classList.add(QUERIES.WARNING_TEXT);
       } else {
-        this.wraningParagraph.classList.remove(QUERIES.WARNING_TEXT);
+        this.warningParagraph.classList.remove(QUERIES.WARNING_TEXT);
         this.updateSettings(); // запуск метода класса из обработчика
       }
     });
-
-    // Или сделать сохранение по событию на изменение любой из настроек... типа...
-  /*
-    const allSettingsQueries = Object.values(QUERIES);
-    const AllSettingsElements = allSettingsQueries.map((query) => {
-      const newElement = this.element.querySelector(query);
-      return newElement;
-    });
-
-    AllSettingsElements.forEach((element) => {
-      element.addEventListener('change', this.updateSettings.bind(this));
-      // еще один метод запуска метода класса из обработчика непосредственно
-    }); */
   }
 
   initSettings() {
-    this.settings = this.props.model;
+    this.settings = this.props.model.settings;
 
     this.newCards = this.element.querySelector(QUERIES.NEW_CARDS);
     this.cardsPerDay = this.element.querySelector(QUERIES.CARDS_PER_DAY);
-    this.translation = this.element.querySelector(QUERIES.TRANSLATION);
-    this.translationMeaning = this.element.querySelector(QUERIES.TRANSLATION_MEANING);
-    this.wordUse = this.element.querySelector(QUERIES.EXAMPLE);
-    this.wordTranscription = this.element.querySelector(QUERIES.TRANSCRIPTION);
-    this.wordPicture = this.element.querySelector(QUERIES.SHOW_IMAGE);
-    this.showAnswer = this.element.querySelector(QUERIES.SHOW_BUTTON_ANSWER);
+    this.showWordTranslate = this.element.querySelector(QUERIES.TRANSLATION);
+    this.showMeaning = this.element.querySelector(QUERIES.MEANING);
+    this.showExample = this.element.querySelector(QUERIES.EXAMPLE);
+    this.showTranscription = this.element.querySelector(QUERIES.TRANSCRIPTION);
+    this.showImage = this.element.querySelector(QUERIES.SHOW_IMAGE);
+    this.showButtonAnswer = this.element.querySelector(QUERIES.SHOW_BUTTON_ANSWER);
     this.showDeleteButton = this.element.querySelector(QUERIES.SHOW_BUTTON_DELETE);
-    this.showHardButton = this.element.querySelector(QUERIES.SHOW_BUTTON_HARD);
-    this.showButtons = this.element.querySelector(QUERIES.SHOW_RATE);
-    this.wraningParagraph = this.element.querySelector(QUERIES.WARNING_PARAGRAPH);
+    this.showButtonComplicated = this.element.querySelector(QUERIES.SHOW_BUTTON_HARD);
+    this.showWordRate = this.element.querySelector(QUERIES.SHOW_RATE);
+    this.warningParagraph = this.element.querySelector(QUERIES.WARNING_PARAGRAPH);
 
-    this.newCards.value = this.settings.newCards;
-    this.cardsPerDay.value = this.settings.cardsPerDay;
-    this.translation.checked = this.settings.translation;
-    this.translationMeaning.checked = this.settings.translationMeaning;
-    this.wordUse.checked = this.settings.wordUse;
-    this.wordTranscription.checked = this.settings.wordTranscription;
-    this.wordPicture.checked = this.settings.wordPicture;
-    this.showAnswer.checked = this.settings.showAnswer;
+    this.newWordsPerDay.value = this.settings.newCards;
+    this.wordsPerDay.value = this.settings.cardsPerDay;
+    this.showWordTranslate.checked = this.settings.showWordTranslate;
+    this.showMeaning.checked = this.settings.showMeaning;
+    this.showExample.checked = this.settings.showExample;
+    this.showTranscription.checked = this.settings.showTranscription;
+    this.showImage.checked = this.settings.showImage;
+    this.showButtonAnswer.checked = this.settings.showButtonAnswer;
     this.showDeleteButton.checked = this.settings.showDeleteButton;
-    this.showHardButton.checked = this.settings.showHardButton;
-    this.showButtons.checked = this.settings.showButtons;
+    this.showButtonComplicated.checked = this.settings.showButtonComplicated;
+    this.showWordRate.checked = this.settings.showWordRate;
   }
 
   updateSettings() {
@@ -84,7 +75,7 @@ export default class IndexView extends View {
       showButtons: this.showButtons.checked,
     };
 
-    SettingsModel.settings = newSettings;
+    this.props.model.settings = newSettings;
   }
 
   /**
