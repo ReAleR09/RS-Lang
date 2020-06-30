@@ -1,6 +1,6 @@
 export default class Api {
   constructor() {
-    this.url = 'https://afternoon-falls-25894.herokuapp.com/';
+    this.url = 'http://pacific-castle-12388.herokuapp.com/';
   }
 
   async post(endpoint, param) {

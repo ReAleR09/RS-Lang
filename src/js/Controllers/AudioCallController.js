@@ -18,7 +18,7 @@ export default class GameSprintController extends Controller {
       index: IndexView,
     };
     super(viewClasses);
-    this.wordsUrl = 'https://afternoon-falls-25894.herokuapp.com/words?page=1&group=0';
+    this.wordsUrl = 'http://pacific-castle-12388.herokuapp.com/words?page=1&group=0';
     this.audioClickBtn = new Audio('../../audio/piu.mp3');
   }
 
@@ -28,8 +28,11 @@ export default class GameSprintController extends Controller {
    * Try to do all data aggregation here then pass it to view
    */
   async indexAction() {
-    this.props.checkAnswer = () => {
+    this.props.checkAnswerWord = () => {
       this.checkAnswer();
+    };
+    this.props.answerWord = (event) => {
+      console.log(event.target.innerText);
     };
     await this.getWordsFromDataBase();
     this.startGame();
@@ -53,7 +56,7 @@ export default class GameSprintController extends Controller {
         randomTranslateWords: this.randomTranslateWord(this.dataWords[x].wordTranslate),
       });
     }
-    console.log(this.wordsToSend);
+    // console.log(this.wordsToSend);
   }
 
   randomTranslateWord(rightWord) {
@@ -86,7 +89,7 @@ export default class GameSprintController extends Controller {
     try {
       const response = await fetch(this.wordsUrl);
       this.dataWords = await response.json();
-      console.log(this.dataWords);
+      // console.log(this.dataWords);
     } catch (error) {
       throw new Error('Ошибка при получении слов с сервера');
     }

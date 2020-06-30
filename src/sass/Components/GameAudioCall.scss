@@ -1,3 +1,22 @@
 .carousel-slider {
+  margin-top: 20px;
   border: 2px solid red;
+}
+.audio-call__img-word {
+  display: inherit;
+  width: 120px !important;
+  height: 120px;
+  border-radius: 50%;
+  margin: 20px auto;
+}
+.audio-call__wrapper-shuffle-words {
+  display: flex;
+  justify-content: center;
+  margin: 15px;
+}
+.audio-call__number-word {
+  margin: 0 5px 0 10px;
+}
+.audio-call__shuffle-word {
+  cursor: pointer;
 }

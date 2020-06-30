@@ -1,6 +1,8 @@
 import M from 'materialize-css';
 import View from '../../lib/View';
 
+const numberSlide = ['#one!', '#two!', '#three!', '#four!', '#five!', '#six!', '#seven!', '#eight!', '#nine!', '#ten!'];
+
 export default class IndexView extends View {
   /**
    * This method will be automatically called oncewhen navigation to the page occured,
@@ -15,55 +17,54 @@ export default class IndexView extends View {
     // this.element.querySelector('#repeat-word-btn').addEventListener('click', () => {
     //   this.props.repeatWord();
     // });
-    this.element.querySelector('#answer-word-btn').addEventListener('click', () => {
-      this.props.answerWord();
-    });
     this.element.querySelector('#check-answer-btn').addEventListener('click', () => {
-      this.props.checkAnswer();
+      this.props.checkAnswerWord();
       this.instance.next();
     });
+
     // this.componentDidUpdate();
+
     this.subscribe('update-data', ({
       status,
       countCorrectTranslationWords,
       wordsToSend,
     }) => {
-      console.log('status: ', status, 'countCorrWords: ', countCorrectTranslationWords, 'wordsToSend: ', wordsToSend);
+      this.wordsToSend = wordsToSend;
+      console.log(status, countCorrectTranslationWords, wordsToSend);
+      this.generateHtml(wordsToSend);
     });
   }
 
-  componentDidUpdate() {
-    // M.AutoInit();
-    this.carousel = document.querySelector('.carousel');
-    M.Carousel.init(this.carousel, {
-      fullWidth: true,
+  generateHtml(wordsToSend) {
+    console.log(wordsToSend);
+    let answerHtml = '';
+    wordsToSend.forEach((el, i) => {
+      let translateWords = '';
+      el.randomTranslateWords.forEach((element, item) => {
+        translateWords += `
+        <span class="audio-call__number-word">${item + 1}.</span>
+        <div class="white-text audio-call__shuffle-word">${element}</div>`;
+      });
+      answerHtml += `
+        <div class="carousel-item blue white-text" href="${numberSlide[i]}">
+          <img class="audio-call__img-word" src="https://raw.githubusercontent.com/irinainina/rslang-data/master/${el.image}">
+          <a id="repeat-word-btn" class="btn-floating btn-large waves-effect waves-light red">
+            <i class="material-icons">volume_up</i>
+          </a>
+          <h5>${el.word}</h5>
+          <div class="audio-call__wrapper-shuffle-words">
+            ${translateWords}
+          </div>
+        </div>
+      `;
     });
-    this.instance = M.Carousel.getInstance(this.carousel);
-  }
-
-  generateHtml() {
-    this.sendHtml = `
-    <div class="carousel-item blue white-text" href="#one!">
-      <h2>First Panel</h2>
-      <a id="repeat-word-btn" class="btn-floating btn-large waves-effect waves-light red">
-        <i class="material-icons">volume_up</i>
-      </a>
-      <p class="white-text">This is your first panel</p>
-    </div>
-    <div class="carousel-item blue white-text" href="#two!">
-      <h2>Second Panel</h2>
-      <a id="repeat-word-btn" class="btn-floating btn-large waves-effect waves-light red">
-        <i class="material-icons">volume_up</i>
-      </a>
-      <p class="white-text">This is your second panel</p>
-    </div>
-    <div class="carousel-item blue white-text" href="#three!">
-      <h2>Third Panel</h2>
-      <a id="repeat-word-btn" class="btn-floating btn-large waves-effect waves-light red">
-        <i class="material-icons">volume_up</i>
-      </a>
-      <p class="white-text">This is your third panel</p>
-    </div>`;
+    this.element.insertAdjacentHTML('beforeend', answerHtml);
+    this.componentDidUpdate();
+    this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
+      el.addEventListener('click', (event) => {
+        this.props.answerWord(event);
+      });
+    });
   }
 
   /**
@@ -91,5 +92,14 @@ export default class IndexView extends View {
         </div>
       </div>`;
     return html;
+  }
+
+  componentDidUpdate() {
+    // M.AutoInit();
+    this.carousel = document.querySelector('.carousel');
+    M.Carousel.init(this.carousel, {
+      fullWidth: true,
+    });
+    this.instance = M.Carousel.getInstance(this.carousel);
   }
 }
