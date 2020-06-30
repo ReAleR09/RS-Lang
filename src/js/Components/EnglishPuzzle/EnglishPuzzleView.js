@@ -27,6 +27,15 @@ export default class EnglisPuzzleView {
     }
   }
 
+  updateTemplateShadow(elem) {
+    this.templateShadow.appendChild(elem);
+  }
+
+  removePuzzleLinePointerEvents(lineIndex) {
+    const puzzleRow = document.querySelector(`.${engPuzConst.content.DROPSECTION} .row-${lineIndex}`);
+    puzzleRow.classList.add('noPointer');
+  }
+
   toggleDisableButton() {
     const idkBtn = this.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`);
     idkBtn.classList.toggle('disabled');

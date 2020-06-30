@@ -3,17 +3,36 @@
 import Sortable from 'sortablejs';
 import engPuzConst from './EnglishPuzzleConstants';
 
+const OPTIONS = {
+  group: 'shared', // set both lists to same group
+  animation: 150,
+  pull: 'clone',
+  ghostClass: 'blue-background-class',
+  swap: true,
+  swapClass: 'highlight',
+  dragoverBubble: true,
+  removeCloneOnHide: true,
+};
+
 export default class EnglisPuzzleDragDrop {
   constructor() {
     this.dragZone = document.querySelector(`.${engPuzConst.content.DRAGSECTION} .group-words`);
-    this.dropZone = document.querySelector('.engPuz__drop-section--line');
+    this.dropZone = document.querySelector('.engPuz__drop-section--line.row-0');
+    this.instances = [];
+    this.toDisable = [];
     this.init();
+  }
+
+  createInstance(node) {
+    const instance = new Sortable(node, OPTIONS);
+    this.instances.push(instance);
   }
 
   init() {
     new Sortable(this.dragZone, {
       group: 'shared', // set both lists to same group
       animation: 150,
+      pull: 'clone',
       ghostClass: 'blue-background-class',
       swap: true,
       swapClass: 'highlight',
@@ -21,26 +40,14 @@ export default class EnglisPuzzleDragDrop {
       removeCloneOnHide: true,
     });
 
-    new Sortable(this.dropZone, {
-      group: 'shared',
-      animation: 150,
-      ghostClass: 'blue-background-class',
-      swap: true,
-      swapClass: 'highlight',
-      dragoverBubble: true,
-      removeCloneOnHide: true,
-      onEnd(evt) {
-        if (evt.to.classList.contains('group-words')) {
-          evt.item.classList.remove('canvas-green', 'canvas-red');
-        }
-      },
-    });
+    this.createInstance(this.dropZone);
   }
 
   static activateNextLineDND(rowIndex) {
-    console.log(document.querySelector(`.${engPuzConst.content.DROPSECTION} .row-${rowIndex - 1}`));
     if (document.querySelector(`.${engPuzConst.content.DROPSECTION} .row-${rowIndex - 1}`)) {
       new Sortable(document.querySelector(`.${engPuzConst.content.DROPSECTION} .row-${rowIndex - 1}`), {
+        swap: true,
+        group: 'shared',
         disabled: true,
       });
     }
