@@ -16,7 +16,7 @@ import LearningWordsGameMode from './LearningWordsGameMode';
 
 export default class LearningWordsModel {
   constructor(settings, statistics, mode = MODES.REPITITION) {
-    this.statistics = new Statistics(GAMES.LEARNING, MODES.REPITITION);
+    this.statistics = new Statistics(GAMES.LEARNING, mode);
     this.dictionary = new Dictionary();
     this.settings = settings;
     this.difficulty = this.settings.difficulty;

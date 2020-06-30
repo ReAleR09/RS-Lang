@@ -64,6 +64,7 @@ export default class LearningWordsGameMode {
   set round(value) {
     if (value >= this.roundMaxCount) {
       this.nextRound();
+      this.level -= 1;
 
       if (this.retry) {
         this.ended = true;

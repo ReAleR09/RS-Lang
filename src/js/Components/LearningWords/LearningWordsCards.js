@@ -62,14 +62,17 @@ export default class LearnindWordsCards {
   }
 
   get restCardsCount() {
-    if ((this.limits.maxCount - this.counts.totalCount) < 0) {
+    if ((this.limits.maxCount - this.counts.totalWordsCount) < 0) {
       return 0;
     }
-    return (this.limits.maxCount - this.counts.totalCount);
+    return (this.limits.maxCount - this.counts.totalWordsCount);
   }
 
   get restNewWordsCount() {
-    return (this.limits.maxCountNewCards - this.counts.NewWords);
+    if ((this.limits.maxCountNewCards - this.counts.newWordsCount) < 0) {
+      return 0;
+    }
+    return (this.limits.maxCountNewCards - this.counts.newWordsCount);
   }
 
   get length() {
