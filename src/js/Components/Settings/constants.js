@@ -26,6 +26,8 @@ const CLASSES = {
   MAX_INTERVAL: 'max-interval',
   ANNOYING_LIMIT: 'annoying-limit',
   ANNOYING_ACTION: 'annoying-action',
+  ACTION_COMPLICATED: 'annoying-action--complicated',
+  ACTION_DELETE: 'annoying-action--delete',
 };
 
 // export const CLASS_BUTTON_SAVE = `.${CLASSES.COMPONENT} .${CLASSES.BUTTON_SAVE}`;
@@ -55,6 +57,8 @@ export const SETTINGS_QUERIES = {
   MAX_INTERVAL: `.${CLASSES.COMPONENT} .${CLASSES.MAX_INTERVAL}`,
   ANNOYING_LIMIT: `.${CLASSES.COMPONENT} .${CLASSES.ANNOYING_LIMIT}`,
   ANNOYING_ACTION: `.${CLASSES.COMPONENT} .${CLASSES.ANNOYING_ACTION}`,
+  ACTION_COMPLICATED: `.${CLASSES.COMPONENT} .${CLASSES.ANNOYING_ACTION} .${CLASSES.ACTION_COMPLICATED}`,
+  ACTION_DELETE: `.${CLASSES.COMPONENT} .${CLASSES.ANNOYING_ACTION} .${CLASSES.ACTION_DELETE}`,
 };
 
 const MAIN_SETTINGS = `
@@ -180,8 +184,8 @@ const INTERVAL_SETTINGS = `
 </p>
 <div class="input-field col s12">
   <select class="${CLASSES.ANNOYING_ACTION}">
-    <option value="0" selected>Отправить в Сложные</option>
-    <option value="1">Отправить в Удаленные</option>
+    <option class="${CLASSES.ACTION_COMPLICATED}" value="0" selected>Отправить в Сложные</option>
+    <option class="${CLASSES.ACTION_DELETE}" value="1">Отправить в Удаленные</option>
   </select>
   <label>Действие с надоедливыми картами</label>
 </div>

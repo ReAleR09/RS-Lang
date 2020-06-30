@@ -20,10 +20,11 @@ export default class IndexView extends View {
       swipeable: false,
     });
 
+    this.initSettings();
+
     const selects = this.element.querySelectorAll('select');
     Materialize.FormSelect.init(selects);
 
-    this.initSettings();
     const buttonSaveSettings = this.element.querySelector(QUERIES.BUTTON_SAVE);
     buttonSaveSettings.addEventListener('click', (event) => {
       event.preventDefault();
@@ -59,6 +60,11 @@ export default class IndexView extends View {
     this.maxInterval = this.element.querySelector(QUERIES.MAX_INTERVAL);
     this.annoyingLimit = this.element.querySelector(QUERIES.ANNOYING_LIMIT);
     this.annoyingAction = this.element.querySelector(QUERIES.ANNOYING_ACTION);
+
+    this.actionComplicated = this.element.querySelector(QUERIES.ACTION_COMPLICATED);
+    this.actionDelete = this.element.querySelector(QUERIES.ACTION_DELETE);
+    this.actionComplicated.value = DICT_CATEGORIES.COMPLICATED;
+    this.actionDelete.value = DICT_CATEGORIES.DELETE;
   }
 
   initSettings() {
@@ -86,23 +92,19 @@ export default class IndexView extends View {
     this.simpleMultiplier.value = this.settings.simpleMultiplierPercents;
     this.maxInterval.value = this.settings.maxIntervalDays;
     this.annoyingLimit.value = this.settings.annoyinglimit;
-    this.annoyingAction.value = IndexView.transformCategoriesToSelectValues(
-      this.settings.annoyingAction,
-    );
+
+    this.setAnnoyingAction(this.settings.annoyingAction);
   }
 
-  static transformCategoriesToSelectValues(category) {
+  setAnnoyingAction(category) {
     if (category === DICT_CATEGORIES.COMPLICATED) {
-      return 0;
+      this.actionComplicated.setAttribute('selected', '');
+      this.actionDelete.removeAttribute('selected');
     }
-    return 1;
-  }
-
-  static transformSelectValuesToCategories(value) {
-    if (value === 0) {
-      return DICT_CATEGORIES.COMPLICATED;
+    if (category === DICT_CATEGORIES.DELETE) {
+      this.actionComplicated.removeAttribute('selected');
+      this.actionDelete.setAttribute('selected', '');
     }
-    return DICT_CATEGORIES.DELETE;
   }
 
   updateSettings() {
@@ -126,7 +128,7 @@ export default class IndexView extends View {
       simpleMultiplierPercents: +this.simpleMultiplierPercents.value,
       maxIntervalDays: +this.maxInterval.value,
       annoyinglimit: +this.annoyinglimit.value,
-      annoyingAction: IndexView.transformSelectValuesToCategories(this.annoyingAction.value),
+      annoyingAction: this.annoyingAction.value,
     };
 
     this.props.model.settings = newSettings;
