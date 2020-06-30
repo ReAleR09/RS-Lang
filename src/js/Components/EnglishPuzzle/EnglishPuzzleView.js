@@ -41,12 +41,27 @@ export default class EnglisPuzzleView {
     idkBtn.classList.toggle('disabled');
   }
 
+  togglePlayBtn() {
+    this.element.querySelector('a.engPuz__audio').classList.toggle('disabled');
+  }
+
   addCanvasHighlight(puzzleLineIndex) {
     const canvasDropToCheck = document.querySelectorAll(`.${engPuzConst.content.DROPSECTION} .canvas-row-${puzzleLineIndex + 1}`);
     [...canvasDropToCheck].forEach((canvas, i) => {
       canvas.dataset.item === `${puzzleLineIndex + 1}-${i + 1}`
         ? canvas.classList.add('canvas-green') : canvas.classList.add('canvas-red');
     });
+  }
+
+  renderTranslation(words, lineIndex) {
+    const translation = document.querySelector('.engPuz__translation');
+    translation.innerText = words[lineIndex].textExampleTranslate;
+  }
+
+  toggleTranlation(e) {
+    if (e.target.classList.contains('engPuz__tooltips-translation')) {
+      document.querySelector('blockquote').classList.toggle('visually-hidden');
+    }
   }
 
   removeCanvasHighlight(puzzleLineIndex) {
@@ -85,14 +100,14 @@ export default class EnglisPuzzleView {
     </div>
       
     <div class="engPuz__tooltips flex-between">
-      <a class="engPuz__tooltips-autoPlay btn-floating waves-effect"> <i class="medium material-icons">volume_up</i></a>
-      <a class="engPuz__tooltips-translation btn-floating circle waves-effect"> <i class="medium material-icons">translate</i></a>
-      <a class="engPuz__tooltips-audioSwitcher btn-floating circle waves-effect"> <i class="medium material-icons">music_video</i></a>
-      <a class="engPuz__tooltips-picture btn-floating circle waves-effect"> <i class="medium material-icons">photo</i></a>
+      <a class="engPuz__tooltips-autoPlay btn-floating waves-effect"> <i class="engPuz__tooltips-autoPlay medium material-icons">volume_up</i></a>
+      <a class="engPuz__tooltips-translation btn-floating circle waves-effect"> <i class="engPuz__tooltips-translation medium material-icons">translate</i></a>
+      <a class="engPuz__tooltips-audioSwitcher btn-floating circle waves-effect"> <i class="engPuz__tooltips-audioSwitcher medium material-icons">music_video</i></a>
+      <a class="engPuz__tooltips-picture btn-floating circle waves-effect"> <i class="engPuz__tooltips-picture medium material-icons">photo</i></a>
     </div>
     </div>
     <div class="flex-center">
-    <a class="engPuz__audio #ffb74d orange lighten-2 center btn waves-effect waves-purple "><i class="material-icons">volume_up</i></a>
+    <a class="engPuz__audio #ffb74d orange lighten-2 center btn waves-effect waves-purple "><i class="engPuz__audio material-icons">volume_up</i></a>
     </div>
     <div class="flex-center">
     <blockquote class="engPuz__translation center flex-center">Sentes translation</blockquote>

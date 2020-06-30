@@ -5,12 +5,15 @@ import EnglishPuzzleView from './EnglishPuzzleView';
 import EnglisPuzzleMaterial from './EnglishPuzzleMaterial';
 import EnglisPuzzleDragDrop from './EnglishPuzzleDragDrop';
 import engPuzConst from './EnglishPuzzleConstants';
+import MockWordsApi from './mockWords';
+import { CONF_MEDIA_BASE_PATH } from '../../../config';
 
 export const EP_GAME_STATS = 'EP_GAME_STATS';
 
 export default class EnglishPuzzleManager {
-  constructor(difficulty = 0, page = 1) {
+  constructor(difficulty = 1, page = 1) {
     this.difficulty = difficulty;
+    this.words = MockWordsApi.getWordsForDifficulty(this.difficulty);
     this.page = page;
     this.puzzleLineIndex = 0;
     this.isAutoPlay = true;
@@ -19,19 +22,9 @@ export default class EnglishPuzzleManager {
     this.isImageShow = true;
     this.puzzleArr = [[], [], [], [], [], [], [], [], [], []];
     this.imgSrc = 'https://tlmnnk.github.io/images/rslang/birthOfVenus.jpg';
-    this.sentences = [
-      'The students <b>agree</b> they have too much homework.',
-      'There is a small <b>boat</b> on the lake.',
-      'They <b>arrived</b> at school at 7 a.m.',
-      'Is your birthday in <b>August</b>?',
-      'I ate eggs for <b>breakfast</b>.',
-      'I brought my <b>camera</b> on my vacation.',
-      'The <b>capital</b> of the United States is Washington, D.C.',
-      'Did you <b>catch</b> the ball during the baseball game?',
-      'People feed <b>ducks</b> at the lake.',
-      'The woman <b>enjoys</b> riding her bicycle.',
-    ];
+    this.sentences = [];
     this.view = new EnglishPuzzleView();
+    console.log(this.sentences);
   }
 
   attach(element) {
@@ -39,7 +32,14 @@ export default class EnglishPuzzleManager {
     this.material = new EnglisPuzzleMaterial();
   }
 
+  getSentencesForGame() {
+    this.words.forEach((word) => {
+      this.sentences.push(word.textExample);
+    });
+  }
+
   async init() {
+    this.getSentencesForGame();
     await this.getPuzzleElements();
     this.puzzleLineRender(this.puzzleLineIndex);
     this.eventListenersInit();
@@ -50,7 +50,22 @@ export default class EnglishPuzzleManager {
       this.canvasClickHandler(e);
       this.checkButtonHandler(e);
       this.idkClickHandler(e);
+      this.view.toggleTranlation(e);
+      this.audioBtnHandler(e);
+      this.audioSwitcherHandler(e);
     });
+  }
+
+  audioBtnHandler(e) {
+    if (e.target.classList.contains('engPuz__audio')) {
+      new Audio(CONF_MEDIA_BASE_PATH + this.words[this.puzzleLineIndex].audioExample).play();
+    }
+  }
+
+  audioSwitcherHandler(e) {
+    if (e.target.classList.contains('engPuz__tooltips-audioSwitcher')) {
+      this.view.togglePlayBtn();
+    }
   }
 
   idkClickHandler(e) {
@@ -138,11 +153,11 @@ export default class EnglishPuzzleManager {
     // todo shuffle sentences array this.puzzle[lineIndex] before appending
     const dragZone = document.querySelector(`.${engPuzConst.content.DRAGSECTION}`);
     this.pushNewLinePuzzleToPuzzleArr();
+
     dragZone.append(this.puzzleCompelete[this.puzzleLineIndex]);
+    this.view.renderTranslation(this.words, this.puzzleLineIndex);
     // eslint-disable-next-line no-new
     this.dnd = new EnglisPuzzleDragDrop();
-    // EnglisPuzzleDragDrop.activateNextLineDND(lineIndex);
-    console.log(this.puzzleArr);
   }
 
   async getPuzzleElements() {
