@@ -86,9 +86,14 @@ export default class WordsApi {
     if (filterString) {
       params.filter = filterString;
     }
-    let totalCount = await this.api.getAggregatedWords(params);
+    const totalCountResult = await this.api.getAggregatedWords(params);
 
-    totalCount = totalCount[0].totalCount[0].count;
+    let totalCount = 0;
+    try {
+      totalCount = totalCountResult[0].totalCount[0].count;
+    } catch (error) {
+      return [];
+    }
 
     params.wordsPerPage = totalCount;
     let arrayOfResults = await this.api.getAggregatedWords(params);
