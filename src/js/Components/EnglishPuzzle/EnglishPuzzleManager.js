@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-undef */
 /* eslint-disable class-methods-use-this */
 import EnglishPuzzleView from './EnglishPuzzleView';
 import EnglisPuzzleMaterial from './EnglishPuzzleMaterial';
@@ -154,7 +152,9 @@ export default class EnglishPuzzleManager {
   canvasClickHandler(e) {
     if (e.target.parentNode.classList.contains('engPuz__drop-section--line', `row-${this.puzzleLineIndex}`)) {
       const dragSection = document.querySelector('.group-words');
+      // eslint-disable-next-line no-unused-expressions
       e.target.classList.contains('canvas-green') ? e.target.classList.remove('canvas-green') : null;
+      // eslint-disable-next-line no-unused-expressions
       e.target.classList.contains('canvas-red') ? e.target.classList.remove('canvas-red') : null;
       dragSection.appendChild(e.target);
       // this.isLastCanvasInDragSection();

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 /* eslint-disable class-methods-use-this */
 import engPuzConst from './EnglishPuzzleConstants';
 
@@ -6,10 +5,6 @@ export default class EnglisPuzzleView {
   attach(element) {
     this.element = element;
     this.dropContainer = this.element.querySelector(`.${engPuzConst.content.DROPSECTION}`);
-    // this.initDifficultySwitcher();
-    // this.initWordSoundButtonClick();
-    // this.initBeginButton();
-    // this.initFinishButton();
   }
 
   clearContainer(container) {
@@ -80,6 +75,7 @@ export default class EnglisPuzzleView {
   addCanvasHighlight(puzzleLineIndex) {
     const canvasDropToCheck = document.querySelectorAll(`.${engPuzConst.content.DROPSECTION} .canvas-row-${puzzleLineIndex + 1}`);
     [...canvasDropToCheck].forEach((canvas, i) => {
+      // eslint-disable-next-line no-unused-expressions
       canvas.dataset.item === `${puzzleLineIndex + 1}-${i + 1}`
         ? canvas.classList.add('canvas-green') : canvas.classList.add('canvas-red');
     });
