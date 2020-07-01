@@ -65,6 +65,7 @@ export default class EnglishPuzzleManager {
   audioSwitcherHandler(e) {
     if (e.target.classList.contains('engPuz__tooltips-audioSwitcher')) {
       this.view.togglePlayBtn();
+      this.view.toggleGreyBtnBackground(e.target.parentNode);
     }
   }
 

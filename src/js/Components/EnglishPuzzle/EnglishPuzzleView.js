@@ -65,6 +65,7 @@ export default class EnglisPuzzleView {
   toggleTranlation(e) {
     if (e.target.classList.contains('engPuz__tooltips-translation')) {
       document.querySelector('blockquote').classList.toggle('visually-hidden');
+      this.toggleGreyBtnBackground(e.target.parentNode);
     }
   }
 
