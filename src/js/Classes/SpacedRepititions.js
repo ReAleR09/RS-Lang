@@ -1,5 +1,6 @@
 import WordsApi from './Api/WordsApi';
 import { MILLIS_PER_MINUTE, MILLIS_PER_DAY, DIFFICULTIES } from './Api/constants';
+import Dictionary from './Dictionary';
 
 const SETTINGS = {
   firstIntervalMinutes: 5,
@@ -13,19 +14,20 @@ const SETTINGS = {
 export default class SpacedRepititions {
   constructor() {
     this.wordsApi = new WordsApi();
+    this.dictionary = new Dictionary();
     this.settings = SETTINGS;
   }
 
   getMultiplier(difficulty) {
-    let additionalMultiplier = 1;
+    let multiplier = (this.settings.baseMultiplierPercents / 100);
+
     if (difficulty === DIFFICULTIES.HARD) {
-      additionalMultiplier = this.settings.hardMultiplierPercents / 100;
+      multiplier = this.settings.hardMultiplierPercents / 100;
     }
     if (difficulty === DIFFICULTIES.SIMPLE) {
-      additionalMultiplier = this.settings.simpleMultiplierPercents / 100;
+      multiplier = this.settings.simpleMultiplierPercents / 100;
     }
 
-    let multiplier = (this.settings.baseMultiplierPercents / 100) * additionalMultiplier;
     multiplier = Math.max(1, multiplier);
     return multiplier;
   }
@@ -82,6 +84,10 @@ export default class SpacedRepititions {
     } else {
       userWordData = await this.wordsApi.getWordDataById(wordId);
       isFirstStep = (userWordData.nextDate === 0);
+    }
+
+    if (userWordData.errors >= this.settings.annoyingLimit) {
+      await this.dictionary.putOnCategory(wordId, this.settings.annoyingAction);
     }
 
     if (isFirstStep) {
