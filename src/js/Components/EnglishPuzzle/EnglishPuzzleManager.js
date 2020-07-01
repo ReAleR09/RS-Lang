@@ -24,7 +24,6 @@ export default class EnglishPuzzleManager {
     this.imgSrc = 'https://tlmnnk.github.io/images/rslang/birthOfVenus.jpg';
     this.sentences = [];
     this.view = new EnglishPuzzleView();
-    console.log(this.sentences);
   }
 
   attach(element) {
@@ -93,17 +92,31 @@ export default class EnglishPuzzleManager {
   isLastCanvasInDragSection() {
     const dragContainer = document.querySelector('.group-words');
     if (!dragContainer.firstChild) {
-      this.checkLineAnswers();
+      this.view.addCanvasHighlight(this.puzzleLineIndex);
+      if (this.checkLineAnswers()) {
+        this.view.toggleDisableButton();
+        this.view.renameCheckButton();
+        this.view.removePuzzleLinePointerEvents(this.puzzleLineIndex);
+        console.log('hello000000');
+        // update statisticks with correct answer
+      }
     }
   }
 
   checkLineAnswers() {
     const canvasDropToCheck = this.view.element.querySelectorAll(`.canvas-row-${this.puzzleLineIndex + 1}`);
+    let mistakes = 0;
     [...canvasDropToCheck].forEach((canvas) => {
       if (canvas.classList.contains('canvas-red')) {
-        console.log('IDK or skip!');
+        mistakes += 1;
       }
     });
+
+    if (mistakes) {
+      // update statistics
+      return false;
+    }
+    return true;
   }
 
   canvasClickHandler(e) {
@@ -118,20 +131,16 @@ export default class EnglishPuzzleManager {
     if (e.target.parentNode.classList.contains('group-words')) {
       const dropSection = document.querySelector(`.engPuz__drop-section--line.row-${this.puzzleLineIndex}`);
       dropSection.appendChild(e.target);
+      this.isLastCanvasInDragSection();
     }
-    this.isLastCanvasInDragSection();
   }
 
   checkButtonHandler(e) {
     const checkBtn = this.view.element.querySelector(`.${engPuzConst.buttons.CHECK}`);
     if (e.target.classList.contains(engPuzConst.buttons.CHECK)) {
-      if (checkBtn.innerText === 'CHECK') {
-        this.view.removeCanvasHighlight(this.puzzleLineIndex);
-        this.view.addCanvasHighlight(this.puzzleLineIndex);
-        // TODO Update user stat
-        console.log(this.puzzleArr);
-      }
+      console.log(checkBtn);
       if (checkBtn.innerText === 'CONTINUE') {
+        console.log('from continue');
         this.view.removeCanvasHighlight(this.puzzleLineIndex);
         this.view.toggleDisableButton();
         this.puzzleLineIndex += 1;
@@ -139,6 +148,12 @@ export default class EnglishPuzzleManager {
         this.puzzleLineRender(this.puzzleLineIndex);
         this.view.renameCheckButton();
         this.dnd.createInstance(document.querySelector(`.${engPuzConst.content.DROPSECTION} .row-${this.puzzleLineIndex}`));
+      }
+      if (checkBtn.innerText === 'CHECK') {
+        this.view.removeCanvasHighlight(this.puzzleLineIndex);
+        this.view.addCanvasHighlight(this.puzzleLineIndex);
+        this.isLastCanvasInDragSection();
+        // TODO Update user stat
       }
     }
   }
