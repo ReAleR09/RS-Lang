@@ -1,3 +1,4 @@
+/* eslint-disable no-new */
 /* eslint-disable class-methods-use-this */
 import EnglishPuzzleView from './EnglishPuzzleView';
 import EnglisPuzzleMaterial from './EnglishPuzzleMaterial';
@@ -54,6 +55,7 @@ export default class EnglishPuzzleManager {
       this.audioBtnHandler(e);
       this.audioSwitcherHandler(e);
       this.autoPlayBtnClickHandler(e);
+      this.resultAudioHandler(e);
     });
   }
 
@@ -67,6 +69,15 @@ export default class EnglishPuzzleManager {
     if (e.target.classList.contains('engPuz__tooltips-audioSwitcher')) {
       this.view.togglePlayBtn();
       this.view.toggleGreyBtnBackground(e.target.parentNode);
+    }
+  }
+
+  resultAudioHandler(e) {
+    if (e.target.classList.contains('engPuz__tooltips-autoPlay--results')) {
+      console.log(this.words);
+      const { word } = e.target.dataset;
+      console.log(`id = ${word}`);
+      new Audio(CONF_MEDIA_BASE_PATH + this.words[word].audioExample).play();
     }
   }
 
@@ -179,6 +190,8 @@ export default class EnglishPuzzleManager {
         // 10 means last puzzle line
         if (this.puzzleLineIndex === 10) {
           this.view.drawCompletePuzzle();
+          this.view.hideTooltipsBtns();
+          this.view.removeDragContainer();
           this.view.renderPaintingInfo('Here goes Painting name and Author text');
           // disabling continue button so far we don't have logic to go to next page/difficult
           this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.CHECK}`));
@@ -224,7 +237,7 @@ export default class EnglishPuzzleManager {
   }
 
   getGameResults() {
-    console.log(this.answers);
+    document.querySelector('blockquote').classList.toggle('visually-hidden');
     this.view.clearContainer(this.view.dropContainer);
     this.view.renderCurrentStat(this.answers);
   }

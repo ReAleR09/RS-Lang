@@ -17,15 +17,28 @@ export default class EnglisPuzzleView {
     let fragment = '';
     let i = 0;
     Object.values(answers).forEach((value) => {
-      fragment += `<p class="fullWidth">
-        <i class="engPuz__tooltips-autoPlay medium material-icons" data-word=${i}>volume_up</i>
-        <blockquote class="fullWidth ${value.isCorrect ? 'green' : 'red'}">${value.sentence}</blockquote>
-      </p>`;
+      fragment += `<div class="fullWidth flex-center margin-bottom">
+      <a class="btn waves-effect blue lighten-4">
+      <i class="engPuz__tooltips-autoPlay--results large material-icons" data-word=${i}>volume_up</i>
+      </a>
+        <div class="fullWidth ${value.isCorrect ? 'green' : 'red'}">${value.sentence}</div>
+      </div>`;
       i += 1;
     });
 
     const container = document.querySelector(`.${engPuzConst.content.DROPSECTION}`);
+    console.log(fragment);
     container.insertAdjacentHTML('afterbegin', fragment);
+  }
+
+  hideTooltipsBtns() {
+    const tooltipSection = this.element.querySelector('.engPuz__tooltips-section');
+    tooltipSection.classList.add('noPointer');
+  }
+
+  removeDragContainer() {
+    const dragContainer = this.element.querySelector(`.${engPuzConst.content.DRAGSECTION}`);
+    dragContainer.remove();
   }
 
   renameCheckButton() {
@@ -103,10 +116,10 @@ export default class EnglisPuzzleView {
   getGameLayout() {
     const html = `
     <div>
+    <div class="engPuz__tooltips-section">
     <div class="flex-between EP-start__buttons">
     <div class="engPuz__settings flex-center">
     </div>
-      
     <div class="engPuz__tooltips flex-between">
       <a class="engPuz__tooltips-autoPlay btn-floating waves-effect"> <i class="engPuz__tooltips-autoPlay medium material-icons">volume_up</i></a>
       <a class="engPuz__tooltips-translation btn-floating circle waves-effect"> <i class="engPuz__tooltips-translation medium material-icons">translate</i></a>
@@ -118,7 +131,8 @@ export default class EnglisPuzzleView {
     <a class="engPuz__audio #ffb74d orange lighten-2 center btn waves-effect waves-purple "><i class="engPuz__audio material-icons">volume_up</i></a>
     </div>
     <div class="flex-center">
-    <blockquote class="engPuz__translation center flex-center">Sentes translation</blockquote>
+    <blockquote class="engPuz__translation center flex-center"></blockquote>
+    </div>
     </div>
     <div id="engPuz__drop-section" class="engPuz__drop-section card-panel">
       <div class="engPuz__drop-section--line row-0 flex-center"></div>
