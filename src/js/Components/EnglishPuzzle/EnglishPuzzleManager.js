@@ -5,6 +5,7 @@ import EnglisPuzzleDragDrop from './EnglishPuzzleDragDrop';
 import engPuzConst from './EnglishPuzzleConstants';
 import MockWordsApi from './mockWords';
 import AppNavigator from '../../lib/AppNavigator';
+import Utils from '../../Utils/Utils';
 import { CONF_MEDIA_BASE_PATH } from '../../../config';
 
 export const EP_GAME_STATS = 'EP_GAME_STATS';
@@ -233,7 +234,16 @@ export default class EnglishPuzzleManager {
     const dragZone = document.querySelector(`.${engPuzConst.content.DRAGSECTION}`);
     this.pushNewLinePuzzleToPuzzleArr();
 
-    dragZone.append(this.puzzleCompelete[this.puzzleLineIndex]);
+    const toShuffle = Array.from(this.puzzleCompelete[this.puzzleLineIndex].children);
+    const lineShuffled = Utils.arrayShuffle(toShuffle);
+
+    const div = document.createElement('div');
+    div.classList.add('group-words', `row-${this.puzzleLineIndex + 1}`);
+    lineShuffled.forEach((item) => {
+      div.appendChild(item);
+    });
+
+    dragZone.append(div);
     this.view.renderTranslation(this.words, this.puzzleLineIndex);
     this.autoPlaySentenceHandler();
     // eslint-disable-next-line no-new
