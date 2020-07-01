@@ -14,55 +14,102 @@ export default class IndexView extends View {
    * it references actual DOM root element of this view
    */
   onMount() {
-    // this.element.querySelector('#repeat-word-btn').addEventListener('click', () => {
-    //   this.props.repeatWord();
-    // });
-    this.element.querySelector('#check-answer-btn').addEventListener('click', () => {
-      this.props.checkAnswerWord();
-      this.instance.next();
-    });
-
-    // this.componentDidUpdate();
-
     this.subscribe('update-data', ({
       status,
       countCorrectTranslationWords,
       wordsToSend,
     }) => {
-      this.wordsToSend = wordsToSend;
-      console.log(status, countCorrectTranslationWords, wordsToSend);
-      this.generateHtml(wordsToSend);
+      if (status === 'init-game') {
+        console.log(countCorrectTranslationWords, wordsToSend);
+        this.wordsToSend = wordsToSend;
+        this.generateHtml(wordsToSend);
+      } else if (status === 'guessed-word') {
+        this.guessWord();
+      } else if (status === 'not-guess') {
+        this.notGuessWord();
+      } else {
+        this.endGame();
+      }
     });
   }
 
   generateHtml(wordsToSend) {
-    console.log(wordsToSend);
-    let answerHtml = '';
+    // console.log(wordsToSend);
+    let sliderHtml = '';
     wordsToSend.forEach((el, i) => {
       let translateWords = '';
       el.randomTranslateWords.forEach((element, item) => {
         translateWords += `
-        <span class="audio-call__number-word">${item + 1}.</span>
-        <div class="white-text audio-call__shuffle-word">${element}</div>`;
+        <div class="white-text audio-call__wrapper-shuffle-word">
+          <span class="audio-call__number-word">${item + 1}.</span>
+          <div class="white-text audio-call__shuffle-word">${element}</div>
+        </div>`;
       });
-      answerHtml += `
+      sliderHtml += `
         <div class="carousel-item blue white-text" href="${numberSlide[i]}">
           <img class="audio-call__img-word" src="https://raw.githubusercontent.com/irinainina/rslang-data/master/${el.image}">
           <a id="repeat-word-btn" class="btn-floating btn-large waves-effect waves-light red">
             <i class="material-icons">volume_up</i>
           </a>
-          <h5>${el.word}</h5>
+          <h5 id="origin-word" class="audio__call-origin-word-hidden">${el.word}</h5>
           <div class="audio-call__wrapper-shuffle-words">
             ${translateWords}
           </div>
         </div>
       `;
     });
-    this.element.insertAdjacentHTML('beforeend', answerHtml);
-    this.componentDidUpdate();
+    this.element.insertAdjacentHTML('beforeend', sliderHtml);
+    this.componentDidUpdate(); // init slider.
+    this.createEventSubscribe();
+  }
+
+  guessWord() {
+    this.visibilitySendBtn();
+    this.visibilityOriginWord();
+    this.element.querySelector('.audio-call__mark-word').previousElementSibling.innerHTML = '&#10004;';
+    this.element.querySelector('.audio-call__mark-word').previousElementSibling.classList.add('audio-call__guess-color');
+    this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
+      el.classList.remove('audio-call__mark-word');
+    });
+
+    this.element.querySelector('#answer-word-btn').addEventListener('click', () => {
+      this.instance.next();
+      this.hideSendBtn();
+      this.hideOriginWord();
+      this.props.sayWord(); // Двоится звук! Постоянно создает аудио. Потом фиксануть.
+    });
+  }
+
+  notGuessWord() {
+    this.element.querySelector('.audio-call__mark-word').previousElementSibling.innerHTML = '&#10006;';
+    this.element.querySelector('.audio-call__mark-word').previousElementSibling.classList.add('audio-call__not-guess-color');
+    this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
+      el.classList.remove('audio-call__mark-word');
+    });
+    this.nextSlide();
+  }
+
+  nextSlide() {
+    setTimeout(() => {
+      this.instance.next();
+    }, 1200);
+  }
+
+  createEventSubscribe() {
+    this.element.querySelector('#check-answer-btn').addEventListener('click', () => {
+      this.props.checkAnswerWord();
+    });
+
     this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
       el.addEventListener('click', (event) => {
+        event.target.classList.add('audio-call__mark-word');
         this.props.answerWord(event);
+      });
+    });
+
+    this.element.querySelectorAll('#repeat-word-btn').forEach((el) => {
+      el.addEventListener('click', () => {
+        this.props.sayWord();
       });
     });
   }
@@ -85,7 +132,7 @@ export default class IndexView extends View {
     const html = `
       <div class="carousel carousel-slider center">
         <div class="carousel-fixed-item center">
-          <a id="answer-word-btn" class="btn waves-effect white grey-text darken-text-2">Ответить
+          <a id="answer-word-btn" class="btn waves-effect white grey-text darken-text-2 audio-call__hidden-btn">Ответить
             <i class="material-icons right">send</i>
           </a>
           <a id="check-answer-btn" class="btn waves-effect white grey-text darken-text-2">Не знаю</a>
@@ -101,5 +148,31 @@ export default class IndexView extends View {
       fullWidth: true,
     });
     this.instance = M.Carousel.getInstance(this.carousel);
+  }
+
+  endGame() {
+    this.element.innerHTML = 'The End';
+  }
+
+  visibilitySendBtn() {
+    this.element.querySelector('#check-answer-btn').classList.add('audio-call__hidden-btn');
+    this.element.querySelector('#answer-word-btn').classList.remove('audio-call__hidden-btn');
+  }
+
+  hideSendBtn() {
+    this.element.querySelector('#answer-word-btn').classList.add('audio-call__hidden-btn');
+    this.element.querySelector('#check-answer-btn').classList.remove('audio-call__hidden-btn');
+  }
+
+  visibilityOriginWord() {
+    this.element.querySelectorAll('#origin-word').forEach((el) => {
+      el.classList.remove('audio__call-origin-word-hidden');
+    });
+  }
+
+  hideOriginWord() {
+    this.element.querySelectorAll('#origin-word').forEach((el) => {
+      el.classList.add('audio__call-origin-word-hidden');
+    });
   }
 }

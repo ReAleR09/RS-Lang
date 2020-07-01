@@ -19,7 +19,6 @@ export default class GameSprintController extends Controller {
     };
     super(viewClasses);
     this.wordsUrl = 'http://pacific-castle-12388.herokuapp.com/words?page=1&group=0';
-    this.audioClickBtn = new Audio('../../audio/piu.mp3');
   }
 
   /**
@@ -32,18 +31,24 @@ export default class GameSprintController extends Controller {
       this.checkAnswer();
     };
     this.props.answerWord = (event) => {
+      this.compareWords(event);
       console.log(event.target.innerText);
+    };
+    this.props.sayWord = () => {
+      this.playAudio();
     };
     await this.getWordsFromDataBase();
     this.startGame();
   }
 
   startGame() {
-    this.status = 'in-progress';
+    this.status = 'init-game';
     this.countCorrectTranslationWords = 0;
     this.wordsToSend = [];
+    this.countAnswerWords = 0;
     this.prepareWords();
     this.updateView();
+    this.playAudio();
   }
 
   prepareWords() {
@@ -95,14 +100,27 @@ export default class GameSprintController extends Controller {
     }
   }
 
+  compareWords(event) { // Тут можно помечать угаданные слова
+    if (this.wordsToSend[this.countAnswerWords].wordTranslate === event.target.innerText) {
+      this.status = 'guessed-word';
+      this.updateView();
+    } else { // Если не угадал, отметить статус какой, как не угаданное.
+      this.status = 'not-guess';
+      this.updateView();
+    }
+    this.countAnswerWords += 1;
+  }
+
   checkAnswer() {
     this.playAudio();
   }
 
   playAudio() {
-    this.audioClickBtn.pause();
-    this.audioClickBtn.currentTime = 0.0;
-    this.audioClickBtn.play();
+    this.audio = new Audio(`https://raw.githubusercontent.com/irinainina/rslang-data/master/${this.wordsToSend[this.countAnswerWords].audio}`);
+    this.audio.play();
+    // if (this.audio.ended === true) {
+    //   console.log('stop audio');
+    // }
   }
 
   stopGame() {

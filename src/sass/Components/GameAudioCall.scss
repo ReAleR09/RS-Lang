@@ -14,9 +14,37 @@
   justify-content: center;
   margin: 15px;
 }
+.audio__call-origin-word-hidden {
+  visibility: hidden;
+}
+.audio-call__wrapper-shuffle-word {
+  display: flex;
+  align-items: center;
+  margin: 5px;
+  border-radius: 5px;
+}
+.audio-call__wrapper-shuffle-word:hover {
+  background: #434488;
+}
 .audio-call__number-word {
-  margin: 0 5px 0 10px;
+  padding-left: 5px;
+  opacity: 0.5;
+  cursor: default;
+}
+.audio-call__guess-color {
+  color: #a9ff00;
+  font-weight: 600;
+  opacity: 1;
+}
+.audio-call__not-guess-color {
+  color: #ff0000;
+  font-weight: 600;
+  opacity: 1;
 }
 .audio-call__shuffle-word {
+  padding: 5px;
   cursor: pointer;
+}
+.audio-call__hidden-btn {
+  display: none !important;
 }
