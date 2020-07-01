@@ -5,6 +5,7 @@ import engPuzConst from './EnglishPuzzleConstants';
 export default class EnglisPuzzleView {
   attach(element) {
     this.element = element;
+    this.dropContainer = this.element.querySelector(`.${engPuzConst.content.DROPSECTION}`);
     // this.initDifficultySwitcher();
     // this.initWordSoundButtonClick();
     // this.initBeginButton();
@@ -17,9 +18,23 @@ export default class EnglisPuzzleView {
     }
   }
 
+  renderCurrentStat(answers) {
+    let fragment = '';
+    let i = 0;
+    Object.values(answers).forEach((value) => {
+      fragment += `<p class="fullWidth">
+        <i class="engPuz__tooltips-autoPlay medium material-icons" data-word=${i}>volume_up</i>
+        <blockquote class="fullWidth ${value.isCorrect ? 'green' : 'red'}">${value.sentence}</blockquote>
+      </p>`;
+      i += 1;
+    });
+
+    const container = document.querySelector(`.${engPuzConst.content.DROPSECTION}`);
+    container.insertAdjacentHTML('afterbegin', fragment);
+  }
+
   renameCheckButton() {
     const checkBtn = document.querySelector(`.${engPuzConst.buttons.CHECK}`);
-    console.log(document.querySelector(`.${engPuzConst.buttons.CHECK}`));
     if (checkBtn.innerText === 'CHECK') {
       checkBtn.innerText = 'CONTINUE';
     } else {
@@ -40,9 +55,22 @@ export default class EnglisPuzzleView {
     btn.classList.toggle('grey');
   }
 
-  toggleDisableButton() {
-    const idkBtn = this.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`);
+  toggleDisableButton(idkBtn) {
     idkBtn.classList.toggle('disabled');
+  }
+
+  renderPaintingInfo(info) {
+    const infoEl = document.querySelector('.engPuz__translation');
+    infoEl.innerText = info;
+  }
+
+  drawCompletePuzzle() {
+    const puzzleContainer = document.querySelector(`.${engPuzConst.content.DROPSECTION}`);
+    this.clearContainer(puzzleContainer);
+    const img = document.createElement('img');
+    img.src = this.puzzleImage;
+
+    puzzleContainer.appendChild(img);
   }
 
   togglePlayBtn() {
@@ -79,29 +107,8 @@ export default class EnglisPuzzleView {
   getGameLayout() {
     const html = `
     <div>
-    <div class="flex-between">
+    <div class="flex-between EP-start__buttons">
     <div class="engPuz__settings flex-center">
-      <div class="input-field">
-          <select class="engPuz__difficulty">
-            <option value="" disabled selected>Choose difficulty</option>
-            <option value="1">Option 1</option>
-            <option value="2">Option 2</option>
-            <option value="3">Option 3</option>
-            <option value="4">Option 3</option>
-            <option value="5">Option 3</option>
-            <option value="6">Option 3</option>
-          </select>
-          <label>difficulty</label>
-      </div>
-      <div class="input-field">
-        <select class="engPuz__page">
-          <option value="" disabled selected>Choose page</option>
-          <option value="1">Option 1</option>
-          <option value="2">Option 2</option>
-          <option value="3">Option 3</option>
-        </select>
-        <label>Page</label>
-    </div>
     </div>
       
     <div class="engPuz__tooltips flex-between">
@@ -144,6 +151,7 @@ export default class EnglisPuzzleView {
       const img = new Image();
 
       img.src = imgSrc;
+      this.puzzleImage = imgSrc;
 
       const dropZoneWidth = parseInt(document.querySelector(`.${engPuzConst.content.DROPSECTION}`).offsetWidth, 10) - 30;
 
@@ -290,11 +298,10 @@ export default class EnglisPuzzleView {
   }
 
   async renderPuzzleElementsToDom(imageSrc, sentences) {
-    // console.log('hello');
     const puzzleArr = await this.getPuzzleElements(imageSrc, sentences);
     if (!puzzleArr) {
       // handle promise error e.g. try another imageSrc
-      console.log('puzzleArr error');
+      console.log('image loading error');
     }
 
     const dropPanel = document.querySelector(`.${engPuzConst.content.DROPSECTION}`);

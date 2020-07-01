@@ -6,6 +6,7 @@ import EnglisPuzzleMaterial from './EnglishPuzzleMaterial';
 import EnglisPuzzleDragDrop from './EnglishPuzzleDragDrop';
 import engPuzConst from './EnglishPuzzleConstants';
 import MockWordsApi from './mockWords';
+import AppNavigator from '../../lib/AppNavigator';
 import { CONF_MEDIA_BASE_PATH } from '../../../config';
 
 export const EP_GAME_STATS = 'EP_GAME_STATS';
@@ -20,6 +21,7 @@ export default class EnglishPuzzleManager {
     this.isTranslation = true;
     this.isPlayActive = true;
     this.isImageShow = true;
+    this.answers = {};
     this.puzzleArr = [[], [], [], [], [], [], [], [], [], []];
     this.imgSrc = 'https://tlmnnk.github.io/images/rslang/birthOfVenus.jpg';
     this.sentences = [];
@@ -72,22 +74,43 @@ export default class EnglishPuzzleManager {
   autoPlayBtnClickHandler(e) {
     if (e.target.classList.contains('engPuz__tooltips-autoPlay')) {
       this.isAutoPlay = !this.isAutoPlay;
-      console.log(this.view.element.querySelector('a .engPuz__tooltips-autoPlay'));
       this.view.toggleGreyBtnBackground(this.view.element.querySelector('a .engPuz__tooltips-autoPlay'));
+    }
+  }
+
+  updateCurrentStat(answer) {
+    if (!this.answers[this.puzzleLineIndex]) {
+      this.answers[this.puzzleLineIndex] = {
+        sentence: this.words[this.puzzleLineIndex].textExample,
+        isCorrect: answer,
+      };
     }
   }
 
   idkClickHandler(e) {
     if (e.target.classList.contains('engPuz__bottom-idk')) {
+      if (e.target.innerText === 'RESULTS') {
+        this.getGameResults();
+        e.target.innerText = 'PLAY AGAIN';
+        return;
+      }
+      if (e.target.innerText === 'PLAY AGAIN') {
+        AppNavigator.go('englishpuzzle');
+        return;
+      }
+
       const dragContainer = document.querySelector('.engPuz__drag-section .group-words');
       const dropContainer = document.querySelector(`.engPuz__drop-section--line.row-${this.puzzleLineIndex}`);
+
+      this.updateCurrentStat(false);
 
       this.view.clearContainer(dropContainer);
       this.appendCorrectLineToDropOnIdkPress();
       this.view.clearContainer(dragContainer);
       this.view.addCanvasHighlight(this.puzzleLineIndex);
+
       this.view.renameCheckButton();
-      this.view.toggleDisableButton();
+      this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`));
       this.view.removePuzzleLinePointerEvents(this.puzzleLineIndex);
     }
   }
@@ -101,20 +124,20 @@ export default class EnglishPuzzleManager {
 
   isLastCanvasInDragSection() {
     const dragContainer = document.querySelector('.group-words');
-    if (!dragContainer.firstChild) {
+    const dropContainer = document.querySelector(`.row-${this.puzzleLineIndex}`);
+
+    if (!dragContainer.firstChild && dropContainer.firstChild) {
       this.view.addCanvasHighlight(this.puzzleLineIndex);
-      if (this.checkLineAnswers()) {
-        this.view.toggleDisableButton();
-        this.view.renameCheckButton();
-        this.view.removePuzzleLinePointerEvents(this.puzzleLineIndex);
-        // update statisticks with correct answer
-      }
     }
   }
 
   checkLineAnswers() {
     const canvasDropToCheck = this.view.element.querySelectorAll(`.canvas-row-${this.puzzleLineIndex + 1}`);
+    const lineContainer = this.view.element.querySelector(`.row-${this.puzzleLineIndex}`);
     let mistakes = 0;
+    if (!lineContainer.firstChild) {
+      return false;
+    }
     [...canvasDropToCheck].forEach((canvas) => {
       if (canvas.classList.contains('canvas-red')) {
         mistakes += 1;
@@ -134,34 +157,53 @@ export default class EnglishPuzzleManager {
       e.target.classList.contains('canvas-green') ? e.target.classList.remove('canvas-green') : null;
       e.target.classList.contains('canvas-red') ? e.target.classList.remove('canvas-red') : null;
       dragSection.appendChild(e.target);
-      this.isLastCanvasInDragSection();
+      // this.isLastCanvasInDragSection();
       return;
     }
     if (e.target.parentNode.classList.contains('group-words')) {
       const dropSection = document.querySelector(`.engPuz__drop-section--line.row-${this.puzzleLineIndex}`);
       dropSection.appendChild(e.target);
-      this.isLastCanvasInDragSection();
+      // this.isLastCanvasInDragSection();
     }
   }
 
   checkButtonHandler(e) {
     const checkBtn = this.view.element.querySelector(`.${engPuzConst.buttons.CHECK}`);
     if (e.target.classList.contains(engPuzConst.buttons.CHECK)) {
-      console.log(checkBtn);
       if (checkBtn.innerText === 'CONTINUE') {
-        console.log('from continue');
         this.view.removeCanvasHighlight(this.puzzleLineIndex);
-        this.view.toggleDisableButton();
+        this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`));
         this.puzzleLineIndex += 1;
+
+        // 10 means last puzzle line
+        if (this.puzzleLineIndex === 10) {
+          this.view.drawCompletePuzzle();
+          this.view.renderPaintingInfo('Here goes Painting name and Author text');
+          // disabling continue button so far we don't have logic to go to next page/difficult
+          this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.CHECK}`));
+
+          this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`).innerText = 'RESULTS';
+          return;
+        }
+
         this.view.clearContainer(document.querySelector(`.${engPuzConst.content.DRAGSECTION}`));
         this.puzzleLineRender(this.puzzleLineIndex);
         this.view.renameCheckButton();
         this.dnd.createInstance(document.querySelector(`.${engPuzConst.content.DROPSECTION} .row-${this.puzzleLineIndex}`));
+        return;
       }
       if (checkBtn.innerText === 'CHECK') {
         this.view.removeCanvasHighlight(this.puzzleLineIndex);
         this.view.addCanvasHighlight(this.puzzleLineIndex);
-        this.isLastCanvasInDragSection();
+        this.updateCurrentStat(this.checkLineAnswers());
+        console.log(this.checkLineAnswers());
+        if (this.checkLineAnswers()) {
+          this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`));
+          this.view.renameCheckButton();
+          this.view.removePuzzleLinePointerEvents(this.puzzleLineIndex);
+          // update statisticks with correct answer
+        }
+        // this.isLastCanvasInDragSection();
         // TODO Update user stat
       }
     }
@@ -178,6 +220,12 @@ export default class EnglishPuzzleManager {
       const audio = new Audio(CONF_MEDIA_BASE_PATH + this.words[this.puzzleLineIndex].audioExample);
       audio.play();
     }
+  }
+
+  getGameResults() {
+    console.log(this.answers);
+    this.view.clearContainer(this.view.dropContainer);
+    this.view.renderCurrentStat(this.answers);
   }
 
   puzzleLineRender() {
