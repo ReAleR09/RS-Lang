@@ -52,8 +52,13 @@ export default class LearningWordsController extends Controller {
 
     };
     const statistics = { totalCount: 0, NewWords: 0 };
+
+    let mode;
+    if (params.mode) {
+      mode = params.mode;
+    }
     // TODO Принять настройки и статистику
-    this.props.model = new LearningWordsModel(settings, statistics);
+    this.props.model = new LearningWordsModel(settings, statistics, mode);
   }
 
   resultsAction() {

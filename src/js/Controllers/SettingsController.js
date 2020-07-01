@@ -1,7 +1,7 @@
 import Controller from '../lib/Controller';
 // import AppNavigator from '../lib/AppNavigator';
 import IndexView from '../Views/Settings/IndexView';
-import SettingsModel from '../lib/UserSettings';
+import SettingsModel from '../Classes/UserSettings';
 
 /**
  * Controller is a sctructure that describes a set of "actions",
@@ -28,7 +28,7 @@ export default class SettingsController extends Controller {
    */
   indexAction() {
     // const settingsModel = new UserSettings();
-    this.props.model = SettingsModel.settings;
+    this.props.model = SettingsModel;
     // const params = AppNavigator.getRequestParams(); // get GET parameters etc /example/index?id=3
   }
 }

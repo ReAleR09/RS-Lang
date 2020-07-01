@@ -26,7 +26,7 @@ export default class Statistics {
 
     const isNewWord = await this.wordsApi.checkUserWordInBase(wordId);
 
-    const dateNow = Utils.getDateNoTime();
+    const dateNow = Utils.getDateNoTime().getTime();
     if (!Object.prototype.hasOwnProperty.call(this.statistics, dateNow)) {
       this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow] = {
         totalWordsCount: 0,
@@ -53,6 +53,7 @@ export default class Statistics {
       await this.spacedRepititions.putTrainingData(wordId, result);
     }
     this.wordStat.push({ wordId, result });
+    await this.get();
   }
 
   async sendGameResults() {
@@ -140,5 +141,24 @@ export default class Statistics {
     }
 
     return results;
+  }
+
+  get limits() {
+    const dateNow = Utils.getDateNoTime().getTime();
+    let limits = {};
+
+    try {
+      limits = {
+        totalWordsCount: this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].totalWordsCount,
+        newWordsCount: this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].newWordsCount,
+      };
+    } catch (error) {
+      limits = {
+        totalWordsCount: 0,
+        newWordsCount: 0,
+      };
+    }
+
+    return limits;
   }
 }

@@ -5,7 +5,9 @@ import {
   MAX_RANDOMPAGE_WORDS_INDEX,
   MAX_REQUEST_COUNT,
   MAX_PAGE_INDEX,
+  GROUPS,
 } from './constants';
+import Utils from '../../Utils/Utils';
 
 export default class WordsApi {
   constructor() {
@@ -89,9 +91,14 @@ export default class WordsApi {
     if (filterString) {
       params.filter = filterString;
     }
-    let totalCount = await this.api.getAggregatedWords(params);
+    const totalCountResult = await this.api.getAggregatedWords(params);
 
-    totalCount = totalCount[0].totalCount[0].count;
+    let totalCount = 0;
+    try {
+      totalCount = totalCountResult[0].totalCount[0].count;
+    } catch (error) {
+      return [];
+    }
 
     params.wordsPerPage = totalCount;
     let arrayOfResults = await this.api.getAggregatedWords(params);
@@ -117,20 +124,28 @@ export default class WordsApi {
     return newWords;
   }
 
-  /**
-   * @param {int} count - self-explained
-   * @param {int} difficulty - words api group 0-5 or false
-   * @param {int} day - epoch (if false - defaults to current timestamp)
-   */
-  async getRepeatedWords(count, difficulty = false, day = false) {
+  async getRepeatedWords(count, day) {
     let dateNow = Date.now();
     if (day) {
       dateNow = day.getTime();
     }
 
-    const filter = JSON.stringify({ 'userWord.optional.date': { $lt: dateNow } });
+    const filter = JSON.stringify({
+      $not: [
+        { 'userWord.optional.dictCategory': DICT_CATEGORIES.DELETE },
+      ],
+      'userWord.optional.nextDate': { $lt: dateNow },
+    });
 
-    const repeatedWords = await this.getAggregatedWords(count, difficulty, filter);
+    const requestArray = GROUPS.map((group) => this.getAggregatedWords(undefined, group, filter));
+
+    let repeatedWords = await Promise.all(requestArray);
+    repeatedWords = repeatedWords.flat();
+    repeatedWords = Utils.arrayShuffle(repeatedWords);
+    if (count) {
+      repeatedWords = repeatedWords.slice(0, count);
+    }
+
     return repeatedWords;
   }
 
