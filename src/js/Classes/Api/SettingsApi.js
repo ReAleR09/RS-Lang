@@ -1,5 +1,6 @@
 import Api from './Api';
-import { TEAM_KEY, TEAM_VALUE } from '../../config';
+import { TEAM_KEY, TEAM_VALUE } from '../../../config';
+import { DICT_CATEGORIES } from './constants';
 
 export default class SettingsApi {
   constructor() {
@@ -16,17 +17,27 @@ export default class SettingsApi {
   }
 
   async update(settings = {
+    difficulty: 0,
     wordsPerDay: 50,
     newWordsPerDay: 20,
     showWordTranslate: true,
     showExample: true,
     showTranscription: true,
     showMeaning: true,
-    showButtonSkip: true,
+    showButtonAnswer: true,
     showButtonDelete: true,
     showButtonComplicated: true,
     showImage: true,
     showWordRate: true,
+    games: {},
+    firstIntervalMinutes: 5,
+    baseIntervalDays: 1,
+    baseMultiplierPercents: 150,
+    hardMultiplierPercents: 80,
+    simpleMultiplierPercents: 120,
+    maxIntervalDays: 250,
+    annoyinglimit: 5,
+    annoyingAction: DICT_CATEGORIES.COMPLICATED,
   }) {
     const settingStructure = {
       wordsPerDay: 50,

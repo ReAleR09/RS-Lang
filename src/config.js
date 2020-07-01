@@ -1,6 +1,20 @@
 export const TEAM_KEY = 'team';
 export const TEAM_VALUE = 'team7';
 
+export const GAMES = {
+  LEARNING: 'learningWords',
+  SPEAKIT: 'speakIt',
+  SAVANNAH: 'savannah',
+  AUDIOCALL: 'audioCall',
+  SPRINT: 'sprint',
+  PUZZLE: 'puzzle',
+};
+
+export const MODES = {
+  GAME: 'game',
+  REPITITION: 'repitition',
+};
+
 export const CONF_ROOT_PATH = '';
 
 export const CONF_MEDIA_BASE_PATH = 'https://raw.github.com/ReAleR09/rslang-data/master/';

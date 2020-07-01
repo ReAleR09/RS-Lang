@@ -3,6 +3,7 @@ import Sidebar from './js/Classes/Sidebar';
 import PublisherSubscriber from './js/Classes/PublisherSubscriber';
 import { EVENT_NAVIGATION } from './js/Utils/Constants';
 import ExampleController from './js/Controllers/ExampleController';
+import SavannahController from './js/Controllers/SavannahController';
 
 import LearningWordsController from './js/Controllers/LearningWordsController';
 import GameSprintController from './js/Controllers/GameSprintController';
@@ -27,6 +28,7 @@ function appInit() {
     registration: RegistrationController,
     authorization: AuthorizationController,
     example: ExampleController,
+    savannah: SavannahController,
     settings: SettingsController,
     learningWords: LearningWordsController,
     'game-sprint': GameSprintController,

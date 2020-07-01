@@ -1,8 +1,13 @@
 import Api from './Api';
-
-const MAX_REQUEST_COUNT = 20;
-const MAX_PAGE_INDEX = 29;
-const MAX_RANDOMPAGE_WORDS_INDEX = 19;
+import {
+  DIFFICULTIES,
+  DICT_CATEGORIES,
+  MAX_RANDOMPAGE_WORDS_INDEX,
+  MAX_REQUEST_COUNT,
+  MAX_PAGE_INDEX,
+  GROUPS,
+} from './constants';
+import Utils from '../../Utils/Utils';
 
 export default class WordsApi {
   constructor() {
@@ -81,15 +86,25 @@ export default class WordsApi {
     if (filterString) {
       params.filter = filterString;
     }
-    let totalCount = await this.api.getAggregatedWords(params);
+    const totalCountResult = await this.api.getAggregatedWords(params);
 
-    totalCount = totalCount[0].totalCount[0].count;
+    let totalCount = 0;
+    try {
+      totalCount = totalCountResult[0].totalCount[0].count;
+    } catch (error) {
+      return [];
+    }
 
     params.wordsPerPage = totalCount;
     let arrayOfResults = await this.api.getAggregatedWords(params);
     arrayOfResults = arrayOfResults[0].paginatedResults;
 
-    const resultCount = Math.min(count, totalCount);
+    let resultCount = totalCount;
+
+    if (count) {
+      resultCount = Math.min(count, totalCount);
+    }
+
     const arrayOfIndexes = WordsApi.createArrayOfIndexes(resultCount, (totalCount - 1));
 
     const randomNewWords = arrayOfIndexes.map((index) => arrayOfResults[index]);
@@ -104,39 +119,67 @@ export default class WordsApi {
     return newWords;
   }
 
-  async getRepeatedWords(count, difficulty, day) {
+  async getRepeatedWords(count, day) {
     let dateNow = Date.now();
     if (day) {
       dateNow = day.getTime();
     }
 
-    const filter = JSON.stringify({ 'userWord.optional.date': { $lt: dateNow } });
+    const filter = JSON.stringify({
+      $not: [
+        { 'userWord.optional.dictCategory': DICT_CATEGORIES.DELETE },
+      ],
+      'userWord.optional.nextDate': { $lt: dateNow },
+    });
 
-    const repeatedWords = await this.getAggregatedWords(count, difficulty, filter);
+    const requestArray = GROUPS.map((group) => this.getAggregatedWords(undefined, group, filter));
+
+    let repeatedWords = await Promise.all(requestArray);
+    repeatedWords = repeatedWords.flat();
+    repeatedWords = Utils.arrayShuffle(repeatedWords);
+    if (count) {
+      repeatedWords = repeatedWords.slice(0, count);
+    }
+
     return repeatedWords;
   }
 
-  async changeWordDataById(wordId, wordData = {
-    difficulty: '0',
-    optional: {
-      difficulty: 0, // Сложность в рамках оценки сложности при изучении
-      vocabularyPage: 0, // Словарь Сложные, Удаленные, ещё как-нибудь
-      errors: 0, // количество ошибок по карточке
-      interval: 0, // текущий реальный интервал для расчета даты
-      calculateInterval: 0, // текущий базовый интервал для расчета интервалов
-      iteration: 1, // текущая итерация
-      date: 0, // дата с которой начинает слово вываливаться в обучение.
-    },
+  async changeWordDataById(wordId, userWordData = {
+    difficulty: DIFFICULTIES.NORMAL, // Сложность в рамках оценки сложности слова
+    dictCategory: DICT_CATEGORIES.MAIN, // Словарь Сложные, Удаленные, Основные
+    errors: 0, // количество ошибок по карточке
+    interval: 0, // текущий расчета даты
+    success: 0, // количество успехов
+    bestResult: 0, // лучший результат
+    curSuccessCosistency: 0, // текущая серия
+    lastDate: 0, // последняя дата
+    nextDate: 0, // дата повторения
   }) {
-    let result;
-    result = await this.api.getUserWordById(wordId);
+    const userWordStructure = {
+      difficulty: '0',
+      optional: userWordData,
+    };
+
+    let result = await this.api.getUserWordById(wordId);
     if (result.error) {
-      result = await this.api.postUserWordById(wordId, wordData);
+      result = await this.api.postUserWordById(wordId, userWordStructure);
     } else {
-      result = await this.api.putUserWordById(wordId, wordData);
+      result = await this.api.putUserWordById(wordId, userWordStructure);
     }
 
     return result;
+  }
+
+  async checkUserWordInBase(wordId) {
+    const result = this.getWordDataById(wordId);
+    return !result.error;
+  }
+
+  async getWordDataById(wordId) {
+    const wordData = await this.api.getUserWordById(wordId);
+    if (wordData.error) return wordData;
+    const userWordData = wordData.optional;
+    return userWordData;
   }
 
   async deleteWordById(wordId) {

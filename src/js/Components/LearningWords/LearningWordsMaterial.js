@@ -33,10 +33,10 @@ export default class LearningWordsMaterial {
   }
 
   assignButtonListeners() {
-    const buttonSimple = this.element.querySelector(QUERIES.BUTTONS.SIMPLE);
+    const buttonDelete = this.element.querySelector(QUERIES.BUTTONS.DELETE);
     const buttonComplicated = this.element.querySelector(QUERIES.BUTTONS.COMPLICATED);
 
-    buttonSimple.addEventListener('click', () => {
+    buttonDelete.addEventListener('click', () => {
       Materialize.toast({
         html: '<p>Новое слово добавлено в Словарь/Удаленные</p>',
         displayLength: 1000,

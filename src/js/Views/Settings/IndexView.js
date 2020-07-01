@@ -1,7 +1,9 @@
+import Materialize from 'materialize-css';
+import '../../../sass/Components/Settings.scss';
 import View from '../../lib/View';
 // import AppNavigator from '../../lib/AppNavigator';
 import { SETTINGS_HTML, SETTINGS_QUERIES as QUERIES } from '../../Components/Settings/constants';
-import SettingsModel from '../../lib/UserSettings';
+import { DICT_CATEGORIES } from '../../Classes/Api/constants';
 
 export default class IndexView extends View {
   /**
@@ -14,77 +16,122 @@ export default class IndexView extends View {
    * it references actual DOM root element of this view
    */
   onMount() {
+    this.tabs = Materialize.Tabs.init(this.element.querySelector(QUERIES.TABS), {
+      swipeable: false,
+    });
+
     this.initSettings();
-    const settingsBtn = this.element.querySelector(QUERIES.BUTTON_SAVE);
-    settingsBtn.addEventListener('click', (event) => {
+
+    const selects = this.element.querySelectorAll('select');
+    Materialize.FormSelect.init(selects);
+
+    const buttonSaveSettings = this.element.querySelector(QUERIES.BUTTON_SAVE);
+    buttonSaveSettings.addEventListener('click', (event) => {
       event.preventDefault();
       if (!this.translation.checked && !this.translationMeaning.checked && !this.wordUse.checked) {
-        this.wraningParagraph.classList.add(QUERIES.WARNING_TEXT);
+        this.warningParagraph.classList.add(QUERIES.WARNING_TEXT);
       } else {
-        this.wraningParagraph.classList.remove(QUERIES.WARNING_TEXT);
-        this.updateSettings(); // запуск метода класса из обработчика
+        this.warningParagraph.classList.remove(QUERIES.WARNING_TEXT);
+        this.updateSettings();
       }
     });
+  }
 
-    // Или сделать сохранение по событию на изменение любой из настроек... типа...
-  /*
-    const allSettingsQueries = Object.values(QUERIES);
-    const AllSettingsElements = allSettingsQueries.map((query) => {
-      const newElement = this.element.querySelector(query);
-      return newElement;
-    });
+  initElements() {
+    this.difficulty = this.element.querySelector(QUERIES.DIFFICULTY);
+    this.newWordsPerDay = this.element.querySelector(QUERIES.NEW_CARDS);
+    this.wordsPerDay = this.element.querySelector(QUERIES.CARDS_PER_DAY);
+    this.showWordTranslate = this.element.querySelector(QUERIES.TRANSLATION);
+    this.showMeaning = this.element.querySelector(QUERIES.MEANING);
+    this.showExample = this.element.querySelector(QUERIES.EXAMPLE);
+    this.showTranscription = this.element.querySelector(QUERIES.TRANSCRIPTION);
+    this.showImage = this.element.querySelector(QUERIES.SHOW_IMAGE);
+    this.showButtonAnswer = this.element.querySelector(QUERIES.SHOW_BUTTON_ANSWER);
+    this.showDeleteButton = this.element.querySelector(QUERIES.SHOW_BUTTON_DELETE);
+    this.showButtonComplicated = this.element.querySelector(QUERIES.SHOW_BUTTON_HARD);
+    this.showWordRate = this.element.querySelector(QUERIES.SHOW_RATE);
+    this.warningParagraph = this.element.querySelector(QUERIES.WARNING_PARAGRAPH);
 
-    AllSettingsElements.forEach((element) => {
-      element.addEventListener('change', this.updateSettings.bind(this));
-      // еще один метод запуска метода класса из обработчика непосредственно
-    }); */
+    this.firstInterval = this.element.querySelector(QUERIES.FIRST_INTERVAL);
+    this.baseInterval = this.element.querySelector(QUERIES.BASE_INTERVAL);
+    this.baseMultiplier = this.element.querySelector(QUERIES.BASE_MULTIPLIER);
+    this.hardMultiplier = this.element.querySelector(QUERIES.HARD_MULTIPLIER);
+    this.simpleMultiplier = this.element.querySelector(QUERIES.SIMPLE_MULTIPLIER);
+    this.maxInterval = this.element.querySelector(QUERIES.MAX_INTERVAL);
+    this.annoyingLimit = this.element.querySelector(QUERIES.ANNOYING_LIMIT);
+    this.annoyingAction = this.element.querySelector(QUERIES.ANNOYING_ACTION);
+
+    this.actionComplicated = this.element.querySelector(QUERIES.ACTION_COMPLICATED);
+    this.actionDelete = this.element.querySelector(QUERIES.ACTION_DELETE);
+    this.actionComplicated.value = DICT_CATEGORIES.COMPLICATED;
+    this.actionDelete.value = DICT_CATEGORIES.DELETE;
   }
 
   initSettings() {
-    this.settings = this.props.model;
+    this.settings = this.props.model.settings;
 
-    this.newCards = this.element.querySelector(QUERIES.NEW_CARDS);
-    this.cardsPerDay = this.element.querySelector(QUERIES.CARDS_PER_DAY);
-    this.translation = this.element.querySelector(QUERIES.TRANSLATION);
-    this.translationMeaning = this.element.querySelector(QUERIES.TRANSLATION_MEANING);
-    this.wordUse = this.element.querySelector(QUERIES.EXAMPLE);
-    this.wordTranscription = this.element.querySelector(QUERIES.TRANSCRIPTION);
-    this.wordPicture = this.element.querySelector(QUERIES.SHOW_IMAGE);
-    this.showAnswer = this.element.querySelector(QUERIES.SHOW_BUTTON_ANSWER);
-    this.showDeleteButton = this.element.querySelector(QUERIES.SHOW_BUTTON_DELETE);
-    this.showHardButton = this.element.querySelector(QUERIES.SHOW_BUTTON_HARD);
-    this.showButtons = this.element.querySelector(QUERIES.SHOW_RATE);
-    this.wraningParagraph = this.element.querySelector(QUERIES.WARNING_PARAGRAPH);
+    this.initElements();
 
-    this.newCards.value = this.settings.newCards;
-    this.cardsPerDay.value = this.settings.cardsPerDay;
-    this.translation.checked = this.settings.translation;
-    this.translationMeaning.checked = this.settings.translationMeaning;
-    this.wordUse.checked = this.settings.wordUse;
-    this.wordTranscription.checked = this.settings.wordTranscription;
-    this.wordPicture.checked = this.settings.wordPicture;
-    this.showAnswer.checked = this.settings.showAnswer;
+    this.difficulty = this.settings.difficulty;
+    this.newWordsPerDay.value = this.settings.newWordsPerDay;
+    this.wordsPerDay.value = this.settings.wordsPerDay;
+    this.showWordTranslate.checked = this.settings.showWordTranslate;
+    this.showMeaning.checked = this.settings.showMeaning;
+    this.showExample.checked = this.settings.showExample;
+    this.showTranscription.checked = this.settings.showTranscription;
+    this.showImage.checked = this.settings.showImage;
+    this.showButtonAnswer.checked = this.settings.showButtonAnswer;
     this.showDeleteButton.checked = this.settings.showDeleteButton;
-    this.showHardButton.checked = this.settings.showHardButton;
-    this.showButtons.checked = this.settings.showButtons;
+    this.showButtonComplicated.checked = this.settings.showButtonComplicated;
+    this.showWordRate.checked = this.settings.showWordRate;
+
+    this.firstInterval.value = this.settings.firstIntervalMinutes;
+    this.baseInterval.value = this.settings.baseIntervalDays;
+    this.baseMultiplier.value = this.settings.baseMultiplierPercents;
+    this.hardMultiplier.value = this.settings.hardMultiplierPercents;
+    this.simpleMultiplier.value = this.settings.simpleMultiplierPercents;
+    this.maxInterval.value = this.settings.maxIntervalDays;
+    this.annoyingLimit.value = this.settings.annoyinglimit;
+
+    this.setAnnoyingAction(this.settings.annoyingAction);
+  }
+
+  setAnnoyingAction(category) {
+    if (category === DICT_CATEGORIES.COMPLICATED) {
+      this.actionComplicated.setAttribute('selected', '');
+      this.actionDelete.removeAttribute('selected');
+    }
+    if (category === DICT_CATEGORIES.DELETE) {
+      this.actionComplicated.removeAttribute('selected');
+      this.actionDelete.setAttribute('selected', '');
+    }
   }
 
   updateSettings() {
     const newSettings = {
-      newCards: +this.newCards.value,
-      cardsPerDay: +this.cardsPerDay.value,
-      translation: this.translation.checked,
-      translationMeaning: this.translationMeaning.checked,
-      wordUse: this.wordUse.checked,
-      wordTranscription: this.wordTranscription.checked,
-      wordPicture: this.wordPicture.checked,
-      showAnswer: this.showAnswer.checked,
-      showDeleteButton: this.showDeleteButton.checked,
-      showHardButton: this.showHardButton.checked,
-      showButtons: this.showButtons.checked,
+      difficulty: +this.difficulty,
+      newWordsPerDay: +this.newWordsPerDay.value,
+      wordsPerDay: +this.wordsPerDay.value,
+      showWordTranslate: this.showWordTranslate.checked,
+      showMeaning: this.showMeaning.checked,
+      showExample: this.showExample.checked,
+      showTranscription: this.showTranscription.checked,
+      showImage: this.showImage.checked,
+      showButtonAnswer: this.showButtonAnswer.checked,
+      showButtonDelete: this.showButtonDelete.checked,
+      showButtonComplicated: this.showButtonComplicated.checked,
+      showWordRate: this.showWordRate.checked,
+      firstIntervalMinutes: +this.firstInterval.value,
+      baseIntervalDays: +this.baseInterval.value,
+      baseMultiplierPercents: +this.baseMultiplier.value,
+      hardMultiplierPercents: +this.hardMultiplier.value,
+      simpleMultiplierPercents: +this.simpleMultiplierPercents.value,
+      maxIntervalDays: +this.maxInterval.value,
+      annoyinglimit: +this.annoyinglimit.value,
+      annoyingAction: this.annoyingAction.value,
     };
 
-    SettingsModel.settings = newSettings;
+    this.props.model.settings = newSettings;
   }
 
   /**

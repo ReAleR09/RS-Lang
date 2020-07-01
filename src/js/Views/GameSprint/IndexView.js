@@ -1,4 +1,6 @@
 import View from '../../lib/View';
+import AppNavigator from '../../lib/AppNavigator';
+import { inProgressSprintGame, eventNameSprintGame } from '../../Utils/ConstantsGameSprint';
 
 export default class IndexView extends View {
   /**
@@ -15,7 +17,7 @@ export default class IndexView extends View {
       1: 'Один попугай', 2: 'Два попугая', 3: 'Три попугая', 4: 'Четыре попугая',
     };
 
-    this.subscribe('status', ({
+    this.subscribe(eventNameSprintGame, ({
       status,
       score,
       multiplier,
@@ -24,7 +26,7 @@ export default class IndexView extends View {
       translateWord,
       timer,
     }) => {
-      if (status === 'in-progress') {
+      if (status === inProgressSprintGame) {
         this.element.querySelector('.game-sprint__score').innerHTML = score;
         this.element.querySelector('.game-sprint__timer').innerHTML = timer;
         this.element.querySelector('.game-sprint__number-of-animals').innerHTML = this.multiplier[multiplier];
@@ -47,7 +49,7 @@ export default class IndexView extends View {
           <a id="exit-game" class="waves-effect waves-light btn-small red">Выйти</a>`;
 
         this.element.querySelector('#repeat-game').addEventListener('click', () => {
-          window.location.reload();
+          AppNavigator.go('game-sprint');
         });
         this.element.querySelector('#exit-game').addEventListener('click', () => {
           this.element.innerHTML += '<h3>Куда выходить, пока х.з.)';

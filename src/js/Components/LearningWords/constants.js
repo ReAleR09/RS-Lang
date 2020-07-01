@@ -1,5 +1,12 @@
 const githubAccount = 'yafimchik';
 
+export const chunkCount = 10;
+export const difficultyMax = 5;
+
+export const gameRoundsCount = 10;
+export const minBestResult = 4;
+export const gameLevelCount = 7;
+
 export const RESULTS_ACTION = 'results';
 export const LEARNING_WORDS_CONTROLLER = 'learningWords';
 
@@ -18,12 +25,6 @@ export const WORD_STATUSES = {
   OLD: 'oldWord',
   COMPICATED: 'complicated',
   COMPLITED: 'complited',
-};
-
-export const DIFFICULTY_MODIFIERS = {
-  HARD: 1,
-  NORMAL: 2,
-  EASY: 3,
 };
 
 export const AUDIO_KEYS = {

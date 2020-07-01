@@ -1,23 +1,60 @@
-import { wordStartTag, wordEndTag, WORD_STATUSES } from './constants';
-import LearningWordsApi from './LearningWordsApi';
+import {
+  wordStartTag,
+  wordEndTag,
+  WORD_STATUSES,
+  chunkCount,
+  difficultyMax,
+} from './constants';
+import WordsApi from '../../Classes/Api/WordsApi';
+import { MODES } from '../../../config';
 
 export default class LearnindWordsCards {
-  constructor(
-    difficulty = 0,
-    limits,
-    statistics,
-  ) {
-    this.difficulty = difficulty;
+  constructor() {
+    this.difficultyLevel = 0;
 
-    this.limits = limits;
-    this.counts = statistics;
+    this.limits = {};
+    this.counts = {};
+    this.mode = MODES.REPITITION;
 
     this.currentCardIndex = 0;
 
     this.cards = [];
-    this.words = [];
+
     this.newWords = [];
     this.repeatWords = [];
+    this.wordsApi = new WordsApi();
+  }
+
+  init(difficulty, limits, statistics, mode) {
+    if (difficulty) {
+      this.difficulty = difficulty;
+    }
+    if (limits) {
+      this.limits = limits;
+    }
+    if (statistics) {
+      this.counts = statistics;
+    }
+    if (mode) {
+      this.mode = mode;
+    }
+
+    this.cards = [];
+    this.newWords = [];
+    this.repeatWords = [];
+    this.currentCardIndex = 0;
+  }
+
+  set difficulty(value) {
+    if (value < 0 || value > difficultyMax) return;
+    if (this.difficultyLevel !== value) {
+      this.init(value);
+    }
+    this.difficultyLevel = value;
+  }
+
+  get difficulty() {
+    return this.difficultyLevel;
   }
 
   updateStatistics(statistics) {
@@ -25,14 +62,17 @@ export default class LearnindWordsCards {
   }
 
   get restCardsCount() {
-    if ((this.limits.maxCount - this.counts.totalCount) < 0) {
+    if ((this.limits.maxCount - this.counts.totalWordsCount) < 0) {
       return 0;
     }
-    return (this.limits.maxCount - this.counts.totalCount);
+    return (this.limits.maxCount - this.counts.totalWordsCount);
   }
 
   get restNewWordsCount() {
-    return (this.limits.maxCountNewCards - this.counts.NewWords);
+    if ((this.limits.maxCountNewCards - this.counts.newWordsCount) < 0) {
+      return 0;
+    }
+    return (this.limits.maxCountNewCards - this.counts.newWordsCount);
   }
 
   get length() {
@@ -46,30 +86,33 @@ export default class LearnindWordsCards {
   }
 
   getNewWords() {
-    // TODO WORDS API
-    let words = LearningWordsApi.getRandomWordsForDifficulty(this.difficulty);
+    let words = this.wordsApi.getRandomNewWords(chunkCount, this.difficulty);
+    if (!words.length && this.mode === MODES.REPITITION) {
+      this.difficulty += 1;
+    }
     words = words.map((word) => {
       const newWord = word;
       newWord.WordStatus = WORD_STATUSES.NEW;
       return newWord;
     });
-    // TODO filter только новых (работа со словарем)
     this.newWords = this.filterByLimits(words);
   }
 
   getRepeatWords() {
-    // TODO повторяющиеся слова (работа с интервальными повторениями)
-  //  const words = LearningWordsApi.getRandomWordsForDifficulty(this.difficulty);
-    let words = LearningWordsApi.getRandomWordsForDifficulty(this.difficulty);
+    let words = this.wordsApi.getRepeatedWords(chunkCount);
     words = words.map((word) => {
       const newWord = word;
-      newWord.wordStatus = WORD_STATUSES.NEW;
+      newWord.wordStatus = WORD_STATUSES.OLD;
       return newWord;
     });
     this.repeatWords = this.filterByLimits(words);
   }
 
   filterByLimits(words) {
+    if (this.mode === MODES.GAME) {
+      return LearnindWordsCards.transformWordsToCards(words);
+    }
+
     const filteredCards = [];
     let totalCount = 0;
     let newCount = 0;
@@ -90,24 +133,16 @@ export default class LearnindWordsCards {
   }
 
   fillCards() {
-    if (!this.repeatWords.length) {
+    if (!this.repeatWords.length && this.mode === MODES.REPITITION) {
       this.getRepeatWords();
+      this.cards = this.cards.concat(this.repeatWords);
     }
-
-    this.cards = this.cards.concat(this.repeatWords);
 
     if (!this.length) {
       if (!this.newWords.length) {
         this.getNewWords();
       }
       this.cards.push(this.newWords.pop());
-    }
-
-    if (!this.length) {
-      // TODO подгрузка повторов следующего дня.
-      // this.getRepeatWordsNextDay();
-      // this.getRepeatWords();
-      // this.cards.concat(this.repeatWords);
     }
 
     return (!this.currentCardIndex >= this.length);
