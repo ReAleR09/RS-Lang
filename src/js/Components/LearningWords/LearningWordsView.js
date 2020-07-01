@@ -4,7 +4,6 @@ import LearningWordsMaterial from './LearningWordsMaterial';
 import {
   DATA_URL,
   lockAttribute,
-  styleAttribute,
   ONE_LETTER_WIDTH,
   WIDTH_ADDITION,
 } from './constants';
@@ -29,8 +28,6 @@ export default class LearningWordsView {
 
     this.settings.showTranslates = true;
     this.settings.turnOnSound = true;
-
-    this.updateSettings();
   }
 
   updateSettings() {
@@ -223,7 +220,8 @@ export default class LearningWordsView {
 
   drawWordToDOM(word) {
     // TODO clever placeholder: input width = placeholder.width
-    this.wordInput.setAttribute(styleAttribute, `width: ${ONE_LETTER_WIDTH * (word.word.length + WIDTH_ADDITION)}rem;`);
+    this.wordInput.setAttribute('style', `width: ${ONE_LETTER_WIDTH * (word.word.length + WIDTH_ADDITION)}rem;`);
+    this.wordInput.setAttribute('maxlength', word.word.length);
     this.removePlaceHolder();
 
     this.initPlaceHolder(word.word);
@@ -286,7 +284,5 @@ export default class LearningWordsView {
     this.settings.showButtonDelete = false;
     this.settings.showButtonComplicated = false;
     this.settings.showButtonSkip = false;
-
-    this.updateSettings();
   }
 }

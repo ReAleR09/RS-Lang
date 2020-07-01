@@ -2,6 +2,7 @@ import LearningWordsView from './LearningWordsView';
 import LearnindWordsCards from './LearningWordsCards';
 import LearningWordsSoundPlayer from '../LearningWordsSoundPlayer';
 import AppNavigator from '../../lib/AppNavigator';
+import SettingsModel from '../../Classes/UserSettings';
 import {
   WORD_STATUSES,
   DATA_URL,
@@ -15,10 +16,10 @@ import { DICT_CATEGORIES, DIFFICULTIES } from '../../Classes/Api/constants';
 import LearningWordsGameMode from './LearningWordsGameMode';
 
 export default class LearningWordsModel {
-  constructor(settings, statistics, mode = MODES.REPITITION) {
+  constructor(mode = MODES.REPITITION) {
     this.statistics = new Statistics(GAMES.LEARNING, mode);
     this.dictionary = new Dictionary();
-    this.settings = settings;
+    this.settings = SettingsModel;
     this.difficulty = this.settings.difficulty;
     this.wordsState = [];
     this.view = new LearningWordsView(this);
@@ -28,8 +29,6 @@ export default class LearningWordsModel {
 
     this.mode = mode;
     this.cards = new LearnindWordsCards();
-
-    this.cards.init(this.difficulty, settings, statistics.limits, mode);
   }
 
   changeDifficulty(newDifficulty) {
@@ -41,7 +40,15 @@ export default class LearningWordsModel {
     return this.cards.currentCard;
   }
 
-  attach(element) {
+  async attach(element) {
+    await this.statistics.get();
+    await this.settings.loadSettings();
+    this.cards.init(
+      this.difficulty,
+      this.settings.wordLimitsPerDay,
+      this.statistics.limits,
+      this.mode,
+    );
     this.view.attach(element);
   }
 
@@ -50,17 +57,18 @@ export default class LearningWordsModel {
     this.view = null;
   }
 
-  init() {
+  async init() {
     if (this.mode === MODES.GAME) {
       this.view.turnOnGameMode();
       this.game.startGame();
       this.changeDifficulty(this.game.level);
     }
-    this.view.init(this.settings);
 
-    this.cards.fillCards();
+    this.view.init(this.settings.settings);
 
-    this.updateWordCard(this.card);
+    if (await this.cards.fillCards()) {
+      this.updateWordCard(this.card);
+    }
   }
 
   updateWordCard(word) {
@@ -91,7 +99,7 @@ export default class LearningWordsModel {
 
   async acceptInput(value) {
     if (this.cards.currentStatus === WORD_STATUSES.COMPLITED) {
-      this.goNext();
+      await this.goNext();
       return true;
     }
 
@@ -110,7 +118,7 @@ export default class LearningWordsModel {
         if (this.game.level !== this.difficulty) {
           this.changeDifficulty(this.game.level);
         }
-        this.goNext();
+        await this.goNext();
       }
       return true;
     }
@@ -153,8 +161,8 @@ export default class LearningWordsModel {
     }
   }
 
-  goNext() {
-    if (this.cards.getNext()) {
+  async goNext() {
+    if (await this.cards.getNext()) {
       this.updateWordCard(this.card);
     } else {
       this.showResult();
@@ -167,20 +175,31 @@ export default class LearningWordsModel {
   }
 
   async updateStatistics(result) {
+    // eslint-disable-next-line no-underscore-dangle
+    const wordId = this.card._id;
     await this.statistics.updateWordStatistics(
-      this.card.wordId,
+      wordId,
       result,
     );
+    const userWordData = await this.dictionary.wordsApi.getWordDataById(wordId);
 
-    this.cards.updateStatistics(this.statistics.limits);
+    console.log(userWordData);
+    this.cards.updateStatistics(this.statistics);
   }
 
   async updateUserDifficulty(userDifficulty = DIFFICULTIES.NORMAL) {
-    await this.dictionary.setUserDifficulty(this.card.wordId, userDifficulty);
+    // eslint-disable-next-line no-underscore-dangle
+    await this.dictionary.setUserDifficulty(this.card._id, userDifficulty);
   }
 
   async updateDictionary(category = DICT_CATEGORIES.MAIN) {
-    await this.dictionary.putOnCategory(this.card.wordId, category);
+    // eslint-disable-next-line no-underscore-dangle
+    await this.dictionary.putOnCategory(this.card._id, category);
+    // eslint-disable-next-line no-underscore-dangle
+    // const userWordData = await this.dictionary.wordsApi.getWordDataById(this.card._id);
+
+    const data = await this.dictionary.getWordsList();
+    console.log(data);
   }
 
   sendCardToTrainingEnd() {

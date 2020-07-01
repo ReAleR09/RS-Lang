@@ -59,6 +59,7 @@ export default class LearnindWordsCards {
 
   updateStatistics(statistics) {
     this.counts = statistics;
+    console.log(this.counts);
   }
 
   get restCardsCount() {
@@ -85,8 +86,9 @@ export default class LearnindWordsCards {
     return ((this.length - 1) - this.currentCardIndex);
   }
 
-  getNewWords() {
-    let words = this.wordsApi.getRandomNewWords(chunkCount, this.difficulty);
+  async getNewWords() {
+    let words = await this.wordsApi.getRandomNewWords(chunkCount, this.difficulty);
+
     if (!words.length && this.mode === MODES.REPITITION) {
       this.difficulty += 1;
     }
@@ -95,11 +97,12 @@ export default class LearnindWordsCards {
       newWord.WordStatus = WORD_STATUSES.NEW;
       return newWord;
     });
+
     this.newWords = this.filterByLimits(words);
   }
 
-  getRepeatWords() {
-    let words = this.wordsApi.getRepeatedWords(chunkCount);
+  async getRepeatWords() {
+    let words = await this.wordsApi.getRepeatedWords(chunkCount);
     words = words.map((word) => {
       const newWord = word;
       newWord.wordStatus = WORD_STATUSES.OLD;
@@ -132,20 +135,23 @@ export default class LearnindWordsCards {
     return LearnindWordsCards.transformWordsToCards(filteredCards);
   }
 
-  fillCards() {
+  async fillCards() {
     if (!this.repeatWords.length && this.mode === MODES.REPITITION) {
-      this.getRepeatWords();
-      this.cards = this.cards.concat(this.repeatWords);
+      await this.getRepeatWords();
+      if (this.repeatWords.length) {
+        this.cards = this.cards.concat(this.repeatWords);
+      }
     }
-
     if (!this.length) {
       if (!this.newWords.length) {
-        this.getNewWords();
+        await this.getNewWords();
       }
-      this.cards.push(this.newWords.pop());
+      if (this.newWords.length) {
+        this.cards.push(this.newWords.pop());
+      }
     }
 
-    return (!this.currentCardIndex >= this.length);
+    return (this.currentCardIndex < this.length);
   }
 
   static transformWordsToCards(words, defaultStatus) {
@@ -172,10 +178,11 @@ export default class LearnindWordsCards {
     return cardCopy;
   }
 
-  getNext() {
+  async getNext() {
     this.currentCardIndex += 1;
     if (this.currentCardIndex === this.cards.length) {
-      return this.fillCards();
+      const fillingResult = await this.fillCards();
+      return fillingResult;
     }
     return true;
   }

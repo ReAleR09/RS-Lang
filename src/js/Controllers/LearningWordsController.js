@@ -3,6 +3,7 @@ import AppNavigator from '../lib/AppNavigator';
 import IndexView from '../Views/LearningWords/IndexView';
 import ResultsView from '../Views/LearningWords/ResultsView';
 import LearningWordsModel from '../Components/LearningWords/LearningWordsModel';
+import { MODES } from '../../config';
 
 /**
  * Controller is a sctructure that describes a set of "actions",
@@ -36,29 +37,13 @@ export default class LearningWordsController extends Controller {
     } else {
       difficulty = 0;
     }
-
-    const settings = {
-      maxCount: 50,
-      maxCountNewCards: 20,
-      showWordTranslate: true,
-      showExample: true, // TODO СДЕЛАТЬ СОКРЫТИЕ ИСКОМОГО СЛОВА В ПОДСКАЗКАХ
-      showTranscription: true,
-      showMeaning: true,
-      showButtonSkip: true,
-      showButtonSimple: true,
-      showButtonComplicated: true,
-      showImage: true,
-      showWordRate: true,
-
-    };
-    const statistics = { totalCount: 0, NewWords: 0 };
-
-    let mode;
+    // TODO mode
+    let mode = MODES.REPITITION;
     if (params.mode) {
       mode = params.mode;
     }
-    // TODO Принять настройки и статистику
-    this.props.model = new LearningWordsModel(settings, statistics, mode);
+
+    this.props.model = new LearningWordsModel(mode);
   }
 
   resultsAction() {
