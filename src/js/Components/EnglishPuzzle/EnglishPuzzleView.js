@@ -36,6 +36,10 @@ export default class EnglisPuzzleView {
     puzzleRow.classList.add('noPointer');
   }
 
+  toggleGreyBtnBackground(btn) {
+    btn.classList.toggle('grey');
+  }
+
   toggleDisableButton() {
     const idkBtn = this.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`);
     idkBtn.classList.toggle('disabled');

@@ -52,6 +52,7 @@ export default class EnglishPuzzleManager {
       this.view.toggleTranlation(e);
       this.audioBtnHandler(e);
       this.audioSwitcherHandler(e);
+      this.autoPlayBtnClickHandler(e);
     });
   }
 
@@ -64,6 +65,14 @@ export default class EnglishPuzzleManager {
   audioSwitcherHandler(e) {
     if (e.target.classList.contains('engPuz__tooltips-audioSwitcher')) {
       this.view.togglePlayBtn();
+    }
+  }
+
+  autoPlayBtnClickHandler(e) {
+    if (e.target.classList.contains('engPuz__tooltips-autoPlay')) {
+      this.isAutoPlay = !this.isAutoPlay;
+      console.log(this.view.element.querySelector('a .engPuz__tooltips-autoPlay'));
+      this.view.toggleGreyBtnBackground(this.view.element.querySelector('a .engPuz__tooltips-autoPlay'));
     }
   }
 
@@ -97,7 +106,6 @@ export default class EnglishPuzzleManager {
         this.view.toggleDisableButton();
         this.view.renameCheckButton();
         this.view.removePuzzleLinePointerEvents(this.puzzleLineIndex);
-        console.log('hello000000');
         // update statisticks with correct answer
       }
     }
@@ -164,6 +172,13 @@ export default class EnglishPuzzleManager {
     });
   }
 
+  autoPlaySentenceHandler() {
+    if (this.isAutoPlay && this.puzzleLineIndex) {
+      const audio = new Audio(CONF_MEDIA_BASE_PATH + this.words[this.puzzleLineIndex].audioExample);
+      audio.play();
+    }
+  }
+
   puzzleLineRender() {
     // todo shuffle sentences array this.puzzle[lineIndex] before appending
     const dragZone = document.querySelector(`.${engPuzConst.content.DRAGSECTION}`);
@@ -171,6 +186,7 @@ export default class EnglishPuzzleManager {
 
     dragZone.append(this.puzzleCompelete[this.puzzleLineIndex]);
     this.view.renderTranslation(this.words, this.puzzleLineIndex);
+    this.autoPlaySentenceHandler();
     // eslint-disable-next-line no-new
     this.dnd = new EnglisPuzzleDragDrop();
   }
