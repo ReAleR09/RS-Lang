@@ -1,5 +1,4 @@
 import SettingsApi from './Api/SettingsApi';
-import { GAMES } from '../../config';
 
 class UserSettings {
   constructor() {
@@ -24,14 +23,9 @@ class UserSettings {
 
   async loadSettings() {
     const newSettings = await this.settingsApi.get();
+
     if (!newSettings.error) {
       this.settingsObject = newSettings;
-      const gamesArray = Object.values(GAMES);
-      gamesArray.forEach((game) => {
-        if (Object.prototype.hasOwnProperty.call(this.settingsObject.games, game)) {
-          this.settingsObject.games[game] = {};
-        }
-      });
     }
   }
 
@@ -41,7 +35,7 @@ class UserSettings {
   }
 
   async saveGame(game, save = { difficulty: 0, round: 0 }) {
-    this.settingsObject.games[game].lastSave = save;
+    this.settingsObject.saves[game] = save;
     await this.saveSettings();
   }
 
@@ -50,14 +44,40 @@ class UserSettings {
     const round = 0;
     let save = { difficulty, round };
 
-    if (this.settingsObject.games[game].lastSave) {
-      save = this.settingsObject.games[game].lastSave;
+    if (this.settingsObject.saves[game]) {
+      save = this.settingsObject.saves[game];
     }
 
     return save;
   }
+
+  get wordLimitsPerDay() {
+    let limits;
+    if (this.settings) {
+      limits = {
+        maxCount: this.settings.wordsPerDay,
+        maxCountNewCards: this.settings.newWordsPerDay,
+      };
+    } else {
+      limits = {
+        maxCount: 50,
+        maxCountNewCards: 15,
+      };
+    }
+    return limits;
+  }
 }
 
 const SettingsModel = new UserSettings();
+
+// async function settingsInit() {
+//   const validity = await SettingsModel.settingsApi.checkValidity();
+//   if (!validity) {
+//     await SettingsModel.settingsApi.update();
+//   }
+//   await SettingsModel.loadSettings();
+// }
+
+// settingsInit();
 
 export default SettingsModel;
