@@ -5,7 +5,9 @@ import {
   MAX_RANDOMPAGE_WORDS_INDEX,
   MAX_REQUEST_COUNT,
   MAX_PAGE_INDEX,
+  GROUPS,
 } from './constants';
+import Utils from '../../Utils/Utils';
 
 export default class WordsApi {
   constructor() {
@@ -112,15 +114,28 @@ export default class WordsApi {
     return newWords;
   }
 
-  async getRepeatedWords(count, difficulty, day) {
+  async getRepeatedWords(count, day) {
     let dateNow = Date.now();
     if (day) {
       dateNow = day.getTime();
     }
 
-    const filter = JSON.stringify({ 'userWord.optional.date': { $lt: dateNow } });
+    const filter = JSON.stringify({
+      $not: [
+        { 'userWord.optional.dictCategory': DICT_CATEGORIES.DELETE },
+      ],
+      'userWord.optional.nextDate': { $lt: dateNow },
+    });
 
-    const repeatedWords = await this.getAggregatedWords(count, difficulty, filter);
+    const requestArray = GROUPS.map((group) => this.getAggregatedWords(undefined, group, filter));
+
+    let repeatedWords = await Promise.all(requestArray);
+    repeatedWords = repeatedWords.flat();
+    repeatedWords = Utils.arrayShuffle(repeatedWords);
+    if (count) {
+      repeatedWords = repeatedWords.slice(0, count);
+    }
+
     return repeatedWords;
   }
 
