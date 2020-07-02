@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import View from '../../lib/View';
 
 export default class PlayView extends View {
@@ -7,7 +8,7 @@ export default class PlayView extends View {
   }
 
   onUnmount() {
-    this.props.gameManager.stopGame();
+    // removing reference to the game instance (just in case)
     this.props.gameManager = null;
   }
 

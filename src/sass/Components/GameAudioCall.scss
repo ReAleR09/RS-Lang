@@ -1,0 +1,77 @@
+.carousel-slider {
+  margin-top: 20px;
+  border: 2px solid red;
+}
+.audio-call__img-word {
+  display: inherit;
+  width: 120px !important;
+  height: 120px;
+  border-radius: 50%;
+  margin: 20px auto;
+}
+.audio-call__wrapper-shuffle-words {
+  display: flex;
+  justify-content: center;
+  margin: 15px;
+}
+.audio__call-origin-word-hidden {
+  visibility: hidden;
+}
+.audio-call__wrapper-shuffle-word {
+  display: flex;
+  align-items: center;
+  margin: 5px;
+  border-radius: 5px;
+}
+.audio-call__wrapper-shuffle-word:hover {
+  background: #434488;
+}
+.audio-call__number-word {
+  padding-left: 5px;
+  opacity: 0.5;
+  cursor: default;
+}
+.audio-call__guess-color {
+  color: #a9ff00;
+  font-weight: 600;
+  opacity: 1;
+}
+.audio-call__not-guess-color {
+  color: #ff0000;
+  font-weight: 600;
+  opacity: 1;
+}
+.audio-call__shuffle-word {
+  padding: 5px;
+  cursor: pointer;
+}
+.audio-call__hidden-btn {
+  display: none !important;
+}
+.audio-call__wrapper-end-game {
+  background: #afc2f7;
+  width: 100%;
+  height: 100%;
+}
+.audio-call__heading-the-end {
+  margin-top: 0;
+  padding-top: 20px;
+}
+.audio-call__btn-reload {
+  margin-top: 50px;
+}
+.audio-call__toast-dont-know {
+  border-radius: 10px;
+}
+.audio-call__start-container {
+  background: #afc2f7;
+  width: 100%;
+  height: 100%;
+}
+.audio-call__heading-start-message {
+  margin-top: 0;
+  padding-top: 50px;
+}
+.audio-call__btn-start {
+  margin-top: 50px;
+}

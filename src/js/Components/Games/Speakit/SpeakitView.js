@@ -1,13 +1,12 @@
 import './style.scss';
-import AppNavigator from '../../../lib/AppNavigator';
 
-const ID_DIFFICULTY_BAR = 'speakit__difficulty-bar';
 const ID_PICTURE = 'speakit__picture';
 const ID_TRANSLATION = 'speakit__picture';
 const ID_RECOGNIZED_TEXT = 'speakit__recognized-text';
 const ID_WORDS_PANEL = 'speakit__words-panel';
 const ID_BEGIN_BUTTON = 'speakit__begin-button';
 const ID_FINISH_BUTTON = 'speakit__finish-button';
+const ID_GUESSD_COUNT = 'speakit__guessd-count';
 
 const CLASS_WORDCARD = 'speakit__word-card';
 const CLASS_WORDCARD_SOUND = 'speakit__word-card_sound-icon';
@@ -26,7 +25,6 @@ export default class SpeakitView {
 
   attach(element) {
     this.element = element;
-    this.initDifficultySwitcher();
     this.initWordSoundButtonClick();
     this.initBeginButton();
     this.initFinishButton();
@@ -65,17 +63,6 @@ export default class SpeakitView {
     });
   }
 
-  initDifficultySwitcher() {
-    const difficultyBarEl = this.element.querySelector(`#${ID_DIFFICULTY_BAR}`);
-    difficultyBarEl.addEventListener('click', (e) => {
-      if (e.target.dataset.level) {
-        AppNavigator.go('speakit', 'play', { difficulty: e.target.dataset.level });
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    });
-  }
-
   markWordAsRecognized(wordId) {
     const wordCardsEls = this.element.querySelectorAll(`.${CLASS_WORDCARD}`);
     wordCardsEls.forEach((wordCardEl) => {
@@ -85,18 +72,20 @@ export default class SpeakitView {
     });
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  getGameLayout(difficulty) {
-    let difficultyElements = '';
-    for (let level = 0; level < 6; level += 1) {
-      const enabledClass = (difficulty === level) ? 'purple darken-1' : '';
-      difficultyElements += `<div class="waves-effect waves-light btn col s1 ${enabledClass}" data-level=${level}>${level}</div>`;
-    }
+  updateGuessedCount(count) {
+    const el = this.element.querySelector(`#${ID_GUESSD_COUNT}`);
+    el.innerHTML = count;
+  }
 
+  // eslint-disable-next-line class-methods-use-this
+  getGameLayout(roundSize) {
     const html = `<div>
-      <h5 class="col s12">Difficulty:</h5>
-      <div id="${ID_DIFFICULTY_BAR}" class="row valign-wrapper">
-        ${difficultyElements}
+    <div class="row">
+        <div class="col s4 offset-s4">
+          Guessed
+          <span id="${ID_GUESSD_COUNT}">0</span>
+          out of <span>${roundSize}</span>
+        </div>
       </div>
       <div class="row">
         <img id="${ID_PICTURE}" class="col s4 offset-s4" src="${START_PIC}"/>
@@ -116,7 +105,7 @@ export default class SpeakitView {
       <div id="${ID_WORDS_PANEL}" class="row"></div>
 
       <div class="row">
-        <div id="${ID_BEGIN_BUTTON}" class="waves-effect waves-light btn col s2 offset-s5">START GAME</div>
+        <div id="${ID_BEGIN_BUTTON}" class="pulse waves-effect waves-light btn col s2 offset-s5">START GAME</div>
         <div id="${ID_FINISH_BUTTON}" class="waves-effect waves-light btn col s2 offset-s5 ${CLASS_BUTTON_HIDDEN}">FINISH GAME</div>
       </div>
     </div>`;

@@ -1,37 +1,38 @@
 import Router from './js/Router';
 import Sidebar from './js/Classes/Sidebar';
-import PublisherSubscriber from './js/Classes/PublisherSubscriber';
-import { EVENT_NAVIGATION } from './js/Utils/Constants';
-import ExampleController from './js/Controllers/ExampleController';
-import SavannahController from './js/Controllers/SavannahController';
+import AppNavigator from './js/lib/AppNavigator';
+import SettingsModel from './js/Classes/UserSettings';
 
+import SavannahController from './js/Controllers/SavannahController';
 import LearningWordsController from './js/Controllers/LearningWordsController';
 import GameSprintController from './js/Controllers/GameSprintController';
 import SpeakitController from './js/Controllers/SpeakitController';
 import RegistrationController from './js/Controllers/RegistrationController';
 import AuthorizationController from './js/Controllers/AuthorizationController';
-import AppNavigator from './js/lib/AppNavigator';
+import EnglishPuzzleController from './js/Controllers/englishPuzzleController';
 import SettingsController from './js/Controllers/SettingsController';
+import AudioCallController from './js/Controllers/GameAudioCallController';
 
 import './js/plugins';
 import { SIDENAV } from './config';
 
-function appInit() {
+async function appInit() {
   /**
    * On root '/', we will automatically serve indexAction of ExampleController
    * Also, we will serve on /example/* with ExampleController actions
    * THIS TO BE REPLACED IN THE PROCESS OF CREATING NEW CONTROLLERS
    */
   const routes = {
-    '/': ExampleController,
+    '/': LearningWordsController,
     registration: RegistrationController,
     authorization: AuthorizationController,
-    example: ExampleController,
     savannah: SavannahController,
     settings: SettingsController,
-    learningWords: LearningWordsController,
+    // learningWords: LearningWordsController,
     'game-sprint': GameSprintController,
     speakit: SpeakitController,
+    'game-audio-call': AudioCallController,
+    englishpuzzle: EnglishPuzzleController,
   };
 
   /**
@@ -50,14 +51,12 @@ function appInit() {
   sideBarLeft.attach('sidenav-left');
   sideBarFloating.attach('sidenav-floatng');
 
-  router.route();
-  PublisherSubscriber.publish(EVENT_NAVIGATION, { controller: null, action: null, params: null });
-
-  if (localStorage.timeStamp < Date.now()) {
-    localStorage.removeItem('token');
-  }
-  if (!localStorage.token) {
-    AppNavigator.go('registration');
+  const authRevived = await SettingsModel.reviveAuth();
+  if (!authRevived) {
+    SettingsModel.logout();
+    AppNavigator.go('authorization');
+  } else {
+    router.route(true);
   }
 }
 

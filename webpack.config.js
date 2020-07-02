@@ -19,7 +19,6 @@ module.exports = (env, options) => {
     devtool: isProduction ? 'none' : 'source-map',
     watch,
     entry: [
-      'babel-polyfill',
       './src/index.js',
       './src/sass/style.scss',
     ],

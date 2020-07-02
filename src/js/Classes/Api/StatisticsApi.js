@@ -6,10 +6,6 @@ export default class StatisticsApi {
     this.api = new Api();
   }
 
-  updateUserData(userData) {
-    this.api.updateUserData(userData);
-  }
-
   async init() {
     const result = await this.update();
     return result;
