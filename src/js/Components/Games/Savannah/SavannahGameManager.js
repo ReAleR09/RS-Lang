@@ -36,6 +36,10 @@ export default class SavannahGameManager {
     this.view.init(setsWordsToPlayArray);
   }
 
+  stopGame() {
+    this.view.stopAnimation();
+  }
+
   changeState(word) {
     /* eslint-disable no-param-reassign */
     this.wordsState.forEach((item) => {

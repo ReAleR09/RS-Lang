@@ -7,6 +7,7 @@ export default class PlayView extends View {
   }
 
   onUnmount() {
+    this.props.gameManager.stopGame();
     this.props.gameManager = null;
   }
 
