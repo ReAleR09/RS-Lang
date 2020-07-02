@@ -55,7 +55,9 @@ const go = (controller = null, action = null, params = {}, replace = false) => {
     dispatchEvent(popStateEvent);
     return;
   }
-  path += controller;
+  if (controller !== '/') {
+    path += controller;
+  }
   if (action) {
     path += `/${action}`;
   }
