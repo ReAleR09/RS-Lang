@@ -1,6 +1,8 @@
 import DOMUtils from './Utils/DOMUtils';
+import PublisherSubscriber from './Classes/PublisherSubscriber';
 import { CONF_ROOT_PATH } from '../config';
 import ControllerCancelException from './lib/ControllerCancelException';
+import { EVENT_NAVIGATION } from './Utils/Constants';
 
 export default class Router {
   constructor(appContainer, routes) {
@@ -39,7 +41,7 @@ export default class Router {
     return { controllerAlias, actionAlias };
   }
 
-  route() {
+  route(initial = false) {
     const { controllerAlias, actionAlias } = Router.getUrlParts();
 
     if (!Object.prototype.hasOwnProperty.bind(this.routes, controllerAlias)) {
@@ -86,5 +88,12 @@ export default class Router {
     setTimeout(() => {
       this.currentView.viewMounted();
     }, 0);
+
+    if (initial) {
+      PublisherSubscriber.publish(
+        EVENT_NAVIGATION,
+        { controller: controllerAlias, action: actionAlias, params: null },
+      );
+    }
   }
 }

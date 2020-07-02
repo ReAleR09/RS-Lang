@@ -1,6 +1,7 @@
-import { EVENT_NAVIGATION } from '../Utils/Constants';
+import { EVENT_NAVIGATION, FIELD_TOKEN } from '../Utils/Constants';
 import { CONF_ROOT_PATH } from '../../config';
 import PubSub from '../Classes/PublisherSubscriber';
+import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
 
 // here, url is already changed, just publishing EVENT_NAVIGATION for others
 window.addEventListener('popstate', (e) => {
@@ -15,6 +16,14 @@ window.addEventListener('popstate', (e) => {
 });
 
 const go = (controller = null, action = null, params = {}, replace = false) => {
+  // blocking navigation when not authorized
+  if (
+    !LocalStorageAdapter.get(FIELD_TOKEN)
+    && controller !== 'authorization'
+    && controller !== 'registration'
+  ) {
+    return;
+  }
   const state = {
     controller,
     action,
@@ -46,7 +55,9 @@ const go = (controller = null, action = null, params = {}, replace = false) => {
     dispatchEvent(popStateEvent);
     return;
   }
-  path += controller;
+  if (controller !== '/') {
+    path += controller;
+  }
   if (action) {
     path += `/${action}`;
   }

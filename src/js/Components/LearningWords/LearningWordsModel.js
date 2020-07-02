@@ -1,6 +1,6 @@
 import LearningWordsView from './LearningWordsView';
 import LearnindWordsCards from './LearningWordsCards';
-import LearningWordsSoundPlayer from '../LearningWordsSoundPlayer';
+import LearningWordsSoundPlayer from './LearningWordsSoundPlayer';
 import AppNavigator from '../../lib/AppNavigator';
 import {
   WORD_STATUSES,
