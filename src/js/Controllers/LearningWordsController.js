@@ -3,7 +3,9 @@ import AppNavigator from '../lib/AppNavigator';
 import IndexView from '../Views/LearningWords/IndexView';
 import ResultsView from '../Views/LearningWords/ResultsView';
 import LearningWordsModel from '../Components/LearningWords/LearningWordsModel';
-import { MODES } from '../../config';
+import { MODES, GAMES } from '../../config';
+import Statistics from '../Classes/Statistics';
+import PARAM_MODE from '../Utils/Constants';
 
 /**
  * Controller is a sctructure that describes a set of "actions",
@@ -37,16 +39,22 @@ export default class LearningWordsController extends Controller {
     } else {
       difficulty = 0;
     }
-    // TODO mode
+
     let mode = MODES.REPITITION;
-    if (params.mode) {
-      mode = params.mode;
+    if (params.has(PARAM_MODE)) {
+      mode = params.get(PARAM_MODE);
     }
 
     this.props.model = new LearningWordsModel(mode);
   }
 
   resultsAction() {
-    this.statistics = 0;
+    const params = AppNavigator.getRequestParams();
+
+    let mode = MODES.REPITITION;
+    if (params.has(PARAM_MODE)) {
+      mode = params.get(PARAM_MODE);
+    }
+    this.props.statistics = new Statistics(GAMES.LEARNING, mode);
   }
 }

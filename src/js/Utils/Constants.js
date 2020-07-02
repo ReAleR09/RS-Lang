@@ -1,1 +1,2 @@
-// Nothing here yet
+const PARAM_MODE = 'mode';
+export default PARAM_MODE;
