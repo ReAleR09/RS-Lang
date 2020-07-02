@@ -6,6 +6,8 @@ import AppNavigator from '../lib/AppNavigator';
 import ResultsView from '../Views/Speakit/ResultsView';
 import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
 import { difficulties, title, description } from '../Components/Games/Speakit/const';
+import SettingsModel from '../Classes/UserSettings';
+import { GAMES } from '../../config';
 
 export default class SpeakitController extends Controller {
   constructor() {
@@ -26,32 +28,39 @@ export default class SpeakitController extends Controller {
 
     // TODO вычислить может ли пользовать сыграть с пользовательскими словами
     game.userWordsPlay = true;
-    // TODO достать последнюю сложность
-    game.currentDifficulty = 2;
-    // TODO достать последний раунд
-    game.currentRound = 24;
 
+    // load saved difficulty and round
+    const { difficulty, round } = SettingsModel.loadGame(GAMES.SPEAKIT);
+    game.currentDifficulty = difficulty;
+    game.currentRound = round;
     this.props.game = game;
   }
 
   playAction() {
     const params = AppNavigator.getRequestParams();
 
-    let difficulty = params.get('difficulty');
-    difficulty = Number.parseInt(difficulty, 10);
+    const userWordsMode = params.get('userWords');
+    let gameManager;
 
-    let round = params.get('round');
-    round = Number.parseInt(round, 10);
-    // navigate to main game page if user somehow entered the page with invalid params
-    if (
-      difficulty < 0 || difficulty > 5
-      || round < 1 || round > difficulties[difficulty]
-    ) {
-      AppNavigator.go('speakit');
-      this.cancelAction();
+    if (userWordsMode) {
+      gameManager = new SpeakitGameManager(true);
+    } else {
+      let difficulty = params.get('difficulty');
+      difficulty = Number.parseInt(difficulty, 10);
+
+      let round = params.get('round');
+      round = Number.parseInt(round, 10);
+      // navigate to main game page if user somehow entered the page with invalid params
+      if (
+        difficulty < 0 || difficulty > 5
+        || round < 1 || round > difficulties[difficulty]
+      ) {
+        AppNavigator.go('speakit');
+        this.cancelAction();
+      }
+      gameManager = new SpeakitGameManager(false, difficulty, round);
     }
 
-    const gameManager = new SpeakitGameManager(false, difficulty, round);
     this.props.gameManager = gameManager;
   }
 
@@ -78,7 +87,13 @@ export default class SpeakitController extends Controller {
         this.props.nextRound = 1;
       }
     }
-
-    // TODO global game statistics should be sent there
+    // and save it
+    SettingsModel.saveGame(
+      GAMES.SPEAKIT,
+      {
+        difficulty: this.props.nextDifficulty,
+        round: this.props.nextRound,
+      },
+    );
   }
 }

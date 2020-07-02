@@ -35,16 +35,17 @@ class UserSettings {
     const newSettings = await this.settingsApi.get();
     if (newSettings && !newSettings.error) {
       this.settingsObject = newSettings;
-      const gamesArray = Object.values(GAMES);
-      gamesArray.forEach((game) => {
-        if (!Object.prototype.hasOwnProperty.call(this.settingsObject.games, game)) {
-          this.settingsObject.games[game] = {};
-        }
-      });
     } else {
       // if failed to load settings, init local settings with default object
-      this.settings = DEFAULT_USER_SETTINGS;
+      this.settingsObject = DEFAULT_USER_SETTINGS;
     }
+    // Создать пустые записи для игор, которые еще не фигурировали в сейвах на бэке
+    const gamesArray = Object.values(GAMES);
+    gamesArray.forEach((game) => {
+      if (!Object.prototype.hasOwnProperty.call(this.settingsObject.games, game)) {
+        this.settingsObject.games[game] = {};
+      }
+    });
   }
 
   async setDifficultyLevel(difficulty) {
@@ -57,9 +58,14 @@ class UserSettings {
     await this.saveSettings();
   }
 
-  async loadGame(game) {
+  /**
+   * Первая сложность - 0,
+   * первый раунд - 1,
+   * так повелось, сорян :D
+   */
+  loadGame(game) {
     const difficulty = 0;
-    const round = 0;
+    const round = 1;
     let save = { difficulty, round };
 
     if (this.settingsObject.games[game].lastSave) {
