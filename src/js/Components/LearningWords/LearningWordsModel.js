@@ -14,6 +14,7 @@ import { GAMES, MODES } from '../../../config';
 import Dictionary from '../../Classes/Dictionary';
 import { DICT_CATEGORIES, DIFFICULTIES } from '../../Classes/Api/constants';
 import LearningWordsGameMode from './LearningWordsGameMode';
+import PARAM_MODE from '../../Utils/Constants';
 
 export default class LearningWordsModel {
   constructor(mode = MODES.REPITITION) {
@@ -66,8 +67,11 @@ export default class LearningWordsModel {
 
     this.view.init(this.settings.settings);
 
-    if (await this.cards.fillCards()) {
+    await this.cards.fillCards();
+    if (this.cards.isCardReady) {
       this.updateWordCard(this.card);
+    } else {
+      this.showResult();
     }
   }
 
@@ -124,15 +128,15 @@ export default class LearningWordsModel {
     }
 
     if (result) {
+      this.cards.updateCounts();
       this.view.lockCard();
       let { showWordRate } = this.settings;
       if (showWordRate) {
         showWordRate = (this.cards.currentStatus === WORD_STATUSES.NEW);
       }
+      await this.updateStatistics(this.cards.currentErrors === 0);
       this.cards.currentStatus = WORD_STATUSES.COMPLITED;
       this.showFilledCard(showWordRate);
-
-      await this.updateStatistics(this.cards.currentErrors === 0);
     } else if (this.cards.currentErrors) {
       this.cards.sendCardToTrainingEnd();
       this.cards.currentErrors += 1;
@@ -177,14 +181,11 @@ export default class LearningWordsModel {
   async updateStatistics(result) {
     // eslint-disable-next-line no-underscore-dangle
     const wordId = this.card._id;
-    await this.statistics.updateWordStatistics(
+    this.statistics.updateWordStatistics(
       wordId,
       result,
+      (this.cards.currentStatus === WORD_STATUSES.NEW),
     );
-    const userWordData = await this.dictionary.wordsApi.getWordDataById(wordId);
-
-    console.log(userWordData);
-    this.cards.updateStatistics(this.statistics);
   }
 
   async updateUserDifficulty(userDifficulty = DIFFICULTIES.NORMAL) {
@@ -195,20 +196,15 @@ export default class LearningWordsModel {
   async updateDictionary(category = DICT_CATEGORIES.MAIN) {
     // eslint-disable-next-line no-underscore-dangle
     await this.dictionary.putOnCategory(this.card._id, category);
-    // eslint-disable-next-line no-underscore-dangle
-    // const userWordData = await this.dictionary.wordsApi.getWordDataById(this.card._id);
-
-    const data = await this.dictionary.getWordsList();
-    console.log(data);
   }
 
   sendCardToTrainingEnd() {
     this.cards.sendCardToTrainingEnd();
   }
 
+  // eslint-disable-next-line class-methods-use-this
   showResult() {
-    const params = { ...this.statistics };
-    // TODO ResultView final page of app
+    const params = { [PARAM_MODE]: this.mode };
     AppNavigator.go(LEARNING_WORDS_CONTROLLER, RESULTS_ACTION, params);
   }
 }

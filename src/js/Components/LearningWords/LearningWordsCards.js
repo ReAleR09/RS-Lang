@@ -59,7 +59,6 @@ export default class LearnindWordsCards {
 
   updateStatistics(statistics) {
     this.counts = statistics;
-    console.log(this.counts);
   }
 
   get restCardsCount() {
@@ -94,10 +93,9 @@ export default class LearnindWordsCards {
     }
     words = words.map((word) => {
       const newWord = word;
-      newWord.WordStatus = WORD_STATUSES.NEW;
+      newWord.wordStatus = WORD_STATUSES.NEW;
       return newWord;
     });
-
     this.newWords = this.filterByLimits(words);
   }
 
@@ -139,19 +137,34 @@ export default class LearnindWordsCards {
     if (!this.repeatWords.length && this.mode === MODES.REPITITION) {
       await this.getRepeatWords();
       if (this.repeatWords.length) {
+        this.repeatWords = this.newWords.slice(0, this.restCardsCount);
+      }
+      if (this.repeatWords.length) {
         this.cards = this.cards.concat(this.repeatWords);
       }
     }
-    if (!this.length) {
+    if (this.isEnded) {
       if (!this.newWords.length) {
         await this.getNewWords();
+      }
+      if (this.newWords.length) {
+        const restCount = Math.min(this.restCardsCount, this.restNewWordsCount);
+        this.newWords = this.newWords.slice(0, restCount);
       }
       if (this.newWords.length) {
         this.cards.push(this.newWords.pop());
       }
     }
 
-    return (this.currentCardIndex < this.length);
+    return this.isCardReady;
+  }
+
+  get isEnded() {
+    return (this.currentCardIndex > (this.length - 1));
+  }
+
+  get isCardReady() {
+    return this.currentCardIndex < this.length;
   }
 
   static transformWordsToCards(words, defaultStatus) {
@@ -180,11 +193,22 @@ export default class LearnindWordsCards {
 
   async getNext() {
     this.currentCardIndex += 1;
+
     if (this.currentCardIndex === this.cards.length) {
       const fillingResult = await this.fillCards();
       return fillingResult;
     }
     return true;
+  }
+
+  updateCounts() {
+    if (this.currentStatus === WORD_STATUSES.OLD) {
+      this.counts.totalWordsCount += 1;
+    }
+    if (this.currentStatus === WORD_STATUSES.NEW) {
+      this.counts.newWordsCount += 1;
+      this.counts.totalWordsCount += 1;
+    }
   }
 
   getPrevious() {
@@ -193,7 +217,7 @@ export default class LearnindWordsCards {
   }
 
   get currentStatus() {
-    return this.currentCard.wordStatus;
+    return this.cards[this.currentCardIndex].wordStatus;
   }
 
   set currentStatus(status) {
