@@ -1,7 +1,7 @@
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
 import Form from '../../Classes/Form';
-import Api from '../../Classes/Api/Api';
+import SettingsModel from '../../Classes/UserSettings';
 
 const errors = {
   server: 'Server error',
@@ -14,8 +14,7 @@ const logIn = async (e) => {
     email: document.querySelector('.email').value,
     password: document.querySelector('.password').value,
   };
-  const api = new Api();
-  const userData = await api.authorize(user);
+  const userData = await SettingsModel.auth(user);
   if (userData.error) {
     if (userData.error >= 500) {
       document.querySelector('.error').innerHTML = errors.server;
@@ -29,11 +28,6 @@ const logIn = async (e) => {
       }, 2000);
     }
   } else {
-    localStorage.userId = userData.userId;
-    localStorage.token = userData.token;
-    const lifeToken = 14400 * 1000;
-    localStorage.timeStamp = Date.now() + lifeToken;
-
     AppNavigator.go();
   }
 };
@@ -49,9 +43,6 @@ export default class AuthorizationView extends View {
     this.link = document.querySelector('#form-link');
     this.link.addEventListener('click', register);
   }
-  // onUnmount() {
-
-  // }
 
   render() {
     this.authorization = new Form('SIGN IN');

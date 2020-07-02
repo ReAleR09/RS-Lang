@@ -28,10 +28,6 @@ export default class WordsApi {
     return arrayOfIndexes;
   }
 
-  updateUserData(userData) {
-    this.api.updateUserData(userData);
-  }
-
   async getRandomWords(count, difficulty) {
     let requestCount = Math.min(count, MAX_REQUEST_COUNT);
 
@@ -78,11 +74,16 @@ export default class WordsApi {
 
   // Служебная функция
 
-  async getAggregatedWords(count, difficulty, filterString) {
+  async getAggregatedWords(count, difficulty = false, filterString) {
     const params = {
-      group: difficulty,
       wordsPerPage: 1,
     };
+
+    // difficulty is optional
+    if (difficulty !== false) {
+      params.group = difficulty;
+    }
+
     if (filterString) {
       params.filter = filterString;
     }
@@ -180,6 +181,66 @@ export default class WordsApi {
     if (wordData.error) return wordData;
     const userWordData = wordData.optional;
     return userWordData;
+  }
+
+  /**
+   * @param {int} difficulty 0-5
+   * @param {int} gameRoundSize 1-*
+   * @param {int} gameRound 1-*
+   * У апи сложности 0-5 и страницы 0-29
+   */
+  async getWordsForGame(difficulty, gameRoundSize, gameRound) {
+    /**
+     * Сначала нужно спроецировать "игровую страницу" (ака номер раунда)
+     * в страницу(ы) апи (в каждой сложности 600/20=30 страниц,
+     * а размер раунда может варьироваться от 10 до 40?)
+     */
+    // range start something in between 0 to 599.
+    const wordRangeStart = (gameRound - 1) * gameRoundSize;
+    // same, but for end. -1 because range start is included
+    const wordRangeEnd = wordRangeStart + gameRoundSize - 1;
+    // api page where the FIRST word of gameRound is going to be
+    const apiFirstPage = Math.floor(wordRangeStart / MAX_REQUEST_COUNT);
+    // api page where the LAST word of gameRound is going to be
+    const apiLastPage = Math.floor(wordRangeEnd / MAX_REQUEST_COUNT);
+
+    const arrayOfPages = [];
+    for (let pageNum = apiFirstPage; pageNum <= apiLastPage; pageNum += 1) {
+      arrayOfPages.push(pageNum);
+    }
+
+    const arrayOfRequests = arrayOfPages
+      .map((page) => this.api.getChunkOfWords({ group: difficulty, page }));
+
+    let arrayOfResults = await Promise.all(arrayOfRequests);
+    /**
+     * Now need to cut unneeded words.
+     * For example, we are requesting page 3 with gameRoundSize 14. Then
+     * wordRangeStart = 28, wordRangeEnd = 41, apiFirstPage = 1, apiLastPage = 3
+     * Api returned words with range apiRangeStart=20 to apiRangeEnd=59
+     * then we need to cut wordRangeStart-apiRangeStart=28-20=8 words
+     * from the beginning of the array
+     * and get only first gameRoundSize.
+     * But first, we need to sort our parallel-received results. Every word has 'page'
+     */
+    arrayOfResults = arrayOfResults.filter((array) => array.length > 0);
+    if (arrayOfResults.length > 1) {
+      arrayOfResults = arrayOfResults.sort((arr1, arr2) => (arr1[0].page - arr2[0].page));
+    }
+    // and flaten the array
+    arrayOfResults = arrayOfResults.reduce((accum, arr) => [...accum, ...arr], []);
+
+    const apiRangeStart = MAX_REQUEST_COUNT * apiFirstPage;
+    const cutFromStart = wordRangeStart - apiRangeStart;
+    // cut from start
+    if (cutFromStart > 0) {
+      arrayOfResults = arrayOfResults.slice(cutFromStart);
+    }
+    // get only roundSize (or less?)
+    arrayOfResults = arrayOfResults.slice(0, gameRoundSize);
+
+    // aaaaand finally we return this nice stuff
+    return arrayOfResults;
   }
 
   async deleteWordById(wordId) {
