@@ -1,5 +1,6 @@
 import M from 'materialize-css';
 import View from '../../lib/View';
+import AppNavigator from '../../lib/AppNavigator';
 
 const numberSlide = ['#one!', '#two!', '#three!', '#four!', '#five!', '#six!', '#seven!', '#eight!', '#nine!', '#ten!'];
 
@@ -14,13 +15,17 @@ export default class IndexView extends View {
    * it references actual DOM root element of this view
    */
   onMount() {
+    this.element.querySelector('#start-btn').addEventListener('click', () => {
+      this.props.startGame();
+    });
+
     this.subscribe('update-data', ({
       status,
       countCorrectTranslationWords,
       wordsToSend,
     }) => {
       if (status === 'init-game') {
-        console.log(countCorrectTranslationWords, wordsToSend);
+        // console.log(wordsToSend);
         this.wordsToSend = wordsToSend;
         this.generateHtml(wordsToSend);
       } else if (status === 'guessed-word') {
@@ -28,7 +33,7 @@ export default class IndexView extends View {
       } else if (status === 'not-guess') {
         this.notGuessWord();
       } else {
-        this.endGame();
+        this.endGame(countCorrectTranslationWords);
       }
     });
   }
@@ -58,7 +63,16 @@ export default class IndexView extends View {
         </div>
       `;
     });
+    const btnForGame = `
+      <div class="carousel-fixed-item center">
+        <a id="answer-word-btn" class="btn waves-effect white grey-text darken-text-2 audio-call__hidden-btn">Ответить
+          <i class="material-icons right">send</i>
+        </a>
+        <a id="check-answer-btn" class="btn waves-effect white grey-text darken-text-2">Не знаю</a>
+      </div>`;
+    this.element.querySelector('#start-node').remove();
     this.element.insertAdjacentHTML('beforeend', sliderHtml);
+    this.element.insertAdjacentHTML('beforeend', btnForGame);
     this.componentDidUpdate(); // init slider.
     this.createEventSubscribe();
   }
@@ -71,16 +85,10 @@ export default class IndexView extends View {
     this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
       el.classList.remove('audio-call__mark-word');
     });
-
-    this.element.querySelector('#answer-word-btn').addEventListener('click', () => {
-      this.instance.next();
-      this.hideSendBtn();
-      this.hideOriginWord();
-      this.props.sayWord(); // Двоится звук! Постоянно создает аудио. Потом фиксануть.
-    });
   }
 
   notGuessWord() {
+    this.visibilityOriginWord();
     this.element.querySelector('.audio-call__mark-word').previousElementSibling.innerHTML = '&#10006;';
     this.element.querySelector('.audio-call__mark-word').previousElementSibling.classList.add('audio-call__not-guess-color');
     this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
@@ -91,13 +99,15 @@ export default class IndexView extends View {
 
   nextSlide() {
     setTimeout(() => {
+      this.hideOriginWord();
       this.instance.next();
-    }, 1200);
+      this.props.sayWord();
+    }, 1800);
   }
 
   createEventSubscribe() {
     this.element.querySelector('#check-answer-btn').addEventListener('click', () => {
-      this.props.checkAnswerWord();
+      M.toast({ html: 'Лошара!!! =)', classes: 'audio-call__toast-dont-know', displayLength: 300 });
     });
 
     this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
@@ -110,6 +120,19 @@ export default class IndexView extends View {
     this.element.querySelectorAll('#repeat-word-btn').forEach((el) => {
       el.addEventListener('click', () => {
         this.props.sayWord();
+      });
+    });
+
+    this.element.querySelector('#answer-word-btn').addEventListener('click', () => {
+      this.instance.next();
+      this.hideSendBtn();
+      this.hideOriginWord();
+      this.props.sayWord();
+    });
+
+    this.element.querySelectorAll('.carousel-item').forEach((el) => {
+      el.addEventListener('mousedown', (event) => {
+        event.stopPropagation();
       });
     });
   }
@@ -131,11 +154,9 @@ export default class IndexView extends View {
     this.eslint = true;
     const html = `
       <div class="carousel carousel-slider center">
-        <div class="carousel-fixed-item center">
-          <a id="answer-word-btn" class="btn waves-effect white grey-text darken-text-2 audio-call__hidden-btn">Ответить
-            <i class="material-icons right">send</i>
-          </a>
-          <a id="check-answer-btn" class="btn waves-effect white grey-text darken-text-2">Не знаю</a>
+        <div id="start-node" class="audio-call__start-container">
+          <h3 class="audio-call__heading-start-message">Готов? Жми <b>"старт"</b> для начала игры!</h3>
+          <a id="start-btn" class="waves-effect waves-light btn-large audio-call__btn-start">Старт!</a>
         </div>
       </div>`;
     return html;
@@ -150,8 +171,17 @@ export default class IndexView extends View {
     this.instance = M.Carousel.getInstance(this.carousel);
   }
 
-  endGame() {
-    this.element.innerHTML = 'The End';
+  endGame(countRightWord) {
+    this.element.innerHTML = `
+      <div class="audio-call__wrapper-end-game">
+        <h2 class="audio-call__heading-the-end">The End.</h2>
+        <h4>Угаданно <b>${countRightWord}</b> из <b>10</b> слов</h4>
+        <a id="btn-reload-game" class="btn-floating btn-large waves-effect waves-light green audio-call__btn-reload"><i class="material-icons">refresh</i></a>
+      </div>`;
+    this.props.audioEndGame();
+    this.element.querySelector('#btn-reload-game').addEventListener('click', () => {
+      AppNavigator.go('game-audio-call');
+    });
   }
 
   visibilitySendBtn() {

@@ -19,6 +19,9 @@ export default class GameSprintController extends Controller {
     };
     super(viewClasses);
     this.wordsUrl = 'http://pacific-castle-12388.herokuapp.com/words?page=1&group=0';
+    this.audioFail = new Audio('../../src/audio/badumtss.mp3');
+    this.audioEndGame = new Audio('../../src/audio/endGame.mp3');
+    this.audioEndGameFail = new Audio('../../src/audio/veryBadResult.mp3');
   }
 
   /**
@@ -27,18 +30,21 @@ export default class GameSprintController extends Controller {
    * Try to do all data aggregation here then pass it to view
    */
   async indexAction() {
-    this.props.checkAnswerWord = () => {
-      this.checkAnswer();
+    this.props.startGame = () => {
+      this.startGame();
     };
     this.props.answerWord = (event) => {
       this.compareWords(event);
-      console.log(event.target.innerText);
+      // console.log(event.target.innerText);
     };
     this.props.sayWord = () => {
       this.playAudio();
     };
+    this.props.audioEndGame = () => {
+      this.playAudioEndGame();
+    };
     await this.getWordsFromDataBase();
-    this.startGame();
+    // this.startGame();
   }
 
   startGame() {
@@ -102,28 +108,37 @@ export default class GameSprintController extends Controller {
 
   compareWords(event) { // Тут можно помечать угаданные слова
     if (this.wordsToSend[this.countAnswerWords].wordTranslate === event.target.innerText) {
+      this.countCorrectTranslationWords += 1;
       this.status = 'guessed-word';
       this.updateView();
     } else { // Если не угадал, отметить статус какой, как не угаданное.
       this.status = 'not-guess';
       this.updateView();
+      this.playAudioFail();
     }
     this.countAnswerWords += 1;
   }
 
-  checkAnswer() {
-    this.playAudio();
-  }
-
   playAudio() {
-    this.audio = new Audio(`https://raw.githubusercontent.com/irinainina/rslang-data/master/${this.wordsToSend[this.countAnswerWords].audio}`);
-    this.audio.play();
-    // if (this.audio.ended === true) {
-    //   console.log('stop audio');
-    // }
+    if (this.countAnswerWords === 10) {
+      this.status = 'finish';
+      this.updateView();
+    } else {
+      // console.log('playaudio');
+      this.audio = new Audio(`https://raw.githubusercontent.com/irinainina/rslang-data/master/${this.wordsToSend[this.countAnswerWords].audio}`);
+      this.audio.play();
+    }
   }
 
-  stopGame() {
-    this.status = 'finish';
+  playAudioFail() {
+    this.audioFail.play();
+  }
+
+  playAudioEndGame() {
+    if (this.countCorrectTranslationWords > 0) {
+      this.audioEndGame.play();
+    } else {
+      this.audioEndGameFail.play();
+    }
   }
 }
