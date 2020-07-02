@@ -14,7 +14,7 @@ import { GAMES, MODES } from '../../../config';
 import Dictionary from '../../Classes/Dictionary';
 import { DICT_CATEGORIES, DIFFICULTIES } from '../../Classes/Api/constants';
 import LearningWordsGameMode from './LearningWordsGameMode';
-import PARAM_MODE from '../../Utils/Constants';
+import { PARAM_MODE } from '../../Utils/Constants';
 
 export default class LearningWordsModel {
   constructor(mode = MODES.REPITITION) {

@@ -18,10 +18,12 @@ export default class Statistics {
     this.results = {
       success: 0,
       errors: 0,
+      bestResult: 0,
     };
   }
 
   async updateRepititionsStatistics(wordId, isNewWordStatus) {
+    if (this.game !== GAMES.LEARNING) return;
     await this.get();
 
     let isNewWord;
@@ -53,8 +55,10 @@ export default class Statistics {
   async updateWordStatistics(wordId, result = true, isNewWord) {
     if (result) {
       this.results.success += 1;
+      this.results.bestResult += 1;
     } else {
       this.results.errors += 1;
+      this.results.bestResult = 0;
     }
 
     if (this.mode === MODES.REPITITION && !(this.wordsSendAtEnd)) {

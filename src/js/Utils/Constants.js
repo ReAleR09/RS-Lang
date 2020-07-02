@@ -1,2 +1,2 @@
-const PARAM_MODE = 'mode';
-export default PARAM_MODE;
+export const EVENT_NAVIGATION = 'EVENT_NAVIGATION';
+export const PARAM_MODE = 'mode';

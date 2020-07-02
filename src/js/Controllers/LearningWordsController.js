@@ -5,7 +5,7 @@ import ResultsView from '../Views/LearningWords/ResultsView';
 import LearningWordsModel from '../Components/LearningWords/LearningWordsModel';
 import { MODES, GAMES } from '../../config';
 import Statistics from '../Classes/Statistics';
-import PARAM_MODE from '../Utils/Constants';
+import { PARAM_MODE } from '../Utils/Constants';
 
 /**
  * Controller is a sctructure that describes a set of "actions",

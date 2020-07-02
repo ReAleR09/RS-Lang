@@ -1,5 +1,4 @@
 import View from '../../lib/View';
-import AppNavigator from '../../lib/AppNavigator';
 import { HTML_RESULT, RESULTS_QUERIES } from '../../Components/LearningWords/ResultsTemplate';
 import { CLASS_VISIBLE } from '../../Components/LearningWords/IndexTemplate';
 // import LearningWordsView from '../../Components/LearningWords/LearningWordsView';
@@ -15,8 +14,7 @@ export default class ResultsView extends View {
    * it references actual DOM root element of this view
    */
   onMount() {
-    const params = AppNavigator.getRequestParams();
-    this.statstics = params;
+    this.statistics = this.props.statistics;
     // TODO Statistics
     const componentElement = document.querySelector(RESULTS_QUERIES.COMPONENT);
     componentElement.classList.add(CLASS_VISIBLE);
