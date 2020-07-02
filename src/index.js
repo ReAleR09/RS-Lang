@@ -12,9 +12,15 @@ import RegistrationController from './js/Controllers/RegistrationController';
 import AuthorizationController from './js/Controllers/AuthorizationController';
 import AppNavigator from './js/lib/AppNavigator';
 import SettingsController from './js/Controllers/SettingsController';
+import DictionaryController from './js/Controllers/DictionaryController';
 
 import './js/plugins';
 import { SIDENAV } from './config';
+
+import '@fortawesome/fontawesome-free/js/fontawesome';
+import '@fortawesome/fontawesome-free/js/regular';
+import '@fortawesome/fontawesome-free/js/solid';
+import '@fortawesome/fontawesome-free/js/brands';
 
 function appInit() {
   /**
@@ -32,6 +38,7 @@ function appInit() {
     learningWords: LearningWordsController,
     'game-sprint': GameSprintController,
     speakit: SpeakitController,
+    dictionary: DictionaryController,
   };
 
   /**

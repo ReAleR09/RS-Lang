@@ -15,6 +15,7 @@
   "author": "ReAleR09",
   "license": "ISC",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.13.1",
     "materialize-css": "^1.0.0-rc.2"
   },
   "devDependencies": {
