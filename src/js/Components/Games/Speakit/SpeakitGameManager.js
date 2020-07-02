@@ -85,7 +85,9 @@ export default class SpeakitGameManager {
 
     // marking all non-guessed words as error
     this.wordsState.forEach((wordState) => {
-      this.statistics.updateWordStatistics(wordState.id, false);
+      if (!wordState.guessed) {
+        this.statistics.updateWordStatistics(wordState.id, false);
+      }
     });
     // sending stats for the game async
     this.statistics.sendGameResults();
