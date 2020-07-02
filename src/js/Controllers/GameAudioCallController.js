@@ -1,6 +1,13 @@
 import Controller from '../lib/Controller';
 import IndexView from '../Views/GameAudioCall/IndexView';
 import Utils from '../Utils/Utils';
+import {
+  initGame,
+  updateData,
+  guessedWord,
+  notGuess,
+  finish,
+} from '../Utils/ConstantsGameAudioCall';
 
 /**
  * Controller is a sctructure that describes a set of "actions",
@@ -29,7 +36,7 @@ export default class GameSprintController extends Controller {
    * through this.props in the correcponding view as well.
    * Try to do all data aggregation here then pass it to view
    */
-  async indexAction() {
+  indexAction() {
     this.props.startGame = () => {
       this.startGame();
     };
@@ -43,12 +50,12 @@ export default class GameSprintController extends Controller {
     this.props.audioEndGame = () => {
       this.playAudioEndGame();
     };
-    await this.getWordsFromDataBase();
     // this.startGame();
   }
 
-  startGame() {
-    this.status = 'init-game';
+  async startGame() {
+    await this.getWordsFromDataBase();
+    this.status = initGame;
     this.countCorrectTranslationWords = 0;
     this.wordsToSend = [];
     this.countAnswerWords = 0;
@@ -89,7 +96,7 @@ export default class GameSprintController extends Controller {
   }
 
   updateView() {
-    IndexView.publish('update-data', {
+    IndexView.publish(updateData, {
       status: this.status,
       countCorrectTranslationWords: this.countCorrectTranslationWords,
       wordsToSend: this.wordsToSend,
@@ -109,10 +116,10 @@ export default class GameSprintController extends Controller {
   compareWords(event) { // Тут можно помечать угаданные слова
     if (this.wordsToSend[this.countAnswerWords].wordTranslate === event.target.innerText) {
       this.countCorrectTranslationWords += 1;
-      this.status = 'guessed-word';
+      this.status = guessedWord;
       this.updateView();
     } else { // Если не угадал, отметить статус какой, как не угаданное.
-      this.status = 'not-guess';
+      this.status = notGuess;
       this.updateView();
       this.playAudioFail();
     }
@@ -121,7 +128,7 @@ export default class GameSprintController extends Controller {
 
   playAudio() {
     if (this.countAnswerWords === 10) {
-      this.status = 'finish';
+      this.status = finish;
       this.updateView();
     } else {
       // console.log('playaudio');

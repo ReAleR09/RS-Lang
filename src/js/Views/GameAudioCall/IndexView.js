@@ -1,6 +1,12 @@
 import M from 'materialize-css';
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
+import {
+  initGame,
+  updateData,
+  guessedWord,
+  notGuess,
+} from '../../Utils/ConstantsGameAudioCall';
 
 const numberSlide = ['#one!', '#two!', '#three!', '#four!', '#five!', '#six!', '#seven!', '#eight!', '#nine!', '#ten!'];
 
@@ -19,18 +25,18 @@ export default class IndexView extends View {
       this.props.startGame();
     });
 
-    this.subscribe('update-data', ({
+    this.subscribe(updateData, ({
       status,
       countCorrectTranslationWords,
       wordsToSend,
     }) => {
-      if (status === 'init-game') {
+      if (status === initGame) {
         // console.log(wordsToSend);
         this.wordsToSend = wordsToSend;
         this.generateHtml(wordsToSend);
-      } else if (status === 'guessed-word') {
+      } else if (status === guessedWord) {
         this.guessWord();
-      } else if (status === 'not-guess') {
+      } else if (status === notGuess) {
         this.notGuessWord();
       } else {
         this.endGame(countCorrectTranslationWords);
