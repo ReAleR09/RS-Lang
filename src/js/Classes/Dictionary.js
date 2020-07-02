@@ -40,7 +40,6 @@ export default class Dictionary {
       .map((group) => this.wordsApi.getAggregatedWords(count, group, filter));
 
     let wordsList = await Promise.all(requestArray);
-
     wordsList = wordsList.flat();
 
     return wordsList;
