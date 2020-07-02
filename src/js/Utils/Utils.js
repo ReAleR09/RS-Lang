@@ -1,3 +1,9 @@
+import { MILLIS_PER_DAY } from '../Classes/Api/constants';
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
 // Fisher-Yates shuffle
 function arrayShuffle(oldArray) {
   const array = oldArray.slice(0); // shallow copy
@@ -10,8 +16,25 @@ function arrayShuffle(oldArray) {
   return array;
 }
 
+function getDateNoTime(date) {
+  let result = new Date();
+  if (date) result = date;
+
+  result = new Date(result.getFullYear(), result.getMonth(), result.getDate());
+  return result;
+}
+
+export function getNextDay(date) {
+  let resultDate = date;
+  if (!date) resultDate = new Date();
+  return new Date(resultDate.getTime() + MILLIS_PER_DAY);
+}
+
 const Utils = {
   arrayShuffle,
+  getRandomInt,
+  getDateNoTime,
+  getNextDay,
 };
 
 export default Utils;

@@ -1,6 +1,26 @@
+export const TEAM_KEY = 'team';
+export const TEAM_VALUE = 'team7';
+
+export const GAMES = {
+  LEARNING: 'learningWords',
+  SPEAKIT: 'speakIt',
+  SAVANNAH: 'savannah',
+  AUDIOCALL: 'audioCall',
+  SPRINT: 'sprint',
+  PUZZLE: 'puzzle',
+};
+
+export const MODES = {
+  GAME: 'game',
+  REPITITION: 'repitition',
+};
+
 export const CONF_ROOT_PATH = '';
 
 export const CONF_MEDIA_BASE_PATH = 'https://raw.github.com/ReAleR09/rslang-data/master/';
+
+// export const BACKEND_URL = 'https://afternoon-falls-25894.herokuapp.com/';
+export const BACKEND_URL = 'http://pacific-castle-12388.herokuapp.com/';
 
 export const SIDENAV = [
   {
@@ -22,5 +42,10 @@ export const SIDENAV = [
     title: 'SpeakIt [mini-game]',
     path: ['speakit'],
     icon: 'accessibility',
+  },
+  {
+    title: 'EnglishPuzzle [mini-game]',
+    path: ['englishpuzzle'],
+    icon: 'extension',
   },
 ];

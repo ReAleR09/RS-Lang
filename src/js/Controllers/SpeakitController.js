@@ -38,10 +38,13 @@ export default class SpeakitController extends Controller {
     // if no stats stored, redirect to start page
     if (!stats) {
       AppNavigator.go('speakit');
-      return;
+      // we have to do this in order to not cause any errors to the console
+      this.cancelAction();
     }
     // that's only for one time use
     LocalStorageAdapter.remove(SPEAKIT_GAME_STATS);
     this.props.stats = stats;
+
+    // TODO global game statistics should be sent there
   }
 }

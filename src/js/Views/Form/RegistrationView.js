@@ -1,6 +1,6 @@
 import View from '../../lib/View';
 import Form from '../../Classes/Form';
-import Api from '../../Classes/Api';
+import Api from '../../Classes/Api/Api';
 import AppNavigator from '../../lib/AppNavigator';
 
 const errors = {

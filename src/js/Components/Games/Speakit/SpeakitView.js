@@ -2,7 +2,6 @@ import './style.scss';
 import AppNavigator from '../../../lib/AppNavigator';
 
 const ID_DIFFICULTY_BAR = 'speakit__difficulty-bar';
-const ID_PANEL = 'speakit__panel';
 const ID_PICTURE = 'speakit__picture';
 const ID_TRANSLATION = 'speakit__picture';
 const ID_RECOGNIZED_TEXT = 'speakit__recognized-text';
@@ -11,11 +10,12 @@ const ID_BEGIN_BUTTON = 'speakit__begin-button';
 const ID_FINISH_BUTTON = 'speakit__finish-button';
 
 const CLASS_WORDCARD = 'speakit__word-card';
+const CLASS_WORDCARD_SOUND = 'speakit__word-card_sound-icon';
 const CLASS_BUTTON_HIDDEN = 'speakit__button-hidden';
 
-const CLASS_BORDER = 'speakit__border';
+const CLASS_WORDCARD_RECOGNIZED = 'green';
 
-const CLASS_WORDCARD_RECOGNIZED = 'speakit__word-card_recognized';
+const START_PIC = '/assets/img/speakit_start_pic.jpg';
 
 export default class SpeakitView {
   constructor(wordSoundButtonClickCallback, beginCallback, stopCallback) {
@@ -89,40 +89,57 @@ export default class SpeakitView {
   getGameLayout(difficulty) {
     let difficultyElements = '';
     for (let level = 0; level < 6; level += 1) {
-      const enabledClass = (difficulty === level) ? 'speakit__difficulty_enabled' : '';
-      difficultyElements += `<div class="${enabledClass}" data-level=${level}>[d${level}]</div>`;
+      const enabledClass = (difficulty === level) ? 'purple darken-1' : '';
+      difficultyElements += `<div class="waves-effect waves-light btn col s1 ${enabledClass}" data-level=${level}>${level}</div>`;
     }
 
-    const html = `<div class="${CLASS_BORDER}">
-      <div id="${ID_DIFFICULTY_BAR}" class="${CLASS_BORDER}">
+    const html = `<div>
+      <h5 class="col s12">Difficulty:</h5>
+      <div id="${ID_DIFFICULTY_BAR}" class="row valign-wrapper">
         ${difficultyElements}
       </div>
-      <div id="${ID_PANEL}" class="${CLASS_BORDER}">
-        <div id="${ID_PICTURE}" class="${CLASS_BORDER}">Picture of the word goes there</div>
-        <div id="${ID_TRANSLATION}" class="${CLASS_BORDER}">Word translation hint goes there</div>
+      <div class="row">
+        <img id="${ID_PICTURE}" class="col s4 offset-s4" src="${START_PIC}"/>
       </div>
-      <div id="${ID_RECOGNIZED_TEXT}" class="${CLASS_BORDER}">recognized text</div>
-      <div id="${ID_WORDS_PANEL}" class="${CLASS_BORDER}"></div>
-      <div>
-        <div id="${ID_BEGIN_BUTTON}">START GAME</div>
-        <div id="${ID_FINISH_BUTTON}" class="${CLASS_BUTTON_HIDDEN}">FINISH GAME</div>
+      <div class="row">
+        <div class="col s4 offset-s4">
+          <div readonly id="${ID_TRANSLATION}" class="speakit__translation-input"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s6 push-s3">
+          <i class="material-icons prefix">micro</i>
+          <input id="${ID_RECOGNIZED_TEXT}">
+        </div>
+      </div>
+
+      <div id="${ID_WORDS_PANEL}" class="row"></div>
+
+      <div class="row">
+        <div id="${ID_BEGIN_BUTTON}" class="waves-effect waves-light btn col s2 offset-s5">START GAME</div>
+        <div id="${ID_FINISH_BUTTON}" class="waves-effect waves-light btn col s2 offset-s5 ${CLASS_BUTTON_HIDDEN}">FINISH GAME</div>
       </div>
     </div>`;
 
     return html;
   }
 
-  drawRecognizedTextToDOM(text) {
+  drawRecognizedWordToDOM(text, imageUrl) {
     const textDiv = this.element.querySelector(`#${ID_RECOGNIZED_TEXT}`);
-    textDiv.textContent = text;
+    textDiv.value = text;
+
+    if (imageUrl) {
+      const imgEl = this.element.querySelector(`#${ID_PICTURE}`);
+      imgEl.src = imageUrl;
+    }
   }
 
   drawWordsToDOM(words) {
     const wordsHtml = words.reduce((html, wordInfo) => {
-      const wordHTML = `<div class="${CLASS_WORDCARD} ${CLASS_BORDER}" data-wordid="${wordInfo.id}">
-        <div class="${CLASS_BORDER}" data-wordid="${wordInfo.id}" data-wordsound="1">Sound knopka )</div>
-        <div class="${CLASS_BORDER}">${wordInfo.word}</div>
-        <div class="${CLASS_BORDER}">${wordInfo.transcription}</div>
+      const wordHTML = `<div class="${CLASS_WORDCARD} col s2 card" data-wordid="${wordInfo.id}">
+        <i class="${CLASS_WORDCARD_SOUND} material-icons prefix" data-wordid="${wordInfo.id}" data-wordsound="1">micro</i>
+        <div class="">${wordInfo.word}</div>
+        <div class="">${wordInfo.transcription}</div>
       </div>`;
 
       return html + wordHTML;

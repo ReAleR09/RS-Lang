@@ -3,12 +3,14 @@ import Sidebar from './js/Classes/Sidebar';
 import PublisherSubscriber from './js/Classes/PublisherSubscriber';
 import { EVENT_NAVIGATION } from './js/Utils/Constants';
 import ExampleController from './js/Controllers/ExampleController';
+import SavannahController from './js/Controllers/SavannahController';
 
 import LearningWordsController from './js/Controllers/LearningWordsController';
 import GameSprintController from './js/Controllers/GameSprintController';
 import SpeakitController from './js/Controllers/SpeakitController';
 import RegistrationController from './js/Controllers/RegistrationController';
 import AuthorizationController from './js/Controllers/AuthorizationController';
+import EnglishPuzzleController from './js/Controllers/englishPuzzleController';
 import AppNavigator from './js/lib/AppNavigator';
 import SettingsController from './js/Controllers/SettingsController';
 import AudioCallController from './js/Controllers/GameAudioCallController';
@@ -27,11 +29,13 @@ function appInit() {
     registration: RegistrationController,
     authorization: AuthorizationController,
     example: ExampleController,
+    savannah: SavannahController,
     settings: SettingsController,
     learningWords: LearningWordsController,
     'game-sprint': GameSprintController,
     speakit: SpeakitController,
     'game-audio-call': AudioCallController,
+    englishpuzzle: EnglishPuzzleController,
   };
 
   /**
