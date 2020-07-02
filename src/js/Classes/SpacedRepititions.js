@@ -76,7 +76,8 @@ export default class SpacedRepititions {
     let userWordData;
     const DateNow = Date.now();
 
-    let isFirstStep = !this.wordsApi.checkUserWordInBase(wordId);
+    let isFirstStep = await this.wordsApi.checkUserWordInBase(wordId);
+    isFirstStep = !isFirstStep;
 
     if (isFirstStep) {
       await this.wordsApi.changeWordDataById(wordId);

@@ -1,5 +1,5 @@
 import Api from './Api';
-import { TEAM_KEY, TEAM_VALUE } from '../../../config';
+import { TEAM_KEY, TEAM_VALUE, GAMES } from '../../../config';
 import { DICT_CATEGORIES } from './constants';
 
 export const DEFAULT_USER_SETTINGS = {
@@ -25,6 +25,13 @@ export const DEFAULT_USER_SETTINGS = {
   annoyinglimit: 5,
   annoyingAction: DICT_CATEGORIES.COMPLICATED,
 };
+DEFAULT_USER_SETTINGS.saves = {};
+Object.values(GAMES).forEach((game) => {
+  DEFAULT_USER_SETTINGS.saves[game] = {
+    difficulty: 0,
+    round: 1,
+  };
+});
 
 export default class SettingsApi {
   constructor() {
@@ -37,9 +44,16 @@ export default class SettingsApi {
   }
 
   async update(settings) {
+    let newSettings = settings;
+    if (!settings) {
+      newSettings = {
+        ...DEFAULT_USER_SETTINGS,
+      };
+    }
+
     const settingStructure = {
       wordsPerDay: 50,
-      optional: settings,
+      optional: newSettings,
     };
     settingStructure.optional[TEAM_KEY] = TEAM_VALUE;
     const result = await this.api.putUserSettings(settingStructure);
@@ -48,6 +62,7 @@ export default class SettingsApi {
 
   async checkValidity() {
     const settings = await this.get();
+
     let result = Object.prototype.hasOwnProperty.call(settings, TEAM_KEY);
     result = result && (settings[TEAM_KEY] === TEAM_VALUE);
 
@@ -56,6 +71,7 @@ export default class SettingsApi {
 
   async get() {
     const settingsApiObject = await this.api.getUserSettings();
+
     if (!settingsApiObject.optional) return false;
 
     return settingsApiObject.optional;

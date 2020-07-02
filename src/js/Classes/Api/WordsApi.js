@@ -108,9 +108,9 @@ export default class WordsApi {
 
     const arrayOfIndexes = WordsApi.createArrayOfIndexes(resultCount, (totalCount - 1));
 
-    const randomNewWords = arrayOfIndexes.map((index) => arrayOfResults[index]);
+    const randomWords = arrayOfIndexes.map((index) => arrayOfResults[index]);
 
-    return randomNewWords;
+    return randomWords;
   }
 
   async getRandomNewWords(count, difficulty) {
@@ -127,15 +127,14 @@ export default class WordsApi {
     }
 
     const filter = JSON.stringify({
-      $not: [
-        { 'userWord.optional.dictCategory': DICT_CATEGORIES.DELETE },
-      ],
+      'userWord.optional.dictCategory': { $ne: DICT_CATEGORIES.DELETE },
       'userWord.optional.nextDate': { $lt: dateNow },
     });
 
     const requestArray = GROUPS.map((group) => this.getAggregatedWords(undefined, group, filter));
 
     let repeatedWords = await Promise.all(requestArray);
+
     repeatedWords = repeatedWords.flat();
     repeatedWords = Utils.arrayShuffle(repeatedWords);
     if (count) {
@@ -152,7 +151,7 @@ export default class WordsApi {
     interval: 0, // текущий расчета даты
     success: 0, // количество успехов
     bestResult: 0, // лучший результат
-    curSuccessCosistency: 0, // текущая серия
+    curSuccessConsistency: 0, // текущая серия
     lastDate: 0, // последняя дата
     nextDate: 0, // дата повторения
   }) {
@@ -172,7 +171,7 @@ export default class WordsApi {
   }
 
   async checkUserWordInBase(wordId) {
-    const result = this.getWordDataById(wordId);
+    const result = await this.getWordDataById(wordId);
     return !result.error;
   }
 

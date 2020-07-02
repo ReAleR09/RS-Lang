@@ -1,8 +1,8 @@
 import SettingsApi, { DEFAULT_USER_SETTINGS } from './Api/SettingsApi';
 import Api from './Api/Api';
-import { GAMES } from '../../config';
 import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
 import { FIELD_USER_ID, FIELD_TOKEN, FIELD_REFRESH_TOKEN } from '../Utils/Constants';
+import { GAMES } from '../../config';
 
 class UserSettings {
   constructor() {
@@ -37,13 +37,18 @@ class UserSettings {
       this.settingsObject = newSettings;
     } else {
       // if failed to load settings, init local settings with default object
-      this.settingsObject = DEFAULT_USER_SETTINGS;
+      this.settingsObject = { ...DEFAULT_USER_SETTINGS };
     }
-    // Создать пустые записи для игор, которые еще не фигурировали в сейвах на бэке
-    const gamesArray = Object.values(GAMES);
-    gamesArray.forEach((game) => {
-      if (!Object.prototype.hasOwnProperty.call(this.settingsObject.games, game)) {
-        this.settingsObject.games[game] = {};
+    // just in case
+    if (!this.settingsObject.saves) {
+      this.settingsObject.saves = {};
+    }
+    Object.values(GAMES).forEach((game) => {
+      if (!this.settingsObject.saves[game]) {
+        this.settingsObject.saves[game] = {
+          difficulty: 0,
+          round: 1,
+        };
       }
     });
   }
@@ -53,8 +58,8 @@ class UserSettings {
     await this.saveSettings();
   }
 
-  async saveGame(game, save = { difficulty: 0, round: 0 }) {
-    this.settingsObject.games[game].lastSave = save;
+  async saveGame(game, save = { difficulty: 0, round: 1 }) {
+    this.settingsObject.saves[game] = save;
     await this.saveSettings();
   }
 
@@ -68,11 +73,27 @@ class UserSettings {
     const round = 1;
     let save = { difficulty, round };
 
-    if (this.settingsObject.games[game].lastSave) {
-      save = this.settingsObject.games[game].lastSave;
+    if (this.settingsObject.saves[game]) {
+      save = this.settingsObject.saves[game];
     }
 
     return save;
+  }
+
+  get wordLimitsPerDay() {
+    let limits;
+    if (this.settings) {
+      limits = {
+        maxCount: this.settings.wordsPerDay,
+        maxCountNewCards: this.settings.newWordsPerDay,
+      };
+    } else {
+      limits = {
+        maxCount: 50,
+        maxCountNewCards: 15,
+      };
+    }
+    return limits;
   }
 
   async auth({ email, password }) {
@@ -123,5 +144,15 @@ class UserSettings {
 }
 
 const SettingsModel = new UserSettings();
+
+// async function settingsInit() {
+//   const validity = await SettingsModel.settingsApi.checkValidity();
+//   if (!validity) {
+//     await SettingsModel.settingsApi.update();
+//   }
+//   await SettingsModel.loadSettings();
+// }
+
+// settingsInit();
 
 export default SettingsModel;
