@@ -81,6 +81,10 @@ export default class SavannahView {
     }
   }
 
+  stopAnimation() {
+    clearInterval(this.interval);
+  }
+
   initTranslateWordsBlock() {
     const translateWordsBlock = this.element.querySelector(`.${CLASS_TRANSLATE_CARDS}`);
     translateWordsBlock.addEventListener('click', this.play);
