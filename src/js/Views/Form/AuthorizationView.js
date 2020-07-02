@@ -1,9 +1,7 @@
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
-import LocalStorageAdapter from '../../Utils/LocalStorageAdapter';
 import Form from '../../Classes/Form';
-import Api from '../../Classes/Api/Api';
-import { TOKEN_LIFE } from '../../../config';
+import SettingsModel from '../../Classes/UserSettings';
 
 const errors = {
   server: 'Server error',
@@ -16,8 +14,7 @@ const logIn = async (e) => {
     email: document.querySelector('.email').value,
     password: document.querySelector('.password').value,
   };
-  const api = new Api();
-  const userData = await api.authorize(user);
+  const userData = await SettingsModel.auth(user);
   if (userData.error) {
     if (userData.error >= 500) {
       document.querySelector('.error').innerHTML = errors.server;
@@ -31,10 +28,6 @@ const logIn = async (e) => {
       }, 2000);
     }
   } else {
-    LocalStorageAdapter.set('userId', userData.userId);
-    LocalStorageAdapter.set('token', userData.token);
-    LocalStorageAdapter.set('timeStamp', Date.now() + TOKEN_LIFE);
-
     AppNavigator.go();
   }
 };

@@ -1,5 +1,6 @@
 import { BACKEND_URL } from '../../../config';
 import LocalStorageAdapter from '../../Utils/LocalStorageAdapter';
+import { FIELD_TOKEN, FIELD_USER_ID } from '../../Utils/Constants';
 
 const REQUESTS = {
   PUT: 'PUT',
@@ -8,11 +9,17 @@ const REQUESTS = {
   DELETE: 'DELETE',
 };
 
+let instance = null;
+
 export default class Api {
   constructor() {
+    if (instance) {
+      return instance;
+    }
+
     this.url = BACKEND_URL;
 
-    this.updateUserData();
+    instance = this;
   }
 
   static createUrlObject(urlString, endpoint, searchParams) {
@@ -25,16 +32,14 @@ export default class Api {
     return newUrl;
   }
 
-  updateUserData(userData) {
-    if (userData) {
-      if (userData.token && userData.userId) {
-        this.token = userData.token;
-        this.userId = userData.userId;
-      }
-    } else if (LocalStorageAdapter.get('token') && LocalStorageAdapter.get('userId')) {
-      this.token = LocalStorageAdapter.get('token');
-      this.userId = LocalStorageAdapter.get('userId');
-    }
+  // eslint-disable-next-line class-methods-use-this
+  get token() {
+    return LocalStorageAdapter.get(FIELD_TOKEN);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  get userId() {
+    return LocalStorageAdapter.get(FIELD_USER_ID);
   }
 
   async requestToAPI(type, endpoint, searchParams = undefined, bodyObject = undefined) {
@@ -88,8 +93,33 @@ export default class Api {
   async authorize(user) {
     const endpoint = 'signin';
     const result = await this.post(endpoint, {}, user);
-    this.updateUserData(result);
     return result;
+  }
+
+  async getNewTokensUsingRefreshToken(refreshToken, userId) {
+    const endpoint = `users/${userId}/tokens`;
+
+    const url = Api.createUrlObject(this.url, endpoint);
+
+    const fetchOptions = {
+      method: REQUESTS.GET,
+      headers: {
+        Authorization: `Bearer ${refreshToken}`,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const rawResponse = await fetch(url, fetchOptions);
+
+    let content = {};
+    if (rawResponse.status >= 400) {
+      content.error = rawResponse.status;
+    } else {
+      content = await rawResponse.json();
+    }
+
+    return content;
   }
 
   async register(user) {

@@ -26,7 +26,7 @@ export default class SpeakitGameManager {
     );
     this.speechRecognizer = new SpeakitVoiceRecognizer(this.handleRecognizedPhrase.bind(this));
     const mode = userWordsMode ? MODES.REPITITION : MODES.GAME;
-    this.statistics = new Statistics(GAMES.SPEAKIT, mode);
+    this.statistics = new Statistics(GAMES.SPEAKIT, mode, true);
   }
 
   attach(element) {
@@ -54,7 +54,7 @@ export default class SpeakitGameManager {
             this.view.updateGuessedCount(this.wordsState.filter((word) => word.guessed).length);
 
             this.soundPlayer.playGuessSound();
-            // send statistics about the fact that word was recognized (async)
+            // mark word as success in stats
             this.statistics.updateWordStatistics(wordState.id, true);
           }
           return true;
@@ -82,10 +82,16 @@ export default class SpeakitGameManager {
 
   finishGame(withDelay = false) {
     this.speechRecognizer.stopRecognition();
-    const stats = this.calculateStats();
 
+    // marking all non-guessed words as error
+    this.wordsState.forEach((wordState) => {
+      this.statistics.updateWordStatistics(wordState.id, false);
+    });
     // sending stats for the game async
     this.statistics.sendGameResults();
+
+    // calculate stats for display on Result page
+    const stats = this.calculateStats();
 
     // putting stats to storage to use them on /speakit/results page
     LocalStorageAdapter.set(SPEAKIT_GAME_STATS, stats);

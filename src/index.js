@@ -1,9 +1,7 @@
 import Router from './js/Router';
 import Sidebar from './js/Classes/Sidebar';
-import PublisherSubscriber from './js/Classes/PublisherSubscriber';
-import { EVENT_NAVIGATION } from './js/Utils/Constants';
 import AppNavigator from './js/lib/AppNavigator';
-import LocalStorageAdapter from './js/Utils/LocalStorageAdapter';
+import SettingsModel from './js/Classes/UserSettings';
 
 import SavannahController from './js/Controllers/SavannahController';
 import LearningWordsController from './js/Controllers/LearningWordsController';
@@ -17,7 +15,7 @@ import SettingsController from './js/Controllers/SettingsController';
 import './js/plugins';
 import { SIDENAV } from './config';
 
-function appInit() {
+async function appInit() {
   /**
    * On root '/', we will automatically serve indexAction of ExampleController
    * Also, we will serve on /example/* with ExampleController actions
@@ -51,14 +49,12 @@ function appInit() {
   sideBarLeft.attach('sidenav-left');
   sideBarFloating.attach('sidenav-floatng');
 
-  router.route();
-  PublisherSubscriber.publish(EVENT_NAVIGATION, { controller: null, action: null, params: null });
-
-  if (LocalStorageAdapter.get('timeStamp') < Date.now()) {
-    LocalStorageAdapter.remove('token');
-  }
-  if (!LocalStorageAdapter.get('token')) {
+  const authRevived = await SettingsModel.reviveAuth();
+  if (!authRevived) {
+    SettingsModel.logout();
     AppNavigator.go('authorization');
+  } else {
+    router.route(true);
   }
 }
 

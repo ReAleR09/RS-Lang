@@ -28,10 +28,6 @@ export default class WordsApi {
     return arrayOfIndexes;
   }
 
-  updateUserData(userData) {
-    this.api.updateUserData(userData);
-  }
-
   async getRandomWords(count, difficulty) {
     let requestCount = Math.min(count, MAX_REQUEST_COUNT);
 

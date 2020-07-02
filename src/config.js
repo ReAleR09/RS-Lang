@@ -1,8 +1,6 @@
 export const TEAM_KEY = 'team';
 export const TEAM_VALUE = 'team7';
 
-export const TOKEN_LIFE = 14400 * 1000;
-
 export const GAMES = {
   LEARNING: 'learningWords',
   SPEAKIT: 'speakIt',
@@ -21,8 +19,7 @@ export const CONF_ROOT_PATH = '';
 
 export const CONF_MEDIA_BASE_PATH = 'https://raw.github.com/ReAleR09/rslang-data/master/';
 
-// export const BACKEND_URL = 'https://afternoon-falls-25894.herokuapp.com/';
-export const BACKEND_URL = 'http://pacific-castle-12388.herokuapp.com/';
+export const BACKEND_URL = 'https://afternoon-falls-25894.herokuapp.com/';
 
 export const SIDENAV = [
   {

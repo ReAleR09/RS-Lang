@@ -1,4 +1,4 @@
-import { EVENT_NAVIGATION } from '../Utils/Constants';
+import { EVENT_NAVIGATION, FIELD_TOKEN } from '../Utils/Constants';
 import { CONF_ROOT_PATH } from '../../config';
 import PubSub from '../Classes/PublisherSubscriber';
 import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
@@ -18,7 +18,7 @@ window.addEventListener('popstate', (e) => {
 const go = (controller = null, action = null, params = {}, replace = false) => {
   // blocking navigation when not authorized
   if (
-    !LocalStorageAdapter.get('token')
+    !LocalStorageAdapter.get(FIELD_TOKEN)
     && controller !== 'authorization'
     && controller !== 'registration'
   ) {
