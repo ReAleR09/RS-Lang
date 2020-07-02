@@ -60,7 +60,7 @@ export default class EnglisPuzzleView {
   }
 
   toggleGreyBtnBackground(btn) {
-    btn.classList.toggle('grey');
+    btn.classList.toggle('lighten-4');
   }
 
   toggleDisableButton(idkBtn) {
@@ -121,10 +121,10 @@ export default class EnglisPuzzleView {
     <div class="engPuz__settings flex-center">
     </div>
     <div class="engPuz__tooltips flex-between">
-      <a class="engPuz__tooltips-autoPlay btn-floating waves-effect"> <i class="engPuz__tooltips-autoPlay medium material-icons">volume_up</i></a>
-      <a class="engPuz__tooltips-translation btn-floating circle waves-effect"> <i class="engPuz__tooltips-translation medium material-icons">translate</i></a>
-      <a class="engPuz__tooltips-audioSwitcher btn-floating circle waves-effect"> <i class="engPuz__tooltips-audioSwitcher medium material-icons">music_video</i></a>
-      <a class="engPuz__tooltips-picture btn-floating circle waves-effect"> <i class="engPuz__tooltips-picture medium material-icons">photo</i></a>
+      <a class="engPuz__tooltips-autoPlay teal btn-floating waves-effect"> <i class="engPuz__tooltips-autoPlay medium material-icons">volume_up</i></a>
+      <a class="engPuz__tooltips-translation teal btn-floating circle waves-effect"> <i class="engPuz__tooltips-translation medium material-icons">translate</i></a>
+      <a class="engPuz__tooltips-audioSwitcher teal btn-floating circle waves-effect"> <i class="engPuz__tooltips-audioSwitcher medium material-icons">music_video</i></a>
+      <a class="engPuz__tooltips-picture btn-floating teal circle waves-effect"> <i class="engPuz__tooltips-picture medium material-icons">photo</i></a>
     </div>
     </div>
     <div class="flex-center">

@@ -1,7 +1,6 @@
 /* eslint-disable no-new */
 /* eslint-disable class-methods-use-this */
 import EnglishPuzzleView from './EnglishPuzzleView';
-import EnglisPuzzleMaterial from './EnglishPuzzleMaterial';
 import EnglisPuzzleDragDrop from './EnglishPuzzleDragDrop';
 import engPuzConst from './EnglishPuzzleConstants';
 import MockWordsApi from './mockWords';
@@ -30,7 +29,6 @@ export default class EnglishPuzzleManager {
 
   attach(element) {
     this.view.attach(element);
-    this.material = new EnglisPuzzleMaterial();
   }
 
   getSentencesForGame() {
@@ -84,7 +82,7 @@ export default class EnglishPuzzleManager {
   autoPlayBtnClickHandler(e) {
     if (e.target.classList.contains('engPuz__tooltips-autoPlay')) {
       this.isAutoPlay = !this.isAutoPlay;
-      this.view.toggleGreyBtnBackground(this.view.element.querySelector('a .engPuz__tooltips-autoPlay'));
+      this.view.toggleGreyBtnBackground(this.view.element.querySelector('a.engPuz__tooltips-autoPlay'));
     }
   }
 
