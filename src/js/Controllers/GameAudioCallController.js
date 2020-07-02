@@ -36,7 +36,8 @@ export default class GameSprintController extends Controller {
    * through this.props in the correcponding view as well.
    * Try to do all data aggregation here then pass it to view
    */
-  indexAction() {
+  async indexAction() {
+    await this.getWordsFromDataBase();
     this.props.startGame = () => {
       this.startGame();
     };
@@ -53,8 +54,7 @@ export default class GameSprintController extends Controller {
     // this.startGame();
   }
 
-  async startGame() {
-    await this.getWordsFromDataBase();
+  startGame() {
     this.status = initGame;
     this.countCorrectTranslationWords = 0;
     this.wordsToSend = [];
