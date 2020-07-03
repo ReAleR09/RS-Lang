@@ -27,7 +27,6 @@ export default class EnglisPuzzleView {
     });
 
     const container = document.querySelector(`.${engPuzConst.content.DROPSECTION}`);
-    console.log(fragment);
     container.insertAdjacentHTML('afterbegin', fragment);
   }
 
@@ -67,11 +66,6 @@ export default class EnglisPuzzleView {
     idkBtn.classList.toggle('disabled');
   }
 
-  renderPaintingInfo(info) {
-    const infoEl = document.querySelector('.engPuz__translation');
-    infoEl.innerText = info;
-  }
-
   drawCompletePuzzle() {
     const puzzleContainer = document.querySelector(`.${engPuzConst.content.DROPSECTION}`);
     this.clearContainer(puzzleContainer);
@@ -92,6 +86,12 @@ export default class EnglisPuzzleView {
       canvas.dataset.item === `${puzzleLineIndex + 1}-${i + 1}`
         ? canvas.classList.add('canvas-green') : canvas.classList.add('canvas-red');
     });
+  }
+
+  renderImageInfo(imageInfo) {
+    const infoEl = this.element.querySelector('.engPuz__translation');
+    const imageInfoText = `${imageInfo.name}. ${imageInfo.author} ${imageInfo.year}`;
+    infoEl.innerText = imageInfoText;
   }
 
   renderTranslation(words, lineIndex) {

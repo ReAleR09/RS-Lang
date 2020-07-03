@@ -106,9 +106,7 @@ export default class EnglishPuzzleManager {
 
   resultAudioHandler(e) {
     if (e.target.classList.contains('engPuz__tooltips-autoPlay--results')) {
-      console.log(this.words);
       const { word } = e.target.dataset;
-      console.log(`id = ${word}`);
       new Audio(this.words[word].audioExample).play();
     }
   }
@@ -224,7 +222,7 @@ export default class EnglishPuzzleManager {
           this.view.drawCompletePuzzle();
           this.view.hideTooltipsBtns();
           this.view.removeDragContainer();
-          this.view.renderPaintingInfo('Here goes Painting name and Author text');
+          this.view.renderImageInfo(this.imageInfo);
           // disabling continue button so far we don't have logic to go to next page/difficult
           this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.CHECK}`));
 
@@ -242,7 +240,7 @@ export default class EnglishPuzzleManager {
         this.view.removeCanvasHighlight(this.puzzleLineIndex);
         this.view.addCanvasHighlight(this.puzzleLineIndex);
         this.updateCurrentStat(this.checkLineAnswers());
-        console.log(this.checkLineAnswers());
+
         if (this.checkLineAnswers()) {
           this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`));
           this.view.renameCheckButton();

@@ -6,7 +6,8 @@ import EnglishPuzzleManager from '../Components/EnglishPuzzle/EnglishPuzzleManag
 import IndexView from '../Views/englishPuzzle/indexView';
 import PlayView from '../Views/englishPuzzle/playView';
 import ResultsView from '../Views/englishPuzzle/resultsView';
-
+import SettingsModel from '../Classes/UserSettings';
+import { GAMES } from '../../config';
 import engPuzConst from '../Components/EnglishPuzzle/EnglishPuzzleConstants';
 
 export default class EnglishPuzzleController extends Controller {
@@ -47,6 +48,14 @@ export default class EnglishPuzzleController extends Controller {
       }
       gameManager = new EnglishPuzzleManager(false, difficulty, round);
     }
+
+    SettingsModel.saveGame(
+      GAMES.PUZZLE,
+      {
+        difficulty: this.props.nextDifficulty,
+        round: this.props.nextRound,
+      },
+    );
 
     this.props.gameManager = gameManager;
   }
