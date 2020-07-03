@@ -20,8 +20,9 @@ export default class DictionaryWordCard {
 
         <div class="word-data">
           <div class="word-data__status"> типа точечки </div>
-          <div class="word-data__stat-prev"> Когда повторялось последний раз </div>
-          <div class="word-data__stat-next"> Когда будет повторяться </div>`;
+          <div class="word-data__count"><b>Repeated:</b> ${this.word.userWord.optional.errors + this.word.userWord.optional.success || 0} </div>
+          <div class="word-data__stat-prev"> ${new Date(this.word.userWord.optional.lastDate).toLocaleString()} </div>
+          <div class="word-data__stat-next"> ${new Date(this.word.userWord.optional.nextDate).toLocaleString()} </div>`;
     if (this.flag) {
       html += `<div class="word-data__delete-button" idWord="${this.word.id}">DELETE</div>`;
     } else {
