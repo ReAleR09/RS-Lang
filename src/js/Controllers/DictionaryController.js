@@ -1,9 +1,7 @@
 import Controller from '../lib/Controller';
 import IndexView from '../Views/Dictionary/IndexView';
-import MockWordsApi from '../Components/Games/Savannah/mockWords';
 import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
 import Dictionary from '../Classes/Dictionary';
-
 
 export default class SavannahController extends Controller {
   constructor() {
@@ -16,19 +14,18 @@ export default class SavannahController extends Controller {
   // eslint-disable-next-line class-methods-use-this
   async indexAction() {
     const dictionary = new Dictionary();
-    // const learningWords = await dictionary.getWordsList();
-    // console.log(learningWords);
-    // this.props.words2 = 'sdfghj';
 
     // const learningWords = MockWordsApi.getWordsForDifficulty(0);
     const learningWords = await dictionary.getWordsList('mine');
-    console.log(learningWords);
+    // console.log(learningWords);
     LocalStorageAdapter.set('learningWords', learningWords);
 
-    const difficultWords = MockWordsApi.getWordsForDifficulty(1);
+    // const difficultWords = MockWordsApi.getWordsForDifficulty(0);
+    const difficultWords = await dictionary.getWordsList('complicated');
     LocalStorageAdapter.set('difficultWords', difficultWords);
 
-    const deletedWords = MockWordsApi.getWordsForDifficulty(2);
+    // const deletedWords = MockWordsApi.getWordsForDifficulty(0);
+    const deletedWords = await dictionary.getWordsList('delete');
     LocalStorageAdapter.set('deletedWords', deletedWords);
   }
 }
