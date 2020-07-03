@@ -7,6 +7,8 @@ import IndexView from '../Views/englishPuzzle/indexView';
 import PlayView from '../Views/englishPuzzle/playView';
 import ResultsView from '../Views/englishPuzzle/resultsView';
 
+import engPuzConst from '../Components/EnglishPuzzle/EnglishPuzzleConstants';
+
 export default class EnglishPuzzleController extends Controller {
   constructor() {
     const viewClasses = {
@@ -23,14 +25,29 @@ export default class EnglishPuzzleController extends Controller {
 
   playAction() {
     const params = AppNavigator.getRequestParams();
-    let difficulty = params.get('difficulty');
-    if (difficulty) {
-      difficulty = Number.parseInt(difficulty, 10);
+
+    const userWordsMode = params.get('isUserWords');
+    let gameManager;
+
+    if (userWordsMode) {
+      gameManager = new EnglishPuzzleManager(true);
     } else {
-      difficulty = 0;
+      let difficulty = params.get('difficulty');
+      difficulty = Number.parseInt(difficulty, 10);
+
+      let round = params.get('round');
+      round = Number.parseInt(round, 10);
+      // navigate to main game page if user somehow entered the page with invalid params
+      if (
+        difficulty < 0 || difficulty > 5
+        || round < 1 || round > engPuzConst.pagesPerDifficulties[difficulty]
+      ) {
+        AppNavigator.go('speakit');
+        this.cancelAction();
+      }
+      gameManager = new EnglishPuzzleManager(false, difficulty, round);
     }
 
-    const gameManager = new EnglishPuzzleManager();
     this.props.gameManager = gameManager;
   }
 

@@ -19,6 +19,14 @@ const engPuzConst = {
     DIFFICULTY: 'engPuz__difficulty',
     PAGE: 'engPuz__page',
   },
+  gameMode: {
+    ARCADE: 'arcade',
+    MYWORDS: 'mywords',
+  },
+  pagesPerDifficulties: [
+    44, 40, 39,
+    28, 28, 24,
+  ],
 };
 
 export default engPuzConst;

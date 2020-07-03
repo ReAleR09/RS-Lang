@@ -11,10 +11,11 @@ import { CONF_MEDIA_BASE_PATH } from '../../../config';
 export const EP_GAME_STATS = 'EP_GAME_STATS';
 
 export default class EnglishPuzzleManager {
-  constructor(difficulty = 1, page = 1) {
+  constructor(isUserWordsMode = false, difficulty = 0, page = 1) {
+    this.isUserWordsMode = isUserWordsMode;
     this.difficulty = difficulty;
-    this.words = MockWordsApi.getWordsForDifficulty(this.difficulty);
     this.page = page;
+    this.words = MockWordsApi.getWordsForDifficulty(this.difficulty);
     this.puzzleLineIndex = 0;
     this.isAutoPlay = true;
     this.isTranslation = true;
@@ -38,10 +39,16 @@ export default class EnglishPuzzleManager {
   }
 
   async init() {
-    this.getSentencesForGame();
-    await this.getPuzzleElements();
-    this.puzzleLineRender(this.puzzleLineIndex);
-    this.eventListenersInit();
+    if (this.isUserWordsMode) {
+      this.playUserWords();
+      console.log('user words mode');
+    } else {
+      // start game with difficulty and round
+      this.getSentencesForGame();
+      await this.getPuzzleElements();
+      this.puzzleLineRender(this.puzzleLineIndex);
+      this.eventListenersInit();
+    }
   }
 
   eventListenersInit() {
@@ -55,6 +62,10 @@ export default class EnglishPuzzleManager {
       this.autoPlayBtnClickHandler(e);
       this.resultAudioHandler(e);
     });
+  }
+
+  playUserWords() {
+    console.log('User words mode');
   }
 
   audioBtnHandler(e) {
