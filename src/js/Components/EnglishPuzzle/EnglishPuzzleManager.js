@@ -3,19 +3,19 @@
 import EnglishPuzzleView from './EnglishPuzzleView';
 import EnglisPuzzleDragDrop from './EnglishPuzzleDragDrop';
 import engPuzConst from './EnglishPuzzleConstants';
-import MockWordsApi from './mockWords';
+import SpeakitWordsApi from '../Games/Speakit/SpeakitWordsApi';
 import AppNavigator from '../../lib/AppNavigator';
 import Utils from '../../Utils/Utils';
-import { CONF_MEDIA_BASE_PATH } from '../../../config';
+// import { CONF_MEDIA_BASE_PATH } from '../../../config';
 
 export const EP_GAME_STATS = 'EP_GAME_STATS';
 
 export default class EnglishPuzzleManager {
-  constructor(isUserWordsMode = false, difficulty = 0, page = 1) {
+  constructor(isUserWordsMode = false, difficulty = 0, round = 1) {
     this.isUserWordsMode = isUserWordsMode;
     this.difficulty = difficulty;
-    this.page = page;
-    this.words = MockWordsApi.getWordsForDifficulty(this.difficulty);
+    this.round = round;
+    this.words = null;
     this.puzzleLineIndex = 0;
     this.isAutoPlay = true;
     this.isTranslation = true;
@@ -32,7 +32,13 @@ export default class EnglishPuzzleManager {
     this.view.attach(element);
   }
 
-  getSentencesForGame() {
+  async getSentencesForGame() {
+    const words = await SpeakitWordsApi.getWordsForDifficultyAndRound(
+      this.difficulty,
+      this.round,
+    );
+    this.words = words;
+
     this.words.forEach((word) => {
       this.sentences.push(word.textExample);
     });
@@ -41,10 +47,9 @@ export default class EnglishPuzzleManager {
   async init() {
     if (this.isUserWordsMode) {
       this.playUserWords();
-      console.log('user words mode');
     } else {
       // start game with difficulty and round
-      this.getSentencesForGame();
+      await this.getSentencesForGame();
       await this.getPuzzleElements();
       this.puzzleLineRender(this.puzzleLineIndex);
       this.eventListenersInit();
@@ -70,7 +75,7 @@ export default class EnglishPuzzleManager {
 
   audioBtnHandler(e) {
     if (e.target.classList.contains('engPuz__audio')) {
-      new Audio(CONF_MEDIA_BASE_PATH + this.words[this.puzzleLineIndex].audioExample).play();
+      new Audio(this.words[this.puzzleLineIndex].audioExample).play();
     }
   }
 
@@ -86,7 +91,7 @@ export default class EnglishPuzzleManager {
       console.log(this.words);
       const { word } = e.target.dataset;
       console.log(`id = ${word}`);
-      new Audio(CONF_MEDIA_BASE_PATH + this.words[word].audioExample).play();
+      new Audio(this.words[word].audioExample).play();
     }
   }
 
@@ -240,7 +245,7 @@ export default class EnglishPuzzleManager {
 
   autoPlaySentenceHandler() {
     if (this.isAutoPlay && this.puzzleLineIndex) {
-      const audio = new Audio(CONF_MEDIA_BASE_PATH + this.words[this.puzzleLineIndex].audioExample);
+      const audio = new Audio(this.words[this.puzzleLineIndex].audioExample);
       audio.play();
     }
   }
