@@ -3,6 +3,9 @@ import AppNavigator from '../lib/AppNavigator';
 import IndexView from '../Views/LearningWords/IndexView';
 import ResultsView from '../Views/LearningWords/ResultsView';
 import LearningWordsModel from '../Components/LearningWords/LearningWordsModel';
+import { MODES, GAMES } from '../../config';
+import Statistics from '../Classes/Statistics';
+import { PARAM_MODE } from '../Utils/Constants';
 
 /**
  * Controller is a sctructure that describes a set of "actions",
@@ -37,26 +40,21 @@ export default class LearningWordsController extends Controller {
       difficulty = 0;
     }
 
-    const settings = {
-      maxCount: 50,
-      maxCountNewCards: 20,
-      showWordTranslate: true,
-      showExample: true, // TODO СДЕЛАТЬ СОКРЫТИЕ ИСКОМОГО СЛОВА В ПОДСКАЗКАХ
-      showTranscription: true,
-      showMeaning: true,
-      showButtonSkip: true,
-      showButtonSimple: true,
-      showButtonComplicated: true,
-      showImage: true,
-      showWordRate: true,
+    let mode = MODES.REPITITION;
+    if (params.has(PARAM_MODE)) {
+      mode = params.get(PARAM_MODE);
+    }
 
-    };
-    const statistics = { totalCount: 0, NewWords: 0 };
-    // TODO Принять настройки и статистику
-    this.props.model = new LearningWordsModel(settings, statistics);
+    this.props.model = new LearningWordsModel(mode);
   }
 
   resultsAction() {
-    this.statistics = 0;
+    const params = AppNavigator.getRequestParams();
+
+    let mode = MODES.REPITITION;
+    if (params.has(PARAM_MODE)) {
+      mode = params.get(PARAM_MODE);
+    }
+    this.props.statistics = new Statistics(GAMES.LEARNING, mode);
   }
 }

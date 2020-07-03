@@ -3,6 +3,7 @@ import AppNavigator from '../../lib/AppNavigator';
 import SpeakitSoundPlayer from '../../Components/Games/Speakit/SpeakitSoundPlayer';
 
 const ID_BUTTON_PLAYAGAIN = 'speakit__play-again-button';
+const ID_BUTTON_NEXT = 'speakit__next-round-button';
 
 const CLASS_RESULTS_WORDCARD = 'speakit__word-card-result';
 
@@ -55,9 +56,25 @@ export default class ResultsView extends View {
       const wordId = e.target.dataset.wordid;
       soundPlayer.playWordSound(wordId);
     });
+
+    if (this.props.nextRound) {
+      const nextButton = this.element.querySelector(`#${ID_BUTTON_NEXT}`);
+      const difficulty = this.props.nextDifficulty;
+      const round = this.props.nextRound;
+      nextButton.addEventListener('click', () => {
+        AppNavigator.go('speakit', 'play', { difficulty, round });
+      });
+    }
   }
 
   render() {
+    let nextRoundButton = '';
+    if (this.props.nextRound) {
+      nextRoundButton = `
+        <div class='row'><div class="waves-effect waves-light btn col s12" id="${ID_BUTTON_NEXT}">Next round</div></div>
+      `;
+    }
+
     const html = `
       <div>
         <div class='row'>
@@ -73,6 +90,7 @@ export default class ResultsView extends View {
         ${this.generateWordsCards()}
         ${this.generateWordsCards(false)}
         <div class='row'><div class="waves-effect waves-light btn col s12" id="${ID_BUTTON_PLAYAGAIN}">Play again</div></div>
+        ${nextRoundButton}
       </div>
     `;
     return html;

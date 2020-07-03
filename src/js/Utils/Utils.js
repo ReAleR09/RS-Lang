@@ -1,3 +1,5 @@
+import { MILLIS_PER_DAY } from '../Classes/Api/constants';
+
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
@@ -22,10 +24,17 @@ function getDateNoTime(date) {
   return result;
 }
 
+export function getNextDay(date) {
+  let resultDate = date;
+  if (!date) resultDate = new Date();
+  return new Date(resultDate.getTime() + MILLIS_PER_DAY);
+}
+
 const Utils = {
   arrayShuffle,
   getRandomInt,
   getDateNoTime,
+  getNextDay,
 };
 
 export default Utils;

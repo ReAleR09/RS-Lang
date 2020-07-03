@@ -11,9 +11,6 @@ export const CLASS_COMPONENT = 'learn-words';
 
 const CLASS_CARD_SETTINGS = 'card-settings';
 
-const CLASS_PUZZLE = 'puzzle';
-const CLASS_HINTS = 'hints';
-
 const CLASS_MODAL_INTERVAL_REPEAT = 'modal-interval-repeat';
 const CLASS_MODAL_WORD_RATE = 'modal-word-rate';
 
@@ -26,7 +23,6 @@ const CLASSES = {
     WORDCARD: 'word-card',
   },
   MODALS: {
-    TITLE: 'modal-title',
     CLOSE: 'button-close',
     INTERVAL_REPEAT: {
       DESCRIPTION: 'interval-description',
@@ -44,9 +40,6 @@ const CLASSES = {
     },
   },
   CARD: {
-    HEADER: 'card-head',
-    BODY: 'card-body',
-    FOOTER: 'card-footer',
     IMG_WRAPPER: 'card-img-wrapper',
     WORDSTATUS: 'word-status',
     TITLE: 'card-title',
@@ -101,7 +94,7 @@ INDEX_QUERIES.BUTTONS = {
   SKIP: `.${CLASS_COMPONENT} .${CLASSES.CARD.SETTINGS.BUTTON_SKIP}`,
   PREV: `.${CLASS_COMPONENT} .${CLASSES.COMPONENT.ARROW_LEFT} a`,
   NEXT: `.${CLASS_COMPONENT} .${CLASSES.COMPONENT.ARROW_RIGHT} a`,
-  SIMPLE: `.${CLASS_COMPONENT} .${CLASSES.CARD.BUTTON_SIMPLE}`,
+  DELETE: `.${CLASS_COMPONENT} .${CLASSES.CARD.BUTTON_SIMPLE}`,
   COMPLICATED: `.${CLASS_COMPONENT} .${CLASSES.CARD.BUTTON_COMPLICATED}`,
   MODAL_CLOSE: `.${CLASSES.MODALS.CLOSE}`,
   INTERVAL_REPEAT_CLOSE: `${INDEX_QUERIES.MODALS.INTERVAL_REPEAT} .${CLASSES.MODALS.CLOSE}`,
@@ -113,7 +106,7 @@ INDEX_QUERIES.BUTTONS = {
 };
 
 const HTML_CARD_HEADER = `
-  <div class="${CLASSES.CARD.HEADER}">
+  <div class="card-head">
     <a class="${CLASSES.CARD.WORDSTATUS} tooltipped" data-position="right" data-tooltip="Статус изучения слова">X X X O O</a>
     <h5 class="${CLASSES.CARD.TITLE}">Карточка изучения слов</h5>
     <div class="${CLASS_CARD_SETTINGS} fixed-action-btn click-to-toggle">
@@ -129,17 +122,16 @@ const HTML_CARD_HEADER = `
   </div>`;
 
 const HTML_CARD_BODY = `
-  <div class="${CLASSES.CARD.BODY} row">
+  <div class="card-body row">
     <div class="${CLASSES.CARD.IMG_WRAPPER} col l4 s4 offset-s4 valign-wrapper">
       <img alt="word description picture" class="responsive-img img-rounded">
     </div>
     <div class="col l8 s12">
-      <div class="${CLASS_PUZZLE} d-flex">
-        <p class="${CLASSES.CARD.PUZZLE.EXAMPLE_START}"></p>
-        <input id="${ID_WORD}" type="text" autofocus>
-        <p class="${CLASSES.CARD.PUZZLE.EXAMPLE_END}"></p>
+      <div class="puzzle d-flex">
+        <p class="example-text"><span class="${CLASSES.CARD.PUZZLE.EXAMPLE_START}"></span><input id="${ID_WORD}" type="text" autofocus autocomplete="off"><span class="${CLASSES.CARD.PUZZLE.EXAMPLE_END}"></span></p>
       </div>
-      <div class="${CLASS_HINTS}">
+      <div class="divider"></div>
+      <div class="hints">
         <p class="${CLASSES.CARD.HINTS.EXAMPLE_TRANSLATE}"></p>
         <p class="${CLASSES.CARD.HINTS.WORD_TRANSLATE}"></p>
         <ul  class="collapsible">
@@ -159,7 +151,7 @@ const HTML_CARD_BODY = `
   </div>`;
 
 const HTML_CARD_FOOTER = `
-  <div class="${CLASSES.CARD.FOOTER} row">
+  <div class="card-footer row">
     <div class="col s6 valign-wrapper flex-justify-center">
       <a class="${CLASSES.CARD.BUTTON_SIMPLE} waves-effect waves-light btn red">Простое</a>
     </div>
@@ -178,7 +170,7 @@ const HTML_CARD = `
 const HTML_MODAL_INTERVAL_REPEAT = `
   <div id="modal1" class="${CLASS_MODAL_INTERVAL_REPEAT} modal">
     <div class="modal-content">
-      <h4 class="${CLASSES.MODALS.TITLE}">Методика интервального повторения</h4>
+      <h4 class="modal-title">Методика интервального повторения</h4>
       <p class="${CLASSES.MODALS.INTERVAL_REPEAT.DESCRIPTION}">Методика интервального повторения предусматривает повторение слов с периодичностью,
         расчитываемой с учетом сложности слова, правильного или ошибочного ответа при повторении.
         Слова имеют 5 категорий:
@@ -197,7 +189,7 @@ const HTML_MODAL_INTERVAL_REPEAT = `
 const HTML_MODAL_WORD_RATE = `
 <div id="modal2" class="${CLASS_MODAL_WORD_RATE} modal">
   <div class="modal-content center-align">
-    <h4 class="${CLASSES.MODALS.TITLE}">Оцените, пожалуйста, сложность слова для вас, начиная от "Уже забыл и надо повторить" до "легко запомню"</h4>
+    <h4 class="modal-title">Оцените, пожалуйста, сложность слова для вас, начиная от "Уже забыл и надо повторить" до "легко запомню"</h4>
     <a class="${CLASSES.MODALS.WORD_RATE.BUTTON_AGAIN} btn-floating circle red">
       0
     </a>
@@ -217,7 +209,7 @@ const HTML_MODAL_WORD_RATE = `
 </div>`;
 
 export const HTML_COMPONENT = `
-  <div class="${CLASS_COMPONENT} center-align">
+  <section class="${CLASS_COMPONENT} center-align">
     <div class="">
       <div class="d-flex flex-align-center">
         <div class="${CLASSES.COMPONENT.ARROW_LEFT} m-1">
@@ -235,4 +227,4 @@ export const HTML_COMPONENT = `
       ${HTML_MODAL_INTERVAL_REPEAT}
       ${HTML_MODAL_WORD_RATE}
     </div>
-  </div>`;
+  </section>`;
