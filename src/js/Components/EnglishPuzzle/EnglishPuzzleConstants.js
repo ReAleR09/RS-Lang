@@ -27,6 +27,9 @@ const engPuzConst = {
     44, 40, 39,
     28, 28, 24,
   ],
+  paintings: {
+    URL: 'https://raw.githubusercontent.com/tlmnnk/rslang_data_paintings/master/',
+  },
 };
 
 export default engPuzConst;

@@ -6,6 +6,8 @@ import engPuzConst from './EnglishPuzzleConstants';
 import SpeakitWordsApi from '../Games/Speakit/SpeakitWordsApi';
 import AppNavigator from '../../lib/AppNavigator';
 import Utils from '../../Utils/Utils';
+import Api from '../../Classes/Api/Api';
+import getImageInfo from './EnglishPuzzleImageInfo';
 // import { CONF_MEDIA_BASE_PATH } from '../../../config';
 
 export const EP_GAME_STATS = 'EP_GAME_STATS';
@@ -21,10 +23,12 @@ export default class EnglishPuzzleManager {
     this.isTranslation = true;
     this.isPlayActive = true;
     this.isImageShow = true;
+    this.imageInfo = null;
     this.answers = {};
     this.puzzleArr = [[], [], [], [], [], [], [], [], [], []];
-    this.imgSrc = 'https://tlmnnk.github.io/images/rslang/birthOfVenus.jpg';
+    this.defaultImage = 'https://tlmnnk.github.io/images/rslang/birthOfVenus.jpg';
     this.sentences = [];
+    this.api = new Api();
     this.view = new EnglishPuzzleView();
   }
 
@@ -44,12 +48,26 @@ export default class EnglishPuzzleManager {
     });
   }
 
+  getImageForGame() {
+    const imageInfoArray = getImageInfo(this.difficulty);
+    if (imageInfoArray[this.round]) {
+      this.imageInfo = imageInfoArray[this.round];
+    } else {
+      // eslint-disable-next-line prefer-destructuring
+      this.imageInfo = imageInfoArray[1];
+    }
+
+    this.imgSrc = engPuzConst.paintings.URL + this.imageInfo.imageSrc;
+  }
+
   async init() {
     if (this.isUserWordsMode) {
       this.playUserWords();
     } else {
       // start game with difficulty and round
+      this.getImageForGame();
       await this.getSentencesForGame();
+
       await this.getPuzzleElements();
       this.puzzleLineRender(this.puzzleLineIndex);
       this.eventListenersInit();
