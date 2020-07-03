@@ -4,14 +4,19 @@ import SpeakitSoundPlayer from './SpeakitSoundPlayer';
 import SpeakitVoiceRecognizer from './SpeakitVoiceRecognizer';
 import AppNavigator from '../../../lib/AppNavigator';
 import LocalStorageAdapter from '../../../Utils/LocalStorageAdapter';
+import { roundSize } from './const';
+import Statistics from '../../../Classes/Statistics';
+import { GAMES, MODES } from '../../../../config';
 
 export const SPEAKIT_GAME_STATS = 'SPEAKIT_GAME_STATS';
 
-const FINISH_GAME_DELAY_MS = 3000;
+const FINISH_GAME_DELAY_MS = 1000;
 
 export default class SpeakitGameManager {
-  constructor(difficulty = 0) {
+  constructor(userWordsMode = false, difficulty = 0, round = 1) {
+    this.userWords = userWordsMode;
     this.difficulty = difficulty;
+    this.round = round;
     this.wordsState = [];
     this.soundPlayer = new SpeakitSoundPlayer();
     this.view = new SpeakitView(
@@ -20,14 +25,15 @@ export default class SpeakitGameManager {
       this.finishGame.bind(this),
     );
     this.speechRecognizer = new SpeakitVoiceRecognizer(this.handleRecognizedPhrase.bind(this));
+    const mode = userWordsMode ? MODES.REPITITION : MODES.GAME;
+    this.statistics = new Statistics(GAMES.SPEAKIT, mode, true);
   }
 
   attach(element) {
     this.view.attach(element);
   }
 
-  // SpeechREcognition might give several options
-  // eslint-disable-next-line class-methods-use-this
+  // SpeechRecognition might give several options
   handleRecognizedPhrase(phrases) {
     let candidate = phrases[0];
     let wordPicUrl = null;
@@ -45,8 +51,11 @@ export default class SpeakitGameManager {
           if (!wordState.guessed) {
             this.view.markWordAsRecognized(wordState.id);
             this.wordsState[index].guessed = true;
+            this.view.updateGuessedCount(this.wordsState.filter((word) => word.guessed).length);
 
             this.soundPlayer.playGuessSound();
+            // mark word as success in stats
+            this.statistics.updateWordStatistics(wordState.id, true);
           }
           return true;
         }
@@ -73,6 +82,17 @@ export default class SpeakitGameManager {
 
   finishGame(withDelay = false) {
     this.speechRecognizer.stopRecognition();
+
+    // marking all non-guessed words as error
+    this.wordsState.forEach((wordState) => {
+      if (!wordState.guessed) {
+        this.statistics.updateWordStatistics(wordState.id, false);
+      }
+    });
+    // sending stats for the game async
+    this.statistics.sendGameResults();
+
+    // calculate stats for display on Result page
     const stats = this.calculateStats();
 
     // putting stats to storage to use them on /speakit/results page
@@ -88,26 +108,42 @@ export default class SpeakitGameManager {
       guessed,
       notGuessed,
       difficulty: this.difficulty,
+      round: this.round,
+      isUserWordsMode: this.userWordsMode,
     };
   }
 
-  init() {
-    const words = SpeakitWordsApi.getRandomWordsForDifficulty(this.difficulty);
-    const wordsState = words.map((wordInfo) => {
-      const wordState = {
-        id: wordInfo.id,
-        guessed: false,
-        word: wordInfo.word.toLocaleLowerCase(),
-        audio: wordInfo.audio,
-        image: wordInfo.image,
-        transcription: wordInfo.transcription,
-        wordTranslate: wordInfo.wordTranslate,
-      };
+  async init() {
+    // TODO show load animation?
+    let wordsPromise;
 
-      return wordState;
-    });
-    this.wordsState = wordsState;
-    this.displayWords(wordsState);
+    if (this.userWordsMode) {
+      wordsPromise = SpeakitWordsApi.getUserWords();
+    } else {
+      wordsPromise = SpeakitWordsApi.getWordsForDifficultyAndRound(
+        this.difficulty,
+        this.round,
+      );
+    }
+
+    wordsPromise
+      .then((words) => {
+        const wordsState = words.map((wordInfo) => {
+          const wordState = {
+            id: wordInfo.id,
+            guessed: false,
+            word: wordInfo.word.toLowerCase(),
+            audio: wordInfo.audio,
+            image: wordInfo.image,
+            transcription: wordInfo.transcription,
+            wordTranslate: wordInfo.wordTranslate,
+          };
+
+          return wordState;
+        });
+        this.wordsState = wordsState;
+        this.displayWords(wordsState);
+      });
   }
 
   displayWords(wordsInfoArray) {
@@ -116,6 +152,6 @@ export default class SpeakitGameManager {
   }
 
   getInitialLayout() {
-    return this.view.getGameLayout(this.difficulty);
+    return this.view.getGameLayout(roundSize);
   }
 }

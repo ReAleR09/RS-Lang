@@ -1,17 +1,18 @@
 export default class Form {
   constructor(type) {
     this.type = type; // SIGN UP or SIGN IN
-    // this.render = this.render.bind(this);
   }
 
   render() {
     let describe = 'Sign UP to START';
     let question = 'Already have an account?';
     let offer = 'Log in';
+    let autocompleteOff = 'autocomplete="new-password"';
     if (this.type === 'SIGN IN') {
       describe = 'Sign IN to CONTINUE';
       question = 'No account?';
       offer = 'Create one';
+      autocompleteOff = '';
     }
     const html = `
     <div class="authorization-registration">
@@ -30,7 +31,7 @@ export default class Form {
       <p>${describe}</p>
       <form class="form">
         <input class="email" type="email" title="Email should contains '@' and '.'">
-        <input class="password" type="password" minlength="8" title="Password should be > 8 characters and contains one digit, one letter(uppercase), one letter(lowercase) and one special char">
+        <input class="password" type="password" minlength="8" ${autocompleteOff} title="Password should be > 8 characters and contains one digit, one letter(uppercase), one letter(lowercase) and one special char">
         <button>${this.type}</button>
       </form>
       <p class="error"></p>

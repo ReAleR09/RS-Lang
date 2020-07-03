@@ -6,10 +6,6 @@ export default class StatisticsApi {
     this.api = new Api();
   }
 
-  updateUserData(userData) {
-    this.api.updateUserData(userData);
-  }
-
   async init() {
     const result = await this.update();
     return result;
@@ -21,7 +17,9 @@ export default class StatisticsApi {
       learnedWords: 0,
       optional: statistics,
     };
+
     statisticsStructure.optional[TEAM_KEY] = TEAM_VALUE;
+
     const result = await this.api.putUserStatistics(statisticsStructure);
     return result;
   }
@@ -38,6 +36,7 @@ export default class StatisticsApi {
     const statisticsApiObject = await this.api.getUserStatistics();
     if (statisticsApiObject.error) return statisticsApiObject;
     const statistics = statisticsApiObject.optional;
+
     return statistics;
   }
 }

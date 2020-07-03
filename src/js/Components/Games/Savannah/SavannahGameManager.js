@@ -70,7 +70,6 @@ export default class SavannahGameManager {
 
   saveCurrentWordsState() {
     LocalStorageAdapter.set('savannah-current-words-state', this.wordsState);
-    // localStorage.setItem('savannah-current-words-state', JSON.stringify(this.wordsState));
   }
 
   getInitialLayout() {

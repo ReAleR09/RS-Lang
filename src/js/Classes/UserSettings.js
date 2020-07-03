@@ -1,10 +1,14 @@
-import SettingsApi from './Api/SettingsApi';
+import SettingsApi, { DEFAULT_USER_SETTINGS } from './Api/SettingsApi';
+import Api from './Api/Api';
+import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
+import { FIELD_USER_ID, FIELD_TOKEN, FIELD_REFRESH_TOKEN } from '../Utils/Constants';
 import { GAMES } from '../../config';
 
 class UserSettings {
   constructor() {
     this.settingsObject = {};
     this.settingsApi = new SettingsApi();
+    this.api = new Api();
   }
 
   set settings(newSettingsObject) {
@@ -22,17 +26,31 @@ class UserSettings {
     await this.settingsApi.update(this.settingsObject);
   }
 
+  /**
+   * Возвращает false в случае фейла.
+   * Когда создаётся новый пользователь, сеттинги по дефолту не создаются.
+   * ТАк что false скорее всего потому, что сеттинги еще ни разу не сохранялись
+   */
   async loadSettings() {
     const newSettings = await this.settingsApi.get();
-    if (!newSettings.error) {
+    if (newSettings && !newSettings.error) {
       this.settingsObject = newSettings;
-      const gamesArray = Object.values(GAMES);
-      gamesArray.forEach((game) => {
-        if (Object.prototype.hasOwnProperty.call(this.settingsObject.games, game)) {
-          this.settingsObject.games[game] = {};
-        }
-      });
+    } else {
+      // if failed to load settings, init local settings with default object
+      this.settingsObject = { ...DEFAULT_USER_SETTINGS };
     }
+    // just in case
+    if (!this.settingsObject.saves) {
+      this.settingsObject.saves = {};
+    }
+    Object.values(GAMES).forEach((game) => {
+      if (!this.settingsObject.saves[game]) {
+        this.settingsObject.saves[game] = {
+          difficulty: 0,
+          round: 1,
+        };
+      }
+    });
   }
 
   async setDifficultyLevel(difficulty) {
@@ -40,24 +58,101 @@ class UserSettings {
     await this.saveSettings();
   }
 
-  async saveGame(game, save = { difficulty: 0, round: 0 }) {
-    this.settingsObject.games[game].lastSave = save;
+  async saveGame(game, save = { difficulty: 0, round: 1 }) {
+    this.settingsObject.saves[game] = save;
     await this.saveSettings();
   }
 
-  async loadGame(game) {
+  /**
+   * Первая сложность - 0,
+   * первый раунд - 1,
+   * так повелось, сорян :D
+   */
+  loadGame(game) {
     const difficulty = 0;
-    const round = 0;
+    const round = 1;
     let save = { difficulty, round };
 
-    if (this.settingsObject.games[game].lastSave) {
-      save = this.settingsObject.games[game].lastSave;
+    if (this.settingsObject.saves[game]) {
+      save = this.settingsObject.saves[game];
     }
 
     return save;
   }
+
+  get wordLimitsPerDay() {
+    let limits;
+    if (this.settings) {
+      limits = {
+        maxCount: this.settings.wordsPerDay,
+        maxCountNewCards: this.settings.newWordsPerDay,
+      };
+    } else {
+      limits = {
+        maxCount: 50,
+        maxCountNewCards: 15,
+      };
+    }
+    return limits;
+  }
+
+  async auth({ email, password }) {
+    UserSettings.clearLocalStorage();
+
+    const userData = await this.api.authorize({ email, password });
+    if (userData && !userData.error) {
+      LocalStorageAdapter.set(FIELD_USER_ID, userData.userId);
+      LocalStorageAdapter.set(FIELD_TOKEN, userData.token);
+      LocalStorageAdapter.set(FIELD_REFRESH_TOKEN, userData.refreshToken);
+
+      // if success - get saved settings
+      await this.loadSettings();
+    }
+
+    return userData;
+  }
+
+  async reviveAuth() {
+    const refreshToken = LocalStorageAdapter.get(FIELD_REFRESH_TOKEN);
+    const userId = LocalStorageAdapter.get(FIELD_USER_ID);
+    if (!refreshToken || !userId) {
+      UserSettings.clearLocalStorage();
+      return false;
+    }
+    const response = await this.api.getNewTokensUsingRefreshToken(refreshToken, userId);
+    if (response.error) {
+      UserSettings.clearLocalStorage();
+      return false;
+    }
+    LocalStorageAdapter.set(FIELD_TOKEN, response.token);
+    LocalStorageAdapter.set(FIELD_REFRESH_TOKEN, response.refreshToken);
+    // if success - get saved settings
+    await this.loadSettings();
+    return true;
+  }
+
+  logout() {
+    UserSettings.clearLocalStorage();
+    this.settingsObject = {};
+  }
+
+  static clearLocalStorage() {
+    LocalStorageAdapter.remove(FIELD_USER_ID);
+    LocalStorageAdapter.remove(FIELD_TOKEN);
+    LocalStorageAdapter.remove(FIELD_REFRESH_TOKEN);
+  }
 }
 
 const SettingsModel = new UserSettings();
+
+// async function settingsInit() {
+//   const validity = await SettingsModel.settingsApi.checkValidity();
+//   if (!validity) {
+//     await SettingsModel.settingsApi.update();
+//   }
+//   await SettingsModel.loadSettings();
+// }
+
+// settingsInit();
 
 export default SettingsModel;

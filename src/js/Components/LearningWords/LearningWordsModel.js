@@ -1,7 +1,8 @@
 import LearningWordsView from './LearningWordsView';
 import LearnindWordsCards from './LearningWordsCards';
-import LearningWordsSoundPlayer from '../LearningWordsSoundPlayer';
+import LearningWordsSoundPlayer from './LearningWordsSoundPlayer';
 import AppNavigator from '../../lib/AppNavigator';
+import SettingsModel from '../../Classes/UserSettings';
 import {
   WORD_STATUSES,
   DATA_URL,
@@ -13,12 +14,13 @@ import { GAMES, MODES } from '../../../config';
 import Dictionary from '../../Classes/Dictionary';
 import { DICT_CATEGORIES, DIFFICULTIES } from '../../Classes/Api/constants';
 import LearningWordsGameMode from './LearningWordsGameMode';
+import { PARAM_MODE } from '../../Utils/Constants';
 
 export default class LearningWordsModel {
-  constructor(settings, statistics, mode = MODES.REPITITION) {
+  constructor(mode = MODES.REPITITION) {
     this.statistics = new Statistics(GAMES.LEARNING, mode);
     this.dictionary = new Dictionary();
-    this.settings = settings;
+    this.settings = SettingsModel;
     this.difficulty = this.settings.difficulty;
     this.wordsState = [];
     this.view = new LearningWordsView(this);
@@ -28,8 +30,6 @@ export default class LearningWordsModel {
 
     this.mode = mode;
     this.cards = new LearnindWordsCards();
-
-    this.cards.init(this.difficulty, settings, statistics.limits, mode);
   }
 
   changeDifficulty(newDifficulty) {
@@ -41,7 +41,15 @@ export default class LearningWordsModel {
     return this.cards.currentCard;
   }
 
-  attach(element) {
+  async attach(element) {
+    await this.statistics.get();
+    await this.settings.loadSettings();
+    this.cards.init(
+      this.difficulty,
+      this.settings.wordLimitsPerDay,
+      this.statistics.limits,
+      this.mode,
+    );
     this.view.attach(element);
   }
 
@@ -50,17 +58,21 @@ export default class LearningWordsModel {
     this.view = null;
   }
 
-  init() {
+  async init() {
     if (this.mode === MODES.GAME) {
       this.view.turnOnGameMode();
       this.game.startGame();
       this.changeDifficulty(this.game.level);
     }
-    this.view.init(this.settings);
 
-    this.cards.fillCards();
+    this.view.init(this.settings.settings);
 
-    this.updateWordCard(this.card);
+    await this.cards.fillCards();
+    if (this.cards.isCardReady) {
+      this.updateWordCard(this.card);
+    } else {
+      this.showResult();
+    }
   }
 
   updateWordCard(word) {
@@ -91,7 +103,7 @@ export default class LearningWordsModel {
 
   async acceptInput(value) {
     if (this.cards.currentStatus === WORD_STATUSES.COMPLITED) {
-      this.goNext();
+      await this.goNext();
       return true;
     }
 
@@ -110,21 +122,21 @@ export default class LearningWordsModel {
         if (this.game.level !== this.difficulty) {
           this.changeDifficulty(this.game.level);
         }
-        this.goNext();
+        await this.goNext();
       }
       return true;
     }
 
     if (result) {
+      this.cards.updateCounts();
       this.view.lockCard();
       let { showWordRate } = this.settings;
       if (showWordRate) {
         showWordRate = (this.cards.currentStatus === WORD_STATUSES.NEW);
       }
+      await this.updateStatistics(this.cards.currentErrors === 0);
       this.cards.currentStatus = WORD_STATUSES.COMPLITED;
       this.showFilledCard(showWordRate);
-
-      await this.updateStatistics(this.cards.currentErrors === 0);
     } else if (this.cards.currentErrors) {
       this.cards.sendCardToTrainingEnd();
       this.cards.currentErrors += 1;
@@ -153,8 +165,8 @@ export default class LearningWordsModel {
     }
   }
 
-  goNext() {
-    if (this.cards.getNext()) {
+  async goNext() {
+    if (await this.cards.getNext()) {
       this.updateWordCard(this.card);
     } else {
       this.showResult();
@@ -167,29 +179,32 @@ export default class LearningWordsModel {
   }
 
   async updateStatistics(result) {
-    await this.statistics.updateWordStatistics(
-      this.card.wordId,
+    // eslint-disable-next-line no-underscore-dangle
+    const wordId = this.card._id;
+    this.statistics.updateWordStatistics(
+      wordId,
       result,
+      (this.cards.currentStatus === WORD_STATUSES.NEW),
     );
-
-    this.cards.updateStatistics(this.statistics.limits);
   }
 
   async updateUserDifficulty(userDifficulty = DIFFICULTIES.NORMAL) {
-    await this.dictionary.setUserDifficulty(this.card.wordId, userDifficulty);
+    // eslint-disable-next-line no-underscore-dangle
+    await this.dictionary.setUserDifficulty(this.card._id, userDifficulty);
   }
 
   async updateDictionary(category = DICT_CATEGORIES.MAIN) {
-    await this.dictionary.putOnCategory(this.card.wordId, category);
+    // eslint-disable-next-line no-underscore-dangle
+    await this.dictionary.putOnCategory(this.card._id, category);
   }
 
   sendCardToTrainingEnd() {
     this.cards.sendCardToTrainingEnd();
   }
 
+  // eslint-disable-next-line class-methods-use-this
   showResult() {
-    const params = { ...this.statistics };
-    // TODO ResultView final page of app
+    const params = { [PARAM_MODE]: this.mode };
     AppNavigator.go(LEARNING_WORDS_CONTROLLER, RESULTS_ACTION, params);
   }
 }
