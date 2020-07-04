@@ -19,12 +19,16 @@ export default class Statistics {
       success: 0,
       errors: 0,
       bestResult: 0,
+      currentResult: 0,
     };
+    this.isLoaded = false;
   }
 
   async updateRepititionsStatistics(wordId, isNewWordStatus) {
     if (this.game !== GAMES.LEARNING) return;
-    await this.get();
+    if (!this.isLoaded) {
+      await this.get();
+    }
 
     let isNewWord;
     if (isNewWordStatus !== undefined) {
@@ -48,17 +52,34 @@ export default class Statistics {
     if (isNewWord) {
       this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].newWordsCount += 1;
     }
+    if (this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].results) {
+      const statResults = this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].results;
 
+      statResults.errors += this.results.errors;
+      statResults.success += this.results.success;
+      if (statResults.bestResult < this.results.bestResult) {
+        statResults.bestResult.bestResult = this.results.bestResult;
+      }
+      statResults.currentResult = this.results.currentResult;
+    } else {
+      this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].results = { ...this.results };
+    }
     await this.statisticsApi.update(this.statistics);
   }
 
   async updateWordStatistics(wordId, result = true, isNewWord) {
+    if (!this.isLoaded) {
+      await this.get();
+    }
     if (result) {
       this.results.success += 1;
-      this.results.bestResult += 1;
+      this.results.currentResult += 1;
+      if (this.results.currentResult > this.results.bestResult) {
+        this.results.bestResult = this.results.currentResult;
+      }
     } else {
       this.results.errors += 1;
-      this.results.bestResult = 0;
+      this.results.currentResult = 0;
     }
 
     if (this.mode === MODES.REPITITION && !(this.wordsSendAtEnd)) {
@@ -66,11 +87,36 @@ export default class Statistics {
       await this.spacedRepititions.putTrainingData(wordId, result);
     }
     this.wordStat.push({ wordId, result });
-    await this.get();
+  }
+
+  async getLearningStatistics(date) {
+    if (!this.isLoaded) {
+      await this.get();
+    }
+    const requestDate = Utils.getDateNoTime(date).getTime();
+    if (this.statistics[WORDS_LEARNING_RESULTS_KEY][requestDate]) {
+      return this.statistics[WORDS_LEARNING_RESULTS_KEY][requestDate];
+    }
+    return {
+      totalWordsCount: 0,
+      newWordsCount: 0,
+    };
+  }
+
+  async getLastGameResult() {
+    if (!this.isLoaded) {
+      await this.get();
+    }
+    const gameResults = this.statistics[GAME_RESULTS_KEY][this.game];
+
+    return gameResults[gameResults.length - 1];
   }
 
   async sendGameResults() {
-    await this.get();
+    if (!this.isLoaded) {
+      await this.get();
+    }
+
     const dateNow = new Date();
     const gameResult = { date: dateNow, ...this.results };
 
@@ -121,10 +167,14 @@ export default class Statistics {
     if (!Object.prototype.hasOwnProperty.call(this.statistics, WORDS_LEARNING_RESULTS_KEY)) {
       this.statistics[WORDS_LEARNING_RESULTS_KEY] = {};
     }
+    this.isLoaded = true;
   }
 
   async getGameResults(byDates = false, game) {
-    await this.get();
+    if (!this.isLoaded) {
+      await this.get();
+    }
+
     let results = [];
     if (game) {
       results = this.statistics[game];
@@ -156,7 +206,10 @@ export default class Statistics {
     return results;
   }
 
-  get limits() {
+  async getLimits() {
+    if (!this.isLoaded) {
+      await this.get();
+    }
     const dateNow = Utils.getDateNoTime().getTime();
     let limits = {};
 
