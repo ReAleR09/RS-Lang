@@ -1,6 +1,7 @@
 import View from '../../lib/View';
 import { HTML_RESULT, RESULTS_QUERIES } from '../../Components/LearningWords/ResultsTemplate';
 import { CLASS_VISIBLE } from '../../Components/LearningWords/IndexTemplate';
+import Statistics from '../../Classes/Statistics';
 // import LearningWordsView from '../../Components/LearningWords/LearningWordsView';
 
 export default class ResultsView extends View {
@@ -13,9 +14,26 @@ export default class ResultsView extends View {
    * Also, if you need to update DOM from here, this.element is available,
    * it references actual DOM root element of this view
    */
-  onMount() {
-    this.statistics = this.props.statistics;
-    // TODO Statistics
+  async onMount() {
+    // this.statistics = this.props.statistics;
+    this.statistics = new Statistics();
+    await this.statistics.get();
+
+    const dayResults = await this.statistics.getLearningStatistics();
+
+    const wordsCount = this.element.querySelector(RESULTS_QUERIES.TOTAL_COUNT);
+    const newWordsCount = this.element.querySelector(RESULTS_QUERIES.NEWWORDS_COUNT);
+
+    const errorsCount = this.element.querySelector(RESULTS_QUERIES.ERRORS_COUNT);
+    const bestResult = this.element.querySelector(RESULTS_QUERIES.BEST_RESULT);
+
+    wordsCount.innerText = dayResults.totalWordsCount;
+    newWordsCount.innerText = dayResults.newWordsCount;
+    if (dayResults.results) {
+      errorsCount.innerText = dayResults.results.errors;
+      bestResult.innerText = dayResults.results.bestResult;
+    }
+
     const componentElement = document.querySelector(RESULTS_QUERIES.COMPONENT);
     componentElement.classList.add(CLASS_VISIBLE);
   }

@@ -20,13 +20,9 @@ export const HTML_RESULT = `
   <div class="${CLASS_COMPONENT} blue-gray center-align">
     <div class="${CLASSES.RESULTS}">
     <h1>Результаты дня:</h1>
-    <p>Количество пройденных карточек:</p>
-    <p class="${CLASSES.TOTAL_COUNT}"></p>
-    <p>Количество новых слов:</p>
-    <p class="${CLASSES.NEWWORDS_COUNT}"></p>
-    <p>Количество Количество ошибок:</p>
-    <p class="${CLASSES.ERRORS_COUNT}"></p>
-    <p>Самая длинная серия правильных ответов:</p>
-    <p class="${CLASSES.BEST_RESULT}"></p>
+    <p>Количество пройденных карточек: <span class="${CLASSES.TOTAL_COUNT}"></span></p>
+    <p>Количество новых слов: <span class="${CLASSES.NEWWORDS_COUNT}"></span></p>
+    <p>Количество Количество ошибок: <span class="${CLASSES.ERRORS_COUNT}"></span></p>
+    <p>Самая длинная серия правильных ответов: <span class="${CLASSES.BEST_RESULT}"></span></p>
     </div>
   </div>`;
