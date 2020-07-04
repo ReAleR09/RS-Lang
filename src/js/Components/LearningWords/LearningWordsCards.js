@@ -142,6 +142,7 @@ export default class LearnindWordsCards {
       }
       if (this.repeatWords.length) {
         this.cards = this.cards.concat(this.repeatWords);
+        this.repeatWords = [];
       }
     }
 
