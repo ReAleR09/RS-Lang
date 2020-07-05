@@ -12,6 +12,7 @@ import RegistrationController from './js/Controllers/RegistrationController';
 import AuthorizationController from './js/Controllers/AuthorizationController';
 import AppNavigator from './js/lib/AppNavigator';
 import SettingsController from './js/Controllers/SettingsController';
+import StatisticsController from './js/Controllers/StatisticsController';
 
 import './js/plugins';
 import { SIDENAV } from './config';
@@ -32,6 +33,7 @@ function appInit() {
     learningWords: LearningWordsController,
     'game-sprint': GameSprintController,
     speakit: SpeakitController,
+    statistics: StatisticsController,
   };
 
   /**
