@@ -18,7 +18,10 @@ export default class IndexView extends View {
     const myChart = new Chart(this.ctx, {
       type: 'line',
       data: {
-        labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL'],
+        labels: [0, 12, 23, 39, 52, 81, 127, 150, 185, 220, 231, 243, 255, 272, 324, 330, 347, 382,
+          405, 411, 451, 480, 503, 544, 550, 579, 608, 642, 677, 694, 723, 752, 793, 856, 880, 891,
+          961, 1000, 1227, 1308, 1406, 1510, 1609, 1719, 1823, 1933, 2014, 2106, 2332, 2541, 2807,
+          3107, 3322, 3501, 3600],
         datasets: [{
           label: 'Data',
           borderColor: gradientStroke,
@@ -29,11 +32,13 @@ export default class IndexView extends View {
           pointBorderWidth: 10,
           pointHoverRadius: 10,
           pointHoverBorderWidth: 1,
-          pointRadius: 3,
+          pointRadius: 1,
           fill: true,
           backgroundColor: gradientFill,
           borderWidth: 4,
-          data: [100, 120, 150, 170, 180, 170, 160],
+          data: [0, 1, 7, 10, 14, 20, 22, 24, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+            41, 44, 46, 48, 49, 50, 51, 54, 55, 57, 58, 59, 60, 61, 62, 64, 65, 66, 67,
+            69, 70, 71, 73, 74, 76, 77, 78, 79, 80, 81, 82, 83, 84, 87, 88, 89, 89],
         }],
       },
       options: {
@@ -48,6 +53,7 @@ export default class IndexView extends View {
               beginAtZero: true,
               maxTicksLimit: 5,
               padding: 20,
+              callback: (value) => `${value}%`,
             },
             gridLines: {
               drawTicks: false,
@@ -75,8 +81,8 @@ export default class IndexView extends View {
     gradientStroke1.addColorStop(0.8, '#f49080');
 
     const gradientFill1 = this.ctx1.createLinearGradient(500, 0, 100, 0);
-    gradientFill1.addColorStop(0.5, 'rgba(128, 182, 244, 0.6)');
-    gradientFill1.addColorStop(0.5, 'rgba(244, 144, 128, 0.6)');
+    gradientFill1.addColorStop(0.8, 'rgba(128, 182, 244, 0.6)');
+    gradientFill1.addColorStop(0.8, 'rgba(244, 144, 128, 0.6)');
 
     // eslint-disable-next-line no-unused-vars
     const myChart1 = new Chart(this.ctx1, {
