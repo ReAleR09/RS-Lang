@@ -15,13 +15,9 @@
   "author": "ReAleR09",
   "license": "ISC",
   "dependencies": {
-<<<<<<< HEAD
     "chart.js": "^2.9.3",
-    "materialize-css": "^1.0.0-rc.2"
-=======
     "materialize-css": "^1.0.0-rc.2",
     "sortablejs": "^1.10.2"
->>>>>>> 249707c14c8bcdb789eacee99dc37934b0468ef1
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
