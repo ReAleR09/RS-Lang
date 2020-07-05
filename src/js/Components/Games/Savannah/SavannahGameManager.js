@@ -36,6 +36,10 @@ export default class SavannahGameManager {
     this.view.init(setsWordsToPlayArray);
   }
 
+  stopGame() {
+    this.view.stopAnimation();
+  }
+
   changeState(word) {
     /* eslint-disable no-param-reassign */
     this.wordsState.forEach((item) => {
@@ -66,7 +70,6 @@ export default class SavannahGameManager {
 
   saveCurrentWordsState() {
     LocalStorageAdapter.set('savannah-current-words-state', this.wordsState);
-    // localStorage.setItem('savannah-current-words-state', JSON.stringify(this.wordsState));
   }
 
   getInitialLayout() {

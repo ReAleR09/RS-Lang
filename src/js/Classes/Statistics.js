@@ -18,16 +18,26 @@ export default class Statistics {
     this.results = {
       success: 0,
       errors: 0,
+      bestResult: 0,
     };
   }
 
-  async updateRepititionsStatistics(wordId) {
+  async updateRepititionsStatistics(wordId, isNewWordStatus) {
+    if (this.game !== GAMES.LEARNING) return;
     await this.get();
 
-    const isNewWord = await this.wordsApi.checkUserWordInBase(wordId);
+    let isNewWord;
+    if (isNewWordStatus !== undefined) {
+      isNewWord = isNewWordStatus;
+    } else {
+      isNewWord = await this.wordsApi.checkUserWordInBase(wordId);
+    }
 
-    const dateNow = Utils.getDateNoTime();
-    if (!Object.prototype.hasOwnProperty.call(this.statistics, dateNow)) {
+    const dateNow = Utils.getDateNoTime().getTime();
+    if (!Object.prototype.hasOwnProperty.call(
+      this.statistics[WORDS_LEARNING_RESULTS_KEY],
+      dateNow,
+    )) {
       this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow] = {
         totalWordsCount: 0,
         newWordsCount: 0,
@@ -42,17 +52,21 @@ export default class Statistics {
     await this.statisticsApi.update(this.statistics);
   }
 
-  async updateWordStatistics(wordId, result = true) {
+  async updateWordStatistics(wordId, result = true, isNewWord) {
     if (result) {
       this.results.success += 1;
+      this.results.bestResult += 1;
     } else {
       this.results.errors += 1;
+      this.results.bestResult = 0;
     }
+
     if (this.mode === MODES.REPITITION && !(this.wordsSendAtEnd)) {
-      await this.updateRepititionsStatistics(wordId);
+      await this.updateRepititionsStatistics(wordId, isNewWord);
       await this.spacedRepititions.putTrainingData(wordId, result);
     }
     this.wordStat.push({ wordId, result });
+    await this.get();
   }
 
   async sendGameResults() {
@@ -95,7 +109,7 @@ export default class Statistics {
     this.statistics = await this.statisticsApi.get();
     if (this.statistics.error) {
       this.statistics = {
-        [WORDS_LEARNING_RESULTS_KEY]: [],
+        [WORDS_LEARNING_RESULTS_KEY]: {},
       };
     }
     if (!Object.prototype.hasOwnProperty.call(this.statistics, GAME_RESULTS_KEY)) {
@@ -105,7 +119,7 @@ export default class Statistics {
       });
     }
     if (!Object.prototype.hasOwnProperty.call(this.statistics, WORDS_LEARNING_RESULTS_KEY)) {
-      this.statistics[WORDS_LEARNING_RESULTS_KEY] = [];
+      this.statistics[WORDS_LEARNING_RESULTS_KEY] = {};
     }
   }
 
@@ -140,5 +154,24 @@ export default class Statistics {
     }
 
     return results;
+  }
+
+  get limits() {
+    const dateNow = Utils.getDateNoTime().getTime();
+    let limits = {};
+
+    try {
+      limits = {
+        totalWordsCount: this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].totalWordsCount,
+        newWordsCount: this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].newWordsCount,
+      };
+    } catch (error) {
+      limits = {
+        totalWordsCount: 0,
+        newWordsCount: 0,
+      };
+    }
+
+    return limits;
   }
 }

@@ -12,9 +12,9 @@ export default class IndexView extends View {
    * Also, if you need to update DOM from here, this.element is available,
    * it references actual DOM root element of this view
    */
-  onMount() {
-    this.props.model.attach(this.element);
-    this.props.model.init();
+  async onMount() {
+    await this.props.model.attach(this.element);
+    await this.props.model.init();
   }
 
   /**

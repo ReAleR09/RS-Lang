@@ -2,10 +2,8 @@ import '../../../sass/Components/LearningWords/style.scss';
 import LearningWordsMaterial from './LearningWordsMaterial';
 // import AppNavigator from '../../lib/AppNavigator';
 import {
-  DIFFICULTY_MODIFIERS,
   DATA_URL,
   lockAttribute,
-  styleAttribute,
   ONE_LETTER_WIDTH,
   WIDTH_ADDITION,
 } from './constants';
@@ -17,10 +15,12 @@ import {
   HTML_COMPONENT,
   CLASS_VISIBLE,
 } from './IndexTemplate';
+import { DIFFICULTIES, DICT_CATEGORIES } from '../../Classes/Api/constants';
 
 export default class LearningWordsView {
   constructor(model) {
     this.model = model;
+    this.mode = this.model.mode;
   }
 
   init(settings) {
@@ -28,16 +28,11 @@ export default class LearningWordsView {
 
     this.settings.showTranslates = true;
     this.settings.turnOnSound = true;
-
-    this.updateSettings();
   }
 
   updateSettings() {
     const disabledElements = [];
     const enabledElements = [];
-
-    // const wordQueries = CONFIGS.QUERIES.WORD_ELEMENTS;
-    //  const buttons = CONFIGS.QUERIES.BUTTONS;
 
     Object.values(QUERIES.WORD_ELEMENTS).forEach((query) => {
       enabledElements.push(this.element.querySelector(query));
@@ -75,8 +70,8 @@ export default class LearningWordsView {
       disabledElements.push(this.element.querySelector(QUERIES.BUTTONS.SKIP));
     }
 
-    if (!this.settings.showButtonSimple) {
-      disabledElements.push(this.element.querySelector(QUERIES.BUTTONS.SIMPLE));
+    if (!this.settings.showButtonDelete) {
+      disabledElements.push(this.element.querySelector(QUERIES.BUTTONS.DELETE));
     }
 
     if (!this.settings.showButtonComplicated) {
@@ -123,8 +118,6 @@ export default class LearningWordsView {
     const buttonSwitchSound = this.element.querySelector(QUERIES.BUTTONS.VOLUME);
 
     buttonSkip.addEventListener('click', () => {
-      // TODO Показать Ответ
-      // Пропускать карточку или дать ввести самому? Если пропускать, то что делать со словарем?
       this.placeSuccessPlaceHolder();
     });
     buttonTranslate.addEventListener('click', () => {
@@ -135,6 +128,16 @@ export default class LearningWordsView {
     });
 
     this.assignWordRateButtonListeners();
+
+    const buttonDelete = this.element.querySelector(QUERIES.BUTTONS.DELETE);
+    const buttonComplicated = this.element.querySelector(QUERIES.BUTTONS.COMPLICATED);
+
+    buttonDelete.addEventListener('click', () => {
+      this.model.updateDictionary(DICT_CATEGORIES.DELETE);
+    });
+    buttonComplicated.addEventListener('click', () => {
+      this.model.updateDictionary(DICT_CATEGORIES.COMPLICATED);
+    });
   }
 
   assignWordRateButtonListeners() {
@@ -147,13 +150,13 @@ export default class LearningWordsView {
       this.model.sendCardToTrainingEnd();
     });
     buttonHard.addEventListener('click', () => {
-      this.model.updateVocabulary(this.rateWord, DIFFICULTY_MODIFIERS.HARD);
+      this.model.updateUserDifficulty(DIFFICULTIES.HARD);
     });
     buttonNormal.addEventListener('click', () => {
-      this.model.updateVocabulary(this.rateWord, DIFFICULTY_MODIFIERS.NORMAL);
+      this.model.updateUserDifficulty(DIFFICULTIES.NORMAL);
     });
     buttonEasy.addEventListener('click', () => {
-      this.model.updateVocabulary(this.rateWord, DIFFICULTY_MODIFIERS.EASY);
+      this.model.updateUserDifficulty(DIFFICULTIES.SIMPLE);
     });
   }
 
@@ -163,11 +166,11 @@ export default class LearningWordsView {
     });
   }
 
-  onButtonNext() {
+  async onButtonNext() {
     const inputValue = this.wordInput.value;
     this.wordInput.value = '';
 
-    const checkResult = this.model.acceptInput(inputValue);
+    const checkResult = await this.model.acceptInput(inputValue);
 
     if (this.isCardLocked()) {
       this.placeSuccessPlaceHolder();
@@ -182,8 +185,7 @@ export default class LearningWordsView {
     this.model.goPrevious();
   }
 
-  showNewWordRateForm(word) {
-    this.rateWord = word;
+  showNewWordRateForm() {
     const modalWordRate = this.element.querySelector(QUERIES.MODALS.WORD_RATE);
     LearningWordsMaterial.showModal(modalWordRate);
   }
@@ -218,7 +220,8 @@ export default class LearningWordsView {
 
   drawWordToDOM(word) {
     // TODO clever placeholder: input width = placeholder.width
-    this.wordInput.setAttribute(styleAttribute, `width: ${ONE_LETTER_WIDTH * (word.word.length + WIDTH_ADDITION)}rem;`);
+    this.wordInput.setAttribute('style', `width: ${ONE_LETTER_WIDTH * (word.word.length + WIDTH_ADDITION)}rem;`);
+    this.wordInput.setAttribute('maxlength', word.word.length);
     this.removePlaceHolder();
 
     this.initPlaceHolder(word.word);
@@ -271,5 +274,15 @@ export default class LearningWordsView {
 
   toggleTurnOnSoundSetting() {
     this.settings.turnOnSound = !this.settings.turnOnSound;
+  }
+
+  turnOnGameMode() {
+    const buttonPrev = this.element.querySelector(QUERIES.BUTTONS.PREV);
+    buttonPrev.setAttribute('disabled', '');
+
+    this.settings.turnOnSound = false;
+    this.settings.showButtonDelete = false;
+    this.settings.showButtonComplicated = false;
+    this.settings.showButtonSkip = false;
   }
 }

@@ -35,13 +35,13 @@
       }
 
       p {
-        white-space: nowrap; // TODO Продумать перенос на вторую строку
+        // TODO Продумать перенос на вторую строку
         padding-left: 1rem;
         padding-right: 1rem;
       }
 
       #word {
-        width: unset;
+        display: inline;
         font-size: 2rem;
 
         &::placeholder {

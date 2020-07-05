@@ -1,0 +1,74 @@
+// EP - English Puzzle
+
+.EP-start__wrapper {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.EP-start__panel {
+  width: 100%;
+}
+
+.EP-start__buttons {
+  margin-top: 60px;
+}
+.canvas-item:not(:first-child) {
+  margin-left: -8px;
+}
+
+.canvas-item {
+  height: 48px;
+  cursor: pointer;
+}
+
+.group-words {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  &>* {
+    margin: 5px 10px;
+  }
+}
+.engPuz__drop-section {
+  min-height: 400px;
+}
+.engPuz__drag-section {
+  min-height: 106px;
+}
+.engPuz__drop-section--line {
+  min-height: 50px;
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.canvas-red {
+  box-shadow: 0 0 14px red;
+  background-color: red;
+}
+.canvas-green {
+  box-shadow: 0 0 14px green;
+  background-color: green;
+}
+.engPuz__bottom-btn {
+  margin-bottom: 70px;
+}
+.engPuz__bottom-check {
+  margin-left: 50px;
+}
+.noPointer {
+  pointer-events: none;
+}
+.visually-hidden {
+  visibility: hidden;
+}
+.engPuz__drop-section img {
+  width: 100%;
+  height: auto;
+}
+.fullWidth {
+  width: 100%;
+}
