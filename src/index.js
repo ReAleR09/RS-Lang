@@ -12,6 +12,7 @@ import AuthorizationController from './js/Controllers/AuthorizationController';
 import EnglishPuzzleController from './js/Controllers/englishPuzzleController';
 import SettingsController from './js/Controllers/SettingsController';
 import AudioCallController from './js/Controllers/GameAudioCallController';
+import PageAboutTeamController from './js/Controllers/PageAboutTeamController';
 
 import './js/plugins';
 import { SIDENAV } from './config';
@@ -33,6 +34,7 @@ async function appInit() {
     speakit: SpeakitController,
     'game-audio-call': AudioCallController,
     englishpuzzle: EnglishPuzzleController,
+    'about-team': PageAboutTeamController,
   };
 
   /**
