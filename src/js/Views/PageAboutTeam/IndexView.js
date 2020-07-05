@@ -10,6 +10,8 @@ const whatDidEvgeny = 'Back End API, Learning Word Components, Testing mode of k
 const whatDidVlad = 'Game EnglishPuzzle!!!';
 const whatDidBoris = 'Game Sprint, game AudioCall and this magnificence)';
 
+const nameButton = 'Contribution';
+
 export default class IndexView extends View {
   /**
    * This method will be automatically called oncewhen navigation to the page occured,
@@ -63,7 +65,7 @@ export default class IndexView extends View {
               <strong class="about-team__name">Evgeny</strong>
               <span class="about-team__position"> - Mentor</span>
               <br>
-              <a class="btn tooltipped black about-team__btn" data-tooltip="${whatDidEvgenyMentor}">Contribution</a>
+              <a class="btn tooltipped black about-team__btn" data-tooltip="${whatDidEvgenyMentor}">${nameButton}</a>
             </div>
           </div>
           <div class="col s12 m6 l4">
@@ -73,7 +75,7 @@ export default class IndexView extends View {
               <strong class="about-team__name">Bogdan</strong>
               <span class="about-team__position"> - Team leader</span>
               <br>
-              <a class="btn tooltipped black about-team__btn" data-tooltip="${whatDidBogdan}">Contribution</a>
+              <a class="btn tooltipped black about-team__btn" data-tooltip="${whatDidBogdan}">${nameButton}</a>
             </div>
           </div>
           <div class="col s12 m6 l4">
@@ -84,7 +86,7 @@ export default class IndexView extends View {
               <span class="about-team__position"> - Developer</span>
               <br>
               <a class="btn tooltipped black about-team__btn"
-              data-tooltip="${whatDidMasha}">Contribution</a>
+              data-tooltip="${whatDidMasha}">${nameButton}</a>
             </div>
           </div>
           <div class="col s12 m6 l4">
@@ -94,7 +96,7 @@ export default class IndexView extends View {
               <strong class="about-team__name">Kirill</strong>
               <span class="about-team__position"> - Developer</span>
               <br>
-              <a class="btn tooltipped black about-team__btn" data-tooltip="${whatDidKirill}">Contribution</a>
+              <a class="btn tooltipped black about-team__btn" data-tooltip="${whatDidKirill}">${nameButton}</a>
             </div>
           </div>
           <div class="col s12 m6 l4">
@@ -104,7 +106,7 @@ export default class IndexView extends View {
               <strong class="about-team__name">Evgeny</strong>
               <span class="about-team__position"> - Developer</span>
               <br>
-              <a class="btn tooltipped black about-team__btn" data-tooltip="${whatDidEvgeny}">Contribution</a>
+              <a class="btn tooltipped black about-team__btn" data-tooltip="${whatDidEvgeny}">${nameButton}</a>
             </div>
           </div>
           <div class="col s12 m6 l4">
@@ -114,7 +116,7 @@ export default class IndexView extends View {
               <strong class="about-team__name">Vlad</strong>
               <span class="about-team__position"> - Developer</span>
               <br>
-              <a class="btn tooltipped black about-team__btn" data-tooltip="${whatDidVlad}">Contribution</a>
+              <a class="btn tooltipped black about-team__btn" data-tooltip="${whatDidVlad}">${nameButton}</a>
             </div>
           </div>
           <div class="col s12 m6 offset-m3 l4 offset-l4">
@@ -124,7 +126,7 @@ export default class IndexView extends View {
               <strong class="about-team__name">Boris</strong>
               <span class="about-team__position"> - Developer</span>
               <br>
-              <a class="btn tooltipped black about-team__btn" data-tooltip="${whatDidBoris}">Contribution</a>
+              <a class="btn tooltipped black about-team__btn" data-tooltip="${whatDidBoris}">${nameButton}</a>
             </div>
           </div>
         </div>
