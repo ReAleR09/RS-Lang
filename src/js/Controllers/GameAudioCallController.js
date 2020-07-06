@@ -1,12 +1,13 @@
 import Controller from '../lib/Controller';
 import IndexView from '../Views/GameAudioCall/IndexView';
 import Utils from '../Utils/Utils';
+import { BACKEND_URL, CONF_MEDIA_BASE_PATH } from '../../config';
 import {
-  initGame,
-  updateData,
-  guessedWord,
-  notGuess,
-  finish,
+  INIT_GAME,
+  UPDATE_DATA,
+  GUESSED_WORD,
+  NOT_GUESS,
+  FINISH,
 } from '../Utils/ConstantsGameAudioCall';
 
 /**
@@ -19,13 +20,13 @@ import {
  * e.g. we navigate to rslang.com/example/someaction, then
  * controller's "someactionAction" metod will be called
  */
-export default class GameSprintController extends Controller {
+export default class GameAudioCallController extends Controller {
   constructor() {
     const viewClasses = {
       index: IndexView,
     };
     super(viewClasses);
-    this.wordsUrl = 'http://pacific-castle-12388.herokuapp.com/words?page=1&group=0';
+    this.wordsUrl = `${BACKEND_URL}words?page=1&group=0`;
     this.audioFail = new Audio('../../src/audio/badumtss.mp3');
     this.audioEndGame = new Audio('../../src/audio/endGame.mp3');
     this.audioEndGameFail = new Audio('../../src/audio/veryBadResult.mp3');
@@ -55,7 +56,7 @@ export default class GameSprintController extends Controller {
   }
 
   startGame() {
-    this.status = initGame;
+    this.status = INIT_GAME;
     this.countCorrectTranslationWords = 0;
     this.wordsToSend = [];
     this.countAnswerWords = 0;
@@ -96,7 +97,7 @@ export default class GameSprintController extends Controller {
   }
 
   updateView() {
-    IndexView.publish(updateData, {
+    IndexView.publish(UPDATE_DATA, {
       status: this.status,
       countCorrectTranslationWords: this.countCorrectTranslationWords,
       wordsToSend: this.wordsToSend,
@@ -116,10 +117,10 @@ export default class GameSprintController extends Controller {
   compareWords(event) { // Тут можно помечать угаданные слова
     if (this.wordsToSend[this.countAnswerWords].wordTranslate === event.target.innerText) {
       this.countCorrectTranslationWords += 1;
-      this.status = guessedWord;
+      this.status = GUESSED_WORD;
       this.updateView();
     } else { // Если не угадал, отметить статус какой, как не угаданное.
-      this.status = notGuess;
+      this.status = NOT_GUESS;
       this.updateView();
       this.playAudioFail();
     }
@@ -128,11 +129,11 @@ export default class GameSprintController extends Controller {
 
   playAudio() {
     if (this.countAnswerWords === 10) {
-      this.status = finish;
+      this.status = FINISH;
       this.updateView();
     } else {
       // console.log('playaudio');
-      this.audio = new Audio(`https://raw.githubusercontent.com/irinainina/rslang-data/master/${this.wordsToSend[this.countAnswerWords].audio}`);
+      this.audio = new Audio(CONF_MEDIA_BASE_PATH + this.wordsToSend[this.countAnswerWords].audio);
       this.audio.play();
     }
   }
