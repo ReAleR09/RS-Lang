@@ -33,13 +33,18 @@ export const SIDENAV = [
     icon: 'accessibility',
   },
   {
-    title: 'Spint [mini-game]',
+    title: 'Sprint [mini-game]',
     path: ['game-sprint'],
     icon: 'accessibility',
   },
   {
     title: 'SpeakIt [mini-game]',
     path: ['speakit'],
+    icon: 'accessibility',
+  },
+  {
+    title: 'Audio call [mini-game]',
+    path: ['game-audio-call'],
     icon: 'accessibility',
   },
   {

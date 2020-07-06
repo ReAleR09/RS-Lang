@@ -1,6 +1,6 @@
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
-import { inProgressSprintGame, eventNameSprintGame } from '../../Utils/ConstantsGameSprint';
+import { IN_PROGRESS_SPRINT_GAME, EVENT_NAME_SPRINT_GAME } from '../../Utils/ConstantsGameSprint';
 
 export default class IndexView extends View {
   /**
@@ -17,7 +17,7 @@ export default class IndexView extends View {
       1: 'Один попугай', 2: 'Два попугая', 3: 'Три попугая', 4: 'Четыре попугая',
     };
 
-    this.subscribe(eventNameSprintGame, ({
+    this.subscribe(EVENT_NAME_SPRINT_GAME, ({
       status,
       score,
       multiplier,
@@ -26,7 +26,7 @@ export default class IndexView extends View {
       translateWord,
       timer,
     }) => {
-      if (status === inProgressSprintGame) {
+      if (status === IN_PROGRESS_SPRINT_GAME) {
         this.element.querySelector('.game-sprint__score').innerHTML = score;
         this.element.querySelector('.game-sprint__timer').innerHTML = timer;
         this.element.querySelector('.game-sprint__number-of-animals').innerHTML = this.multiplier[multiplier];
