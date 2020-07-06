@@ -1,13 +1,13 @@
-const initGame = 'init-game';
-const updateData = 'update-data';
-const guessedWord = 'guessed-word';
-const notGuess = 'not-guess';
-const finish = 'finish';
+const INIT_GAME = 'init-game';
+const UPDATE_DATA = 'update-data';
+const GUESSED_WORD = 'guessed-word';
+const NOT_GUESS = 'not-guess';
+const FINISH = 'finish';
 
 export {
-  initGame,
-  updateData,
-  guessedWord,
-  notGuess,
-  finish,
+  INIT_GAME,
+  UPDATE_DATA,
+  GUESSED_WORD,
+  NOT_GUESS,
+  FINISH,
 };
