@@ -27,9 +27,9 @@ export default class GameAudioCallController extends Controller {
     };
     super(viewClasses);
     this.wordsUrl = `${BACKEND_URL}words?page=1&group=0`;
-    this.audioFail = new Audio('audio/badumtss.mp3');
-    this.audioEndGame = new Audio('audio/endGame.mp3');
-    this.audioEndGameFail = new Audio('audio/veryBadResult.mp3');
+    this.audioFail = new Audio('/assets/audio/badumtss.mp3');
+    this.audioEndGame = new Audio('/assets/audio/endGame.mp3');
+    this.audioEndGameFail = new Audio('/assets/audio/veryBadResult.mp3');
   }
 
   /**
