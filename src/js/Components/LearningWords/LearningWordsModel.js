@@ -8,6 +8,7 @@ import {
   DATA_URL,
   LEARNING_WORDS_CONTROLLER,
   RESULTS_ACTION,
+  TEST_RESULT_ACTION,
 } from './constants';
 import Statistics from '../../Classes/Statistics';
 import { GAMES, MODES } from '../../../config';
@@ -44,10 +45,11 @@ export default class LearningWordsModel {
   async attach(element) {
     await this.statistics.get();
     await this.settings.loadSettings();
+    const limits = await this.statistics.getLimits();
     this.cards.init(
       this.difficulty,
       this.settings.wordLimitsPerDay,
-      this.statistics.limits,
+      limits,
       this.mode,
     );
     this.view.attach(element);
@@ -204,7 +206,11 @@ export default class LearningWordsModel {
 
   // eslint-disable-next-line class-methods-use-this
   showResult() {
-    const params = { [PARAM_MODE]: this.mode };
-    AppNavigator.go(LEARNING_WORDS_CONTROLLER, RESULTS_ACTION, params);
+    const params = { [PARAM_MODE]: this.mode, difficulty: this.difficulty };
+    if (this.mode === MODES.GAME) {
+      AppNavigator.go(LEARNING_WORDS_CONTROLLER, TEST_RESULT_ACTION, params);
+    } else {
+      AppNavigator.go(LEARNING_WORDS_CONTROLLER, RESULTS_ACTION, params);
+    }
   }
 }

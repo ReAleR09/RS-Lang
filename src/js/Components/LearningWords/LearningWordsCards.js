@@ -137,18 +137,22 @@ export default class LearnindWordsCards {
     if (!this.repeatWords.length && this.mode === MODES.REPITITION) {
       await this.getRepeatWords();
       if (this.repeatWords.length) {
-        this.repeatWords = this.newWords.slice(0, this.restCardsCount);
+        const restCount = Math.min(this.restCardsCount, this.repeatWords.length);
+        this.repeatWords = this.repeatWords.slice(0, restCount);
       }
       if (this.repeatWords.length) {
         this.cards = this.cards.concat(this.repeatWords);
+        this.repeatWords = [];
       }
     }
+
     if (this.isEnded) {
       if (!this.newWords.length) {
         await this.getNewWords();
       }
       if (this.newWords.length) {
-        const restCount = Math.min(this.restCardsCount, this.restNewWordsCount);
+        let restCount = Math.min(this.restCardsCount, this.restNewWordsCount);
+        restCount = Math.min(this.newWords.length, restCount);
         this.newWords = this.newWords.slice(0, restCount);
       }
       if (this.newWords.length) {

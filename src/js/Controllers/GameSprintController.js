@@ -23,7 +23,7 @@ export default class GameSprintController extends Controller {
     this.correctTranslation = 0;
     this.wrongTranslation = 1;
 
-    this.audioClickBtn = new Audio('../../audio/piu.mp3');
+    this.audioClickBtn = new Audio('/assets/audio/piu.mp3');
   }
 
   /**

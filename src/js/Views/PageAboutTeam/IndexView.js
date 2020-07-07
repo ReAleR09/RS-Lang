@@ -59,8 +59,8 @@ export default class IndexView extends View {
         <div class="divider"></div>
         <div class="row center-align about-team__photo-container">
           <div class="col s12 m6 l4">
-            <img class="about-team__person-photo-hide" src="./src/img/teamPhoto/yauhenMentor1.jpg">
-            <img class="about-team__person-photo-visible" src="./src/img/teamPhoto/yauhenMentor2.jpg">
+            <img class="about-team__person-photo-hide" src="/assets/img/teamPhoto/yauhenMentor1.jpg">
+            <img class="about-team__person-photo-visible" src="/assets/img/teamPhoto/yauhenMentor2.jpg">
             <div class="about-team__person-info">
               <strong class="about-team__name">Evgeny</strong>
               <span class="about-team__position"> - Mentor</span>
@@ -69,8 +69,8 @@ export default class IndexView extends View {
             </div>
           </div>
           <div class="col s12 m6 l4">
-            <img class="about-team__person-photo-hide" src="./src/img/teamPhoto/bogdan1.jpg">
-            <img class="about-team__person-photo-visible" src="./src/img/teamPhoto/bogdan2.jpg">
+            <img class="about-team__person-photo-hide" src="/assets/img/teamPhoto/bogdan1.jpg">
+            <img class="about-team__person-photo-visible" src="/assets/img/teamPhoto/bogdan2.jpg">
             <div class="about-team__person-info">
               <strong class="about-team__name">Bogdan</strong>
               <span class="about-team__position"> - Team leader</span>
@@ -79,8 +79,8 @@ export default class IndexView extends View {
             </div>
           </div>
           <div class="col s12 m6 l4">
-            <img class="about-team__person-photo-hide" src="./src/img/teamPhoto/masha1.jpg">
-            <img class="about-team__person-photo-visible" src="./src/img/teamPhoto/masha2.jpg">
+            <img class="about-team__person-photo-hide" src="/assets/img/teamPhoto/masha1.jpg">
+            <img class="about-team__person-photo-visible" src="/assets/img/teamPhoto/masha2.jpg">
             <div class="about-team__person-info">
               <strong class="about-team__name">Masha</strong>
               <span class="about-team__position"> - Developer</span>
@@ -90,8 +90,8 @@ export default class IndexView extends View {
             </div>
           </div>
           <div class="col s12 m6 l4">
-            <img class="about-team__person-photo-hide" src="./src/img/teamPhoto/kirill1.jpg">
-            <img class="about-team__person-photo-visible" src="./src/img/teamPhoto/kirill2.jpg">
+            <img class="about-team__person-photo-hide" src="/assets/img/teamPhoto/kirill1.jpg">
+            <img class="about-team__person-photo-visible" src="/assets/img/teamPhoto/kirill2.jpg">
             <div class="about-team__person-info">
               <strong class="about-team__name">Kirill</strong>
               <span class="about-team__position"> - Developer</span>
@@ -100,8 +100,8 @@ export default class IndexView extends View {
             </div>
           </div>
           <div class="col s12 m6 l4">
-            <img class="about-team__person-photo-hide" src="./src/img/teamPhoto/evgeny1.jpg">
-            <img class="about-team__person-photo-visible" src="./src/img/teamPhoto/evgeny2.jpg">
+            <img class="about-team__person-photo-hide" src="/assets/img/teamPhoto/evgeny1.jpg">
+            <img class="about-team__person-photo-visible" src="/assets/img/teamPhoto/evgeny2.jpg">
             <div class="about-team__person-info">
               <strong class="about-team__name">Evgeny</strong>
               <span class="about-team__position"> - Developer</span>
@@ -110,8 +110,8 @@ export default class IndexView extends View {
             </div>
           </div>
           <div class="col s12 m6 l4">
-            <img class="about-team__person-photo-hide" src="./src/img/teamPhoto/vlad1.jpg">
-            <img class="about-team__person-photo-visible" src="./src/img/teamPhoto/vlad2.jpg">
+            <img class="about-team__person-photo-hide" src="/assets/img/teamPhoto/vlad1.jpg">
+            <img class="about-team__person-photo-visible" src="/assets/img/teamPhoto/vlad2.jpg">
             <div class="about-team__person-info">
               <strong class="about-team__name">Vlad</strong>
               <span class="about-team__position"> - Developer</span>
@@ -120,8 +120,8 @@ export default class IndexView extends View {
             </div>
           </div>
           <div class="col s12 m6 offset-m3 l4 offset-l4">
-            <img class="about-team__person-photo-hide" src="./src/img/teamPhoto/boris1.jpg">
-            <img class="about-team__person-photo-visible" src="./src/img/teamPhoto/boris2.jpg">
+            <img class="about-team__person-photo-hide" src="/assets/img/teamPhoto/boris1.jpg">
+            <img class="about-team__person-photo-visible" src="/assets/img/teamPhoto/boris2.jpg">
             <div class="about-team__person-info">
               <strong class="about-team__name">Boris</strong>
               <span class="about-team__position"> - Developer</span>
