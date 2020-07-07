@@ -5,6 +5,8 @@ import View from '../../lib/View';
 import { SETTINGS_HTML, SETTINGS_QUERIES as QUERIES } from '../../Components/Settings/constants';
 import { DICT_CATEGORIES } from '../../Classes/Api/constants';
 
+import Toaster from '../../Classes/Toaster';
+
 export default class IndexView extends View {
   /**
    * This method will be automatically called oncewhen navigation to the page occured,
@@ -146,6 +148,7 @@ export default class IndexView extends View {
     this.ajaxSettingsTimeout = setTimeout(() => {
       this.ajaxSettingsTimeout = null;
       this.props.model.saveSettings();
+      Toaster.showToast('Настройки сохранены');
     }, 1000);
   }
 
