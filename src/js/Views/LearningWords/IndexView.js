@@ -1,4 +1,5 @@
 import View from '../../lib/View';
+import { showPreloader, hidePreloader } from '../../Classes/Preloader';
 // import AppNavigator from '../../lib/AppNavigator';
 // import LearningWordsView from '../../Components/LearningWords/LearningWordsView';
 
@@ -13,8 +14,10 @@ export default class IndexView extends View {
    * it references actual DOM root element of this view
    */
   async onMount() {
+    showPreloader();
     await this.props.model.attach(this.element);
     await this.props.model.init();
+    hidePreloader();
   }
 
   /**
