@@ -12,7 +12,9 @@ import Utils from '../../Utils/Utils';
 import Api from '../../Classes/Api/Api';
 import getImageInfo from './EnglishPuzzleImageInfo';
 import SettingsModel from '../../Classes/UserSettings';
-import { GAMES } from '../../../config';
+import Statistics from '../../Classes/Statistics';
+import { GAMES, MODES } from '../../../config';
+
 // import { CONF_MEDIA_BASE_PATH } from '../../../config';
 
 export const EP_GAME_STATS = 'EP_GAME_STATS';
@@ -35,6 +37,8 @@ export default class EnglishPuzzleManager {
     this.sentences = [];
     this.api = new Api();
     this.view = new EnglishPuzzleView();
+    const mode = isUserWordsMode ? MODES.REPITITION : MODES.GAME;
+    this.statistics = new Statistics(GAMES.SPEAKIT, mode, true);
   }
 
   attach(element) {
@@ -76,6 +80,8 @@ export default class EnglishPuzzleManager {
 
   async init() {
     if (this.isUserWordsMode) {
+      const userWordsData = await SpeakitWordsApi.getUserWords();
+      console.log(userWordsData);
       this.playUserWords();
     } else {
       // start game with difficulty and round
@@ -157,7 +163,7 @@ export default class EnglishPuzzleManager {
       const dropContainer = document.querySelector(`.engPuz__drop-section--line.row-${this.puzzleLineIndex}`);
 
       this.updateCurrentStat(false);
-
+      this.isUserWordsMode ? this.statistics.updateWordStatistics(this.words[this.puzzleLineIndex].id, false) : null;
       this.view.clearContainer(dropContainer);
       this.appendCorrectLineToDropOnIdkPress();
       this.view.clearContainer(dragContainer);
@@ -284,6 +290,7 @@ export default class EnglishPuzzleManager {
         this.updateCurrentStat(this.checkLineAnswers());
 
         if (this.checkLineAnswers()) {
+          this.isUserWordsMode ? this.statistics.updateWordStatistics(this.words[this.puzzleLineIndex].id, true) : null;
           this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`));
           this.view.renameCheckButton();
           this.view.removePuzzleLinePointerEvents(this.puzzleLineIndex);
