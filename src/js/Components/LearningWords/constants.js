@@ -8,6 +8,8 @@ export const minBestResult = 4;
 export const gameLevelCount = 7;
 
 export const RESULTS_ACTION = 'results';
+
+export const TEST_RESULT_ACTION = 'testResult';
 export const LEARNING_WORDS_CONTROLLER = 'learningWords';
 
 export const DATA_URL = `https://raw.githubusercontent.com/${githubAccount}/rslang-data/master/`;
