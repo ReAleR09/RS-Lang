@@ -32,9 +32,11 @@ export default class GameStartView extends View {
     });
 
     const startButtonUserEl = this.element.querySelector(`#${ID_START_BUTTON_USER}`);
-    startButtonUserEl.addEventListener('click', () => {
-      AppNavigator.go('speakit', 'play', { userWords: 1 });
-    });
+    if (startButtonUserEl) {
+      startButtonUserEl.addEventListener('click', () => {
+        AppNavigator.go('speakit', 'play', { userWords: 1 });
+      });
+    }
 
     this.initSliders();
   }
@@ -46,7 +48,7 @@ export default class GameStartView extends View {
     if (game.userWordsPlay) {
       userWordsPlay = `
         <div class='row'>
-          <div class="waves-effect waves-light btn col s12" id="${ID_START_BUTTON_USER}">Start game with learned words</div>
+          <div class="waves-effect waves-light btn col s12" id="${ID_START_BUTTON_USER}">Играть с изучаемыми словами</div>
         </div>
       `;
     }
@@ -59,7 +61,7 @@ export default class GameStartView extends View {
       </blockquote>
       <div class='row'>
         <p class="range-field col s12">
-          Difficulty:
+          Сложность:
         </p>
         <p class="range-field col s12">
           <input
@@ -73,7 +75,7 @@ export default class GameStartView extends View {
           />
         </p>
         <p class="range-field col s12">
-          Round:
+          Раунд:
         </p>
         <p class="range-field col s12">
           <input
@@ -85,7 +87,7 @@ export default class GameStartView extends View {
             value="${game.currentRound}"
           />
         </p>
-        <div class="waves-effect waves-light btn col s12" id="${ID_START_BUTTON}">Start game</div>
+        <div class="waves-effect waves-light btn col s12" id="${ID_START_BUTTON}">Играть</div>
       </div>
       ${userWordsPlay}
     </div>`;

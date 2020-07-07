@@ -56,12 +56,13 @@ async function appInit() {
   sideBarFloating.attach('sidenav-floatng');
 
   const authRevived = await SettingsModel.reviveAuth();
-  hidePreloader();
+
   if (!authRevived) {
     SettingsModel.logout();
     AppNavigator.go('authorization');
   } else {
-    router.route(true);
+    await router.route(true);
+    hidePreloader();
   }
 }
 

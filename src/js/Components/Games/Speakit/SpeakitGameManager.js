@@ -14,7 +14,7 @@ const FINISH_GAME_DELAY_MS = 1000;
 
 export default class SpeakitGameManager {
   constructor(userWordsMode = false, difficulty = 0, round = 1) {
-    this.userWords = userWordsMode;
+    this.userWordsMode = userWordsMode;
     this.difficulty = difficulty;
     this.round = round;
     this.wordsState = [];

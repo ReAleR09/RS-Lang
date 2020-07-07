@@ -15,7 +15,7 @@ export default class Controller {
     throw new ControllerCancelException('Canceled');
   }
 
-  performAction(actionAlias) {
+  async performAction(actionAlias) {
     const actionName = `${actionAlias}Action`;
     if (!this[actionName]) {
       throw Error(`Controller '${this.constructor.name}' doesn't have '${actionName}' action`);
@@ -26,7 +26,7 @@ export default class Controller {
     // passing collected props from controller to the view
     this.view.props = this.props;
     // performing action
-    this[actionName]();
+    await this[actionName]();
     // returning the view
     return this.view;
   }
