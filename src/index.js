@@ -62,8 +62,8 @@ async function appInit() {
     AppNavigator.go('authorization');
   } else {
     await router.route(true);
-    hidePreloader();
   }
+  hidePreloader();
 }
 
 window.onload = appInit;
