@@ -25,6 +25,9 @@ export default class IndexView extends View {
     const selects = this.element.querySelectorAll('select');
     Materialize.FormSelect.init(selects);
 
+    const rangeDomEls = document.querySelectorAll('input[type=range]');
+    Materialize.Range.init(rangeDomEls);
+
     const buttonSaveSettings = this.element.querySelector(QUERIES.BUTTON_SAVE);
     buttonSaveSettings.addEventListener('click', (event) => {
       event.preventDefault();
