@@ -15,16 +15,12 @@ export default class SavannahController extends Controller {
   async indexAction() {
     const dictionary = new Dictionary();
 
-    // const learningWords = MockWordsApi.getWordsForDifficulty(0);
-    const learningWords = await dictionary.getWordsList('mine');
-    // console.log(learningWords);
+    const learningWords = await dictionary.getWordsList('main');
     LocalStorageAdapter.set('learningWords', learningWords);
 
-    // const difficultWords = MockWordsApi.getWordsForDifficulty(0);
     const difficultWords = await dictionary.getWordsList('complicated');
     LocalStorageAdapter.set('difficultWords', difficultWords);
 
-    // const deletedWords = MockWordsApi.getWordsForDifficulty(0);
     const deletedWords = await dictionary.getWordsList('delete');
     LocalStorageAdapter.set('deletedWords', deletedWords);
   }

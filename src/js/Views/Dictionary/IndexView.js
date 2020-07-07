@@ -1,23 +1,29 @@
 import View from '../../lib/View';
 import LocalStorageAdapter from '../../Utils/LocalStorageAdapter';
-import DictionaryWordCard from '../../Classes/DictionaryWordCard';
-import WordsApi from '../../Classes/Api/WordsApi';
+import {
+  CLASS_DICTIONARY_WORD_SOUND,
+  CLASS_WORD_DELETE_BUTTON,
+  CLASS_WORD_RECOVER_BUTTON,
+  DictionaryWordCard,
+} from '../../Classes/DictionaryWordCard';
 import initDictionaryTabs from '../../plugins/initMaterial';
 import Dictionary from '../../Classes/Dictionary';
+
+const dictionary = new Dictionary();
 
 export default class LearningWordsView extends View {
   onMount() {
     this.instance = initDictionaryTabs();
 
-    const recoverButtons = this.element.querySelectorAll('.word-data__recover-button');
+    const recoverButtons = this.element.querySelectorAll(`.${CLASS_WORD_RECOVER_BUTTON}`);
     recoverButtons.forEach((item) => {
       item.addEventListener('click', () => {
-        const dictionary = new Dictionary();
         dictionary.putOnCategory(item.getAttribute('idWord'));
+
       });
     });
 
-    const wordSounds = this.element.querySelectorAll('.dictionary__word-sound');
+    const wordSounds = this.element.querySelectorAll(`.${CLASS_DICTIONARY_WORD_SOUND}`);
     wordSounds.forEach((item) => {
       item.addEventListener('click', () => {
         const audio = new Audio(`https://raw.githubusercontent.com/yafimchik/rslang-data/master/${item.getAttribute('sound')}`);
@@ -25,11 +31,11 @@ export default class LearningWordsView extends View {
       });
     });
 
-    const deleteButtons = this.element.querySelectorAll('.word-data__delete-button');
+    const deleteButtons = this.element.querySelectorAll(`.${CLASS_WORD_DELETE_BUTTON}`);
     deleteButtons.forEach((item) => {
       item.addEventListener('click', () => {
-        const wordsApi = new WordsApi();
-        wordsApi.deleteWordById(item.getAttribute('idWord'));
+        dictionary.putOnCategory(item.getAttribute('idWord'), 'delete');
+
       });
     });
   }
@@ -58,7 +64,6 @@ export default class LearningWordsView extends View {
     `;
 
     learningWords.forEach((item) => {
-      console.log(item);
       const card = new DictionaryWordCard(item, 'mine').render();
       html += card;
     });
@@ -67,7 +72,6 @@ export default class LearningWordsView extends View {
     <div id="difficult-words" class="col s12 red">`;
 
     difficultWords.forEach((item) => {
-      console.log(item);
       const card = new DictionaryWordCard(item).render();
       html += card;
     });
@@ -76,7 +80,6 @@ export default class LearningWordsView extends View {
     <div id="deleted-words" class="col s12 green">`;
 
     deletedWords.forEach((item) => {
-      console.log(item);
       const card = new DictionaryWordCard(item).render();
       html += card;
     });
