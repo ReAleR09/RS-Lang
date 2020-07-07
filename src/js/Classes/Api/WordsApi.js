@@ -182,6 +182,63 @@ export default class WordsApi {
     return userWordData;
   }
 
+  async getUserWordsCount(difficulty) {
+    const params = {
+      wordsPerPage: 1,
+    };
+
+    // difficulty is optional
+    if (difficulty !== false) {
+      params.group = difficulty;
+    }
+
+    params.filter = JSON.stringify({
+      userWord: { $ne: null },
+    });
+
+    const totalCountResult = await this.api.getAggregatedWords(params);
+
+    let totalCount = 0;
+    try {
+      totalCount = totalCountResult[0].totalCount[0].count;
+    } catch (error) {
+      return 0;
+    }
+    return totalCount;
+  }
+
+  async getRepitionWordsCount(difficulty, date) {
+    const params = {
+      wordsPerPage: 1,
+    };
+
+    // difficulty is optional
+    if (difficulty !== false) {
+      params.group = difficulty;
+    }
+
+    let dateNow = new Date().getTime();
+
+    if (date) {
+      dateNow = date.getTime();
+    }
+
+    params.filter = JSON.stringify({
+      'userWord.optional.dictCategory': { $ne: DICT_CATEGORIES.DELETE },
+      'userWord.optional.nextDate': { $lt: dateNow },
+    });
+
+    const totalCountResult = await this.api.getAggregatedWords(params);
+
+    let totalCount = 0;
+    try {
+      totalCount = totalCountResult[0].totalCount[0].count;
+    } catch (error) {
+      return 0;
+    }
+    return totalCount;
+  }
+
   /**
    * @param {int} difficulty 0-5
    * @param {int} gameRoundSize 1-*

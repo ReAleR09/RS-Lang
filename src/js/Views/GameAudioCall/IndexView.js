@@ -1,11 +1,12 @@
 import M from 'materialize-css';
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
+import { CONF_MEDIA_BASE_PATH } from '../../../config';
 import {
-  initGame,
-  updateData,
-  guessedWord,
-  notGuess,
+  INIT_GAME,
+  UPDATE_DATA,
+  GUESSED_WORD,
+  NOT_GUESS,
 } from '../../Utils/ConstantsGameAudioCall';
 
 const numberSlide = ['#one!', '#two!', '#three!', '#four!', '#five!', '#six!', '#seven!', '#eight!', '#nine!', '#ten!'];
@@ -25,18 +26,18 @@ export default class IndexView extends View {
       this.props.startGame();
     });
 
-    this.subscribe(updateData, ({
+    this.subscribe(UPDATE_DATA, ({
       status,
       countCorrectTranslationWords,
       wordsToSend,
     }) => {
-      if (status === initGame) {
+      if (status === INIT_GAME) {
         // console.log(wordsToSend);
         this.wordsToSend = wordsToSend;
         this.generateHtml(wordsToSend);
-      } else if (status === guessedWord) {
+      } else if (status === GUESSED_WORD) {
         this.guessWord();
-      } else if (status === notGuess) {
+      } else if (status === NOT_GUESS) {
         this.notGuessWord();
       } else {
         this.endGame(countCorrectTranslationWords);
@@ -58,7 +59,7 @@ export default class IndexView extends View {
       });
       sliderHtml += `
         <div class="carousel-item blue white-text" href="${numberSlide[i]}">
-          <img class="audio-call__img-word" src="https://raw.githubusercontent.com/irinainina/rslang-data/master/${el.image}">
+          <img class="audio-call__img-word" src="${CONF_MEDIA_BASE_PATH}${el.image}">
           <a id="repeat-word-btn" class="btn-floating btn-large waves-effect waves-light red">
             <i class="material-icons">volume_up</i>
           </a>
