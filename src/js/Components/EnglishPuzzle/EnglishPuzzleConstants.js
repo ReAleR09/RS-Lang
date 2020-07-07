@@ -30,6 +30,9 @@ const engPuzConst = {
   paintings: {
     URL: 'https://raw.githubusercontent.com/tlmnnk/rslang_data_paintings/master/',
   },
+  localstorage: {
+    RESULTS: 'RS7__engPuz--results',
+  },
 };
 
 export default engPuzConst;

@@ -13,12 +13,26 @@ export default class EnglisPuzzleView {
     }
   }
 
+  renderDropLines() {
+    const fragment = `<div class="engPuz__drop-section--line row-0 flex-center"></div>
+    <div class="engPuz__drop-section--line row-1 flex-center"></div>
+    <div class="engPuz__drop-section--line row-2 flex-center"></div>
+    <div class="engPuz__drop-section--line row-3 flex-center"></div>
+    <div class="engPuz__drop-section--line row-4 flex-center"></div>
+    <div class="engPuz__drop-section--line row-5 flex-center"></div>
+    <div class="engPuz__drop-section--line row-6 flex-center"></div>
+    <div class="engPuz__drop-section--line row-7 flex-center"></div>
+    <div class="engPuz__drop-section--line row-8 flex-center"></div>
+    <div class="engPuz__drop-section--line row-9 flex-center"></div>`;
+    this.dropContainer.insertAdjacentHTML('afterbegin', fragment);
+  }
+
   renderCurrentStat(answers) {
     let fragment = '';
     let i = 0;
     Object.values(answers).forEach((value) => {
       fragment += `<div class="fullWidth flex-center margin-bottom">
-      <a class="btn waves-effect blue lighten-4">
+      <a class="engPuz__tooltips-autoPlay--results btn waves-effect blue lighten-4">
       <i class="engPuz__tooltips-autoPlay--results large material-icons" data-word=${i}>volume_up</i>
       </a>
         <div class="fullWidth ${value.isCorrect ? 'green' : 'red'}">${value.sentence}</div>

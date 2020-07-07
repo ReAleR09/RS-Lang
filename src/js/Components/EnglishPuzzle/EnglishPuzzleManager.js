@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable max-len */
 /* eslint-disable no-new */
 /* eslint-disable class-methods-use-this */
 import EnglishPuzzleView from './EnglishPuzzleView';
@@ -5,9 +7,12 @@ import EnglisPuzzleDragDrop from './EnglishPuzzleDragDrop';
 import engPuzConst from './EnglishPuzzleConstants';
 import SpeakitWordsApi from '../Games/Speakit/SpeakitWordsApi';
 import AppNavigator from '../../lib/AppNavigator';
+import LocalStorageAdapter from '../../Utils/LocalStorageAdapter';
 import Utils from '../../Utils/Utils';
 import Api from '../../Classes/Api/Api';
 import getImageInfo from './EnglishPuzzleImageInfo';
+import SettingsModel from '../../Classes/UserSettings';
+import { GAMES } from '../../../config';
 // import { CONF_MEDIA_BASE_PATH } from '../../../config';
 
 export const EP_GAME_STATS = 'EP_GAME_STATS';
@@ -46,6 +51,15 @@ export default class EnglishPuzzleManager {
     this.words.forEach((word) => {
       this.sentences.push(word.textExample);
     });
+  }
+
+  resetGameParametres() {
+    this.puzzleCompelete = null;
+    this.words = null;
+    this.puzzleLineIndex = 0;
+    this.imageInfo = null;
+    this.answers = {};
+    this.puzzleArr = [[], [], [], [], [], [], [], [], [], []];
   }
 
   getImageForGame() {
@@ -123,6 +137,7 @@ export default class EnglishPuzzleManager {
       this.answers[this.puzzleLineIndex] = {
         sentence: this.words[this.puzzleLineIndex].textExample,
         isCorrect: answer,
+        audio: this.words[this.puzzleLineIndex].audioExample,
       };
     }
   }
@@ -130,8 +145,7 @@ export default class EnglishPuzzleManager {
   idkClickHandler(e) {
     if (e.target.classList.contains('engPuz__bottom-idk')) {
       if (e.target.innerText === 'RESULTS') {
-        this.getGameResults();
-        e.target.innerText = 'PLAY AGAIN';
+        AppNavigator.go('englishpuzzle', 'results');
         return;
       }
       if (e.target.innerText === 'PLAY AGAIN') {
@@ -209,23 +223,51 @@ export default class EnglishPuzzleManager {
     }
   }
 
-  checkButtonHandler(e) {
+  async saveGameForNextRound() {
+    if (!this.isUserWordsMode) {
+      this.round < engPuzConst.pagesPerDifficulties[this.difficulty] ? this.round += 1 : this.round = 1;
+      this.difficulty < engPuzConst.pagesPerDifficulties.length - 1 ? this.difficulty += 1 : this.difficulty = 0;
+    }
+    await SettingsModel.saveGame(
+      GAMES.PUZZLE,
+      {
+        difficulty: this.difficulty,
+        round: this.round,
+      },
+    );
+  }
+
+  async checkButtonHandler(e) {
     const checkBtn = this.view.element.querySelector(`.${engPuzConst.buttons.CHECK}`);
     if (e.target.classList.contains(engPuzConst.buttons.CHECK)) {
       if (checkBtn.innerText === 'CONTINUE') {
+        if (this.isGameFinished) {
+          this.resetGameParametres();
+          this.view.clearContainer(this.view.element.querySelector(`.${engPuzConst.content.DRAGSECTION}`));
+          this.view.clearContainer(this.view.dropContainer);
+          this.view.renderDropLines();
+          await this.saveGameForNextRound();
+          this.getImageForGame();
+          await this.getSentencesForGame();
+          await this.getPuzzleElements();
+          this.puzzleLineRender(this.puzzleLineIndex);
+          return;
+        }
         this.view.removeCanvasHighlight(this.puzzleLineIndex);
         this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`));
         this.puzzleLineIndex += 1;
 
         // 10 means last puzzle line
         if (this.puzzleLineIndex === 10) {
+          // save game to local storagw
+          LocalStorageAdapter.set(engPuzConst.localstorage.RESULTS, this.answers);
+          this.isGameFinished = true;
           this.view.drawCompletePuzzle();
           this.view.hideTooltipsBtns();
           this.view.removeDragContainer();
           this.view.renderImageInfo(this.imageInfo);
           // disabling continue button so far we don't have logic to go to next page/difficult
           this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.CHECK}`));
-
           this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`).innerText = 'RESULTS';
           return;
         }
@@ -266,8 +308,9 @@ export default class EnglishPuzzleManager {
     }
   }
 
-  getGameResults() {
+  async getGameResults() {
     document.querySelector('blockquote').classList.toggle('visually-hidden');
+    this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.CHECK}`));
     this.view.clearContainer(this.view.dropContainer);
     this.view.renderCurrentStat(this.answers);
   }

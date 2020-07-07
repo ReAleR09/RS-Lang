@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable class-methods-use-this */
 import Controller from '../lib/Controller';
 import AppNavigator from '../lib/AppNavigator';
@@ -6,8 +7,6 @@ import EnglishPuzzleManager from '../Components/EnglishPuzzle/EnglishPuzzleManag
 import IndexView from '../Views/englishPuzzle/indexView';
 import PlayView from '../Views/englishPuzzle/playView';
 import ResultsView from '../Views/englishPuzzle/resultsView';
-import SettingsModel from '../Classes/UserSettings';
-import { GAMES } from '../../config';
 import engPuzConst from '../Components/EnglishPuzzle/EnglishPuzzleConstants';
 
 export default class EnglishPuzzleController extends Controller {
@@ -24,19 +23,17 @@ export default class EnglishPuzzleController extends Controller {
     this.props.userData = {};
   }
 
-  playAction() {
+  async playAction() {
     const params = AppNavigator.getRequestParams();
 
     const userWordsMode = params.get('isUserWords');
     let gameManager;
-
+    let difficulty = params.get('difficulty');
+    let round = params.get('round');
     if (userWordsMode) {
       gameManager = new EnglishPuzzleManager(true);
     } else {
-      let difficulty = params.get('difficulty');
       difficulty = Number.parseInt(difficulty, 10);
-
-      let round = params.get('round');
       round = Number.parseInt(round, 10);
       // navigate to main game page if user somehow entered the page with invalid params
       if (
@@ -48,20 +45,10 @@ export default class EnglishPuzzleController extends Controller {
       }
       gameManager = new EnglishPuzzleManager(false, difficulty, round);
     }
-
-    SettingsModel.saveGame(
-      GAMES.PUZZLE,
-      {
-        difficulty: this.props.nextDifficulty,
-        round: this.props.nextRound,
-      },
-    );
-
     this.props.gameManager = gameManager;
   }
 
   resultsAction() {
-    // const stats = LocalStorageAdapter.get(SPEAKIT_GAME_STATS);
     // if no stats stored, redirect to start page
     /*  if (!stats) {
       AppNavigator.go('englispuzzle');
