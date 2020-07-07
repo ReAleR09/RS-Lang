@@ -1,7 +1,9 @@
 import SettingsApi, { DEFAULT_USER_SETTINGS } from './Api/SettingsApi';
 import Api from './Api/Api';
 import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
-import { FIELD_USER_ID, FIELD_TOKEN, FIELD_REFRESH_TOKEN } from '../Utils/Constants';
+import {
+  FIELD_USER_ID, FIELD_TOKEN, FIELD_REFRESH_TOKEN, FIELD_EMAIL,
+} from '../Utils/Constants';
 import { GAMES } from '../../config';
 
 class UserSettings {
@@ -9,6 +11,7 @@ class UserSettings {
     this.settingsObject = {};
     this.settingsApi = new SettingsApi();
     this.api = new Api();
+    this.isAuth = false;
   }
 
   set settings(newSettingsObject) {
@@ -104,6 +107,9 @@ class UserSettings {
       LocalStorageAdapter.set(FIELD_USER_ID, userData.userId);
       LocalStorageAdapter.set(FIELD_TOKEN, userData.token);
       LocalStorageAdapter.set(FIELD_REFRESH_TOKEN, userData.refreshToken);
+      LocalStorageAdapter.set(FIELD_EMAIL, email);
+      UserSettings.displayUserLogin(email);
+      this.isAuth = true;
 
       // if success - get saved settings
       await this.loadSettings();
@@ -126,33 +132,39 @@ class UserSettings {
     }
     LocalStorageAdapter.set(FIELD_TOKEN, response.token);
     LocalStorageAdapter.set(FIELD_REFRESH_TOKEN, response.refreshToken);
+    const login = LocalStorageAdapter.get(FIELD_EMAIL);
+    UserSettings.displayUserLogin(login);
+    this.isAuth = true;
     // if success - get saved settings
     await this.loadSettings();
     return true;
   }
 
   logout() {
+    UserSettings.removeUserLogin();
     UserSettings.clearLocalStorage();
     this.settingsObject = {};
+    this.isAuth = false;
   }
 
   static clearLocalStorage() {
     LocalStorageAdapter.remove(FIELD_USER_ID);
     LocalStorageAdapter.remove(FIELD_TOKEN);
     LocalStorageAdapter.remove(FIELD_REFRESH_TOKEN);
+    LocalStorageAdapter.remove(FIELD_EMAIL);
+  }
+
+  static displayUserLogin(login) {
+    const nameBar = document.querySelector('#application_username');
+    nameBar.innerHTML = login;
+  }
+
+  static removeUserLogin() {
+    const nameBar = document.querySelector('#application_username');
+    nameBar.innerHTML = '';
   }
 }
 
 const SettingsModel = new UserSettings();
-
-// async function settingsInit() {
-//   const validity = await SettingsModel.settingsApi.checkValidity();
-//   if (!validity) {
-//     await SettingsModel.settingsApi.update();
-//   }
-//   await SettingsModel.loadSettings();
-// }
-
-// settingsInit();
 
 export default SettingsModel;

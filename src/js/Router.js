@@ -41,9 +41,8 @@ export default class Router {
     return { controllerAlias, actionAlias };
   }
 
-  route(initial = false) {
+  async route(initial = false) {
     const { controllerAlias, actionAlias } = Router.getUrlParts();
-
     if (!Object.prototype.hasOwnProperty.bind(this.routes, controllerAlias)) {
       throw new Error(`No controller assigned to '${controllerAlias}' path`);
     }
@@ -54,7 +53,7 @@ export default class Router {
     let viewInstance;
     // run cotroller's method
     try {
-      viewInstance = controllerInstance.performAction(actionAlias);
+      viewInstance = await controllerInstance.performAction(actionAlias);
     } catch (e) {
       // cancel navigation if no view instance received
       if (e instanceof ControllerCancelException) {

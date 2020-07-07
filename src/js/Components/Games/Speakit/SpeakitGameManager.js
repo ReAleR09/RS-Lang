@@ -7,6 +7,7 @@ import LocalStorageAdapter from '../../../Utils/LocalStorageAdapter';
 import { roundSize } from './const';
 import Statistics from '../../../Classes/Statistics';
 import { GAMES, MODES } from '../../../../config';
+import { showPreloader, hidePreloader } from '../../../Classes/Preloader';
 
 export const SPEAKIT_GAME_STATS = 'SPEAKIT_GAME_STATS';
 
@@ -14,7 +15,7 @@ const FINISH_GAME_DELAY_MS = 1000;
 
 export default class SpeakitGameManager {
   constructor(userWordsMode = false, difficulty = 0, round = 1) {
-    this.userWords = userWordsMode;
+    this.userWordsMode = userWordsMode;
     this.difficulty = difficulty;
     this.round = round;
     this.wordsState = [];
@@ -114,36 +115,36 @@ export default class SpeakitGameManager {
   }
 
   async init() {
+    showPreloader();
     // TODO show load animation?
-    let wordsPromise;
+    let words;
 
     if (this.userWordsMode) {
-      wordsPromise = SpeakitWordsApi.getUserWords();
+      words = await SpeakitWordsApi.getUserWords();
     } else {
-      wordsPromise = SpeakitWordsApi.getWordsForDifficultyAndRound(
+      words = await SpeakitWordsApi.getWordsForDifficultyAndRound(
         this.difficulty,
         this.round,
       );
     }
 
-    wordsPromise
-      .then((words) => {
-        const wordsState = words.map((wordInfo) => {
-          const wordState = {
-            id: wordInfo.id,
-            guessed: false,
-            word: wordInfo.word.toLowerCase(),
-            audio: wordInfo.audio,
-            image: wordInfo.image,
-            transcription: wordInfo.transcription,
-            wordTranslate: wordInfo.wordTranslate,
-          };
+    const wordsState = words.map((wordInfo) => {
+      const wordState = {
+        id: wordInfo.id,
+        guessed: false,
+        word: wordInfo.word.toLowerCase(),
+        audio: wordInfo.audio,
+        image: wordInfo.image,
+        transcription: wordInfo.transcription,
+        wordTranslate: wordInfo.wordTranslate,
+      };
 
-          return wordState;
-        });
-        this.wordsState = wordsState;
-        this.displayWords(wordsState);
-      });
+      return wordState;
+    });
+    this.wordsState = wordsState;
+    this.displayWords(wordsState);
+
+    hidePreloader();
   }
 
   displayWords(wordsInfoArray) {
