@@ -1,0 +1,31 @@
+.preloader {
+  &__hidden {
+    display: none!important;
+  }
+
+  &__spinner {
+    position: fixed;
+    display: block;
+    margin: 0 auto;
+    top: 20vh;
+    z-index: 9999;
+    width: 100vw;
+    text-align: center;
+
+    &_img {
+      width: 40vw;
+      height: 40vw;
+    }
+  }
+
+  &__backdrop {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: 0.6;
+    z-index: 9998;
+  }
+}

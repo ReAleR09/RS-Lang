@@ -17,7 +17,10 @@ import GameAudioCallController from './js/Controllers/GameAudioCallController';
 import './js/plugins';
 import { SIDENAV } from './config';
 
+import { showPreloader, hidePreloader } from './js/Classes/Preloader';
+
 async function appInit() {
+  showPreloader();
   /**
    * On root '/', we will automatically serve indexAction of ExampleController
    * Also, we will serve on /example/* with ExampleController actions
@@ -53,6 +56,7 @@ async function appInit() {
   sideBarFloating.attach('sidenav-floatng');
 
   const authRevived = await SettingsModel.reviveAuth();
+  hidePreloader();
   if (!authRevived) {
     SettingsModel.logout();
     AppNavigator.go('authorization');
