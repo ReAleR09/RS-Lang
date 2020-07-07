@@ -103,6 +103,22 @@ export default class Statistics {
     };
   }
 
+  // difficulty is optional
+  async getUserWordsCount(difficultyGroup) {
+    const result = await this.wordsApi.getUserWordsCount(difficultyGroup);
+    return result;
+  }
+
+  async getLearningFullStatistics() {
+    if (!this.isLoaded) {
+      await this.get();
+    }
+    const statArray = Object.entries(this.statistics[WORDS_LEARNING_RESULTS_KEY])
+      .sort((a, b) => a[0] < b[0]);
+    const fullStatistics = statArray.map(([date, dayResult]) => ({ date, ...dayResult }));
+    return fullStatistics;
+  }
+
   async getLastGameResult() {
     if (!this.isLoaded) {
       await this.get();
@@ -170,6 +186,8 @@ export default class Statistics {
     this.isLoaded = true;
   }
 
+  // if byDates === true result is divided by dates [[result, result],[...],[...]]
+  // Фиг его знает зачем такая опция. Иначе просто массив результатов
   async getGameResults(byDates = false, game) {
     if (!this.isLoaded) {
       await this.get();
