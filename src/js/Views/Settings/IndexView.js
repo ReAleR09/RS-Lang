@@ -28,7 +28,11 @@ export default class IndexView extends View {
     const buttonSaveSettings = this.element.querySelector(QUERIES.BUTTON_SAVE);
     buttonSaveSettings.addEventListener('click', (event) => {
       event.preventDefault();
-      if (!this.translation.checked && !this.translationMeaning.checked && !this.wordUse.checked) {
+      if (
+        !this.showWordTranslate.checked
+        && !this.showMeaning.checked
+        && !this.showExample.checked
+      ) {
         this.warningParagraph.classList.add(QUERIES.WARNING_TEXT);
       } else {
         this.warningParagraph.classList.remove(QUERIES.WARNING_TEXT);
@@ -72,7 +76,7 @@ export default class IndexView extends View {
 
     this.initElements();
 
-    this.difficulty = this.settings.difficulty;
+    this.difficulty.value = this.settings.difficulty;
     this.newWordsPerDay.value = this.settings.newWordsPerDay;
     this.wordsPerDay.value = this.settings.wordsPerDay;
     this.showWordTranslate.checked = this.settings.showWordTranslate;
@@ -81,7 +85,7 @@ export default class IndexView extends View {
     this.showTranscription.checked = this.settings.showTranscription;
     this.showImage.checked = this.settings.showImage;
     this.showButtonAnswer.checked = this.settings.showButtonAnswer;
-    this.showDeleteButton.checked = this.settings.showDeleteButton;
+    this.showDeleteButton.checked = this.settings.showButtonDelete;
     this.showButtonComplicated.checked = this.settings.showButtonComplicated;
     this.showWordRate.checked = this.settings.showWordRate;
 
@@ -109,7 +113,7 @@ export default class IndexView extends View {
 
   updateSettings() {
     const newSettings = {
-      difficulty: +this.difficulty,
+      difficulty: +this.difficulty.value,
       newWordsPerDay: +this.newWordsPerDay.value,
       wordsPerDay: +this.wordsPerDay.value,
       showWordTranslate: this.showWordTranslate.checked,
@@ -118,20 +122,28 @@ export default class IndexView extends View {
       showTranscription: this.showTranscription.checked,
       showImage: this.showImage.checked,
       showButtonAnswer: this.showButtonAnswer.checked,
-      showButtonDelete: this.showButtonDelete.checked,
+      showButtonDelete: this.showDeleteButton.checked,
       showButtonComplicated: this.showButtonComplicated.checked,
       showWordRate: this.showWordRate.checked,
       firstIntervalMinutes: +this.firstInterval.value,
       baseIntervalDays: +this.baseInterval.value,
       baseMultiplierPercents: +this.baseMultiplier.value,
       hardMultiplierPercents: +this.hardMultiplier.value,
-      simpleMultiplierPercents: +this.simpleMultiplierPercents.value,
+      simpleMultiplierPercents: +this.simpleMultiplier.value,
       maxIntervalDays: +this.maxInterval.value,
-      annoyinglimit: +this.annoyinglimit.value,
+      annoyinglimit: +this.annoyingLimit.value,
       annoyingAction: this.annoyingAction.value,
     };
 
     this.props.model.settings = newSettings;
+    if (this.ajaxSettingsTimeout) {
+      clearTimeout(this.ajaxSettingsTimeout);
+    }
+    // protect button from spamming requests
+    this.ajaxSettingsTimeout = setTimeout(() => {
+      this.ajaxSettingsTimeout = null;
+      this.props.model.saveSettings();
+    }, 1000);
   }
 
   /**
