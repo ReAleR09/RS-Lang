@@ -11,10 +11,8 @@ import RegistrationController from './js/Controllers/RegistrationController';
 import AuthorizationController from './js/Controllers/AuthorizationController';
 import EnglishPuzzleController from './js/Controllers/englishPuzzleController';
 import SettingsController from './js/Controllers/SettingsController';
-import AudioCallController from './js/Controllers/GameAudioCallController';
 import PageAboutTeamController from './js/Controllers/PageAboutTeamController';
 import GameAudioCallController from './js/Controllers/GameAudioCallController';
-
 
 import './js/plugins';
 import { SIDENAV } from './config';
