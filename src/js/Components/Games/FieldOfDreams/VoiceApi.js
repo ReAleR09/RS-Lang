@@ -10,6 +10,7 @@ export default class VoiceApi {
     this.phraseRecognizedCallback = acceptAnswerCallback;
     this.isWorking = false;
 
+    this.results = [];
     this.volume = defaultVolume;
     this.speechSynth = window.speechSynthesis;
   }
