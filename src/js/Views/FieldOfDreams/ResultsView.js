@@ -1,11 +1,11 @@
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
-import SpeakitSoundPlayer from '../../Components/Games/Speakit/SpeakitSoundPlayer';
+// import SoundPlayer from '../../Classes/SoundPlayer';
 
-const ID_BUTTON_PLAYAGAIN = 'speakit__play-again-button';
-const ID_BUTTON_NEXT = 'speakit__next-round-button';
+const ID_BUTTON_PLAYAGAIN = 'field-of-dreams__play-again-button';
+const ID_BUTTON_NEXT = 'field-of-dreams__next-round-button';
 
-const CLASS_RESULTS_WORDCARD = 'speakit__word-card-result';
+const CLASS_RESULTS_WORDCARD = 'field-of-dreams__word-card-result';
 
 export default class ResultsView extends View {
   generateWordsCards(guessed = true) {
@@ -40,21 +40,6 @@ export default class ResultsView extends View {
     const playAgainButton = this.element.querySelector(`#${ID_BUTTON_PLAYAGAIN}`);
     playAgainButton.addEventListener('click', () => {
       AppNavigator.replace('speakit');
-    });
-
-    const soundPlayer = new SpeakitSoundPlayer();
-
-    const sounds = this.props.stats.guessed
-      .concat(this.props.stats.notGuessed);
-    soundPlayer.initWordsSounds(sounds);
-
-    this.element.addEventListener('click', (e) => {
-      if (!e.target.dataset.wordsound) {
-        return;
-      }
-
-      const wordId = e.target.dataset.wordid;
-      soundPlayer.playWordSound(wordId);
     });
 
     if (this.props.nextRound) {

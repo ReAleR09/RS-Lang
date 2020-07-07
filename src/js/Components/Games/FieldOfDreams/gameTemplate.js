@@ -10,21 +10,22 @@ const CLASSES = {
   currentAnswer: 'current-answer',
 };
 
+export const CLASS_BUTTON_DISABLED = 'disabled';
 export const CLASS_LISTENING = 'listening';
 export const CLASS_HIDE_CARD = 'card-hide';
 
 export const FIELD_OF_DREAMS_QUERIES = {
-  question: `${fieldOfDreamsComponent} .${CLASSES.question} p`,
-  alphabet: `${fieldOfDreamsComponent} .${CLASSES.alphabet}`,
+  question: `.${fieldOfDreamsComponent} .${CLASSES.question} p`,
+  alphabet: `.${fieldOfDreamsComponent} .${CLASSES.alphabet}`,
   answer: `.${fieldOfDreamsComponent} .${CLASSES.answer}`,
-  skipButton: `${fieldOfDreamsComponent} .${CLASSES.skipButton}`,
+  skipButton: `.${fieldOfDreamsComponent} .${CLASSES.skipButton}`,
 };
 
 export const LETTER_REPLACE_STRING = '#LETTER#';
 export const ALPHABET_REPLACE_STRING = '#ALPHABET#';
 
 export const APLHABET_LETTER_HTML_TEMPLATE = `
-<div class="button-letter col s2 l1">
+<div class="button-letter col s3 m2 l1">
   <a class="button-letter__link btn-floating circle tooltipped z-depth-3" data-position="bottom" data-tooltip="Вернуться к предыдущей карточке">
     ${LETTER_REPLACE_STRING}
   </a>
@@ -39,7 +40,7 @@ export const ANSWER_LETTER_HTML_TEMPLATE = `
 </div>`;
 
 export const FIELD_OF_DREAMS_GAME_HTML = `
-<section>
+<section class="${fieldOfDreamsComponent}">
   <h1>Своя Игра</h1>
   <div class="${CLASSES.question}">
     <p></p>

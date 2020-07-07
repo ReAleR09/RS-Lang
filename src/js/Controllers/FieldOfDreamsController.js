@@ -1,5 +1,5 @@
 import Controller from '../lib/Controller';
-import GameStartView from '../Views/GameStartView';
+import UniversalGameStartView from '../Views/UniversalGameStartView';
 import PlayView from '../Views/FieldOfDreams/PlayView';
 import AppNavigator from '../lib/AppNavigator';
 import ResultsView from '../Views/FieldOfDreams/ResultsView';
@@ -12,7 +12,7 @@ import FieldOfDreamsGameManager from '../Components/Games/FieldOfDreams/FieldOfD
 export default class FieldOfDreamsController extends Controller {
   constructor() {
     const viewClasses = {
-      index: GameStartView,
+      index: UniversalGameStartView,
       play: PlayView,
       results: ResultsView,
     };
