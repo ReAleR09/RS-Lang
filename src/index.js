@@ -12,6 +12,7 @@ import AuthorizationController from './js/Controllers/AuthorizationController';
 import EnglishPuzzleController from './js/Controllers/englishPuzzleController';
 import SettingsController from './js/Controllers/SettingsController';
 import AudioCallController from './js/Controllers/GameAudioCallController';
+import FieldOfDreamsController from './js/Controllers/FieldOfDreamsController';
 
 import './js/plugins';
 import { SIDENAV } from './config';
@@ -28,7 +29,8 @@ async function appInit() {
     authorization: AuthorizationController,
     savannah: SavannahController,
     settings: SettingsController,
-    // learningWords: LearningWordsController,
+    learningWords: LearningWordsController,
+    fieldOfDreams: FieldOfDreamsController,
     'game-sprint': GameSprintController,
     speakit: SpeakitController,
     'game-audio-call': AudioCallController,

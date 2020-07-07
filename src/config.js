@@ -8,6 +8,7 @@ export const GAMES = {
   AUDIOCALL: 'audioCall',
   SPRINT: 'sprint',
   PUZZLE: 'puzzle',
+  FIELDOFDREAMS: 'fieldOfDreams',
 };
 
 export const MODES = {
