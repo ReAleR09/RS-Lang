@@ -29,7 +29,7 @@ async function appInit() {
     authorization: AuthorizationController,
     savannah: SavannahController,
     settings: SettingsController,
-    // learningWords: LearningWordsController,
+    learningWords: LearningWordsController,
     'game-sprint': GameSprintController,
     speakit: SpeakitController,
     'game-audio-call': GameAudioCallController,

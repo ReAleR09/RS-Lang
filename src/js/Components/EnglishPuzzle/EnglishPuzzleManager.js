@@ -29,10 +29,11 @@ export default class EnglishPuzzleManager {
     this.isAutoPlay = true;
     this.isTranslation = true;
     this.isPlayActive = true;
-    this.isImageShow = true;
+    this.isBackgroundShow = true;
     this.imageInfo = null;
     this.answers = {};
     this.puzzleArr = [[], [], [], [], [], [], [], [], [], []];
+    this.puzzleBumperArr = [[], [], [], [], [], [], [], [], [], []];
     this.defaultImage = 'https://tlmnnk.github.io/images/rslang/birthOfVenus.jpg';
     this.sentences = [];
     this.api = new Api();
@@ -104,6 +105,7 @@ export default class EnglishPuzzleManager {
       this.audioSwitcherHandler(e);
       this.autoPlayBtnClickHandler(e);
       this.resultAudioHandler(e);
+      this.showPuzzleBackgroundHandler(e);
     });
   }
 
@@ -121,6 +123,39 @@ export default class EnglishPuzzleManager {
     if (e.target.classList.contains('engPuz__tooltips-audioSwitcher')) {
       this.view.togglePlayBtn();
       this.view.toggleGreyBtnBackground(e.target.parentNode);
+    }
+  }
+
+  showPuzzleBackgroundHandler(e) {
+    if (e.target.classList.contains('engPuz__tooltips-picture')) {
+      this.applyBackgroundToPuzzleLine();
+    }
+  }
+
+  async applyBackgroundToPuzzleLine() {
+    const canvasLineAll = this.view.element.querySelectorAll(`.canvas-row-${this.puzzleLineIndex + 1}`);
+    if (this.isBackgroundShow) {
+      canvasLineAll.forEach(async (canvas) => {
+        const data = await canvas.dataset.item;
+        const parent = await canvas.parentNode;
+        const toReplace = this.puzzleBumperArr[this.puzzleLineIndex].filter((canvasTo) => canvasTo.dataset.item === data);
+        console.log(toReplace[0]);
+        canvas.remove();
+        await parent.appendChild(toReplace[0]);
+        // canvas.parentNode.append()
+      });
+      this.isBackgroundShow = false;
+    } else {
+      canvasLineAll.forEach(async (canvas) => {
+        const data = await canvas.dataset.item;
+        const toReplace = this.puzzleArr[this.puzzleLineIndex].filter((canvasTo) => canvasTo.dataset.item === data);
+        console.log(toReplace[0]);
+        const parent = await canvas.parentNode;
+        canvas.remove();
+        await parent.appendChild(toReplace[0]);
+        // canvas.parentNode.append()
+      });
+      this.isBackgroundShow = true;
     }
   }
 
@@ -163,6 +198,7 @@ export default class EnglishPuzzleManager {
       const dropContainer = document.querySelector(`.engPuz__drop-section--line.row-${this.puzzleLineIndex}`);
 
       this.updateCurrentStat(false);
+      this.view.toggleShowBackgroundBtnNoPointer();
       this.isUserWordsMode ? this.statistics.updateWordStatistics(this.words[this.puzzleLineIndex].id, false) : null;
       this.view.clearContainer(dropContainer);
       this.appendCorrectLineToDropOnIdkPress();
@@ -259,6 +295,8 @@ export default class EnglishPuzzleManager {
           this.puzzleLineRender(this.puzzleLineIndex);
           return;
         }
+        this.view.element.querySelector('a.engPuz__tooltips-picture').classList.contains('disabled') ? this.view.toggleShowBackgroundBtnNoPointer()
+          : null;
         this.view.removeCanvasHighlight(this.puzzleLineIndex);
         this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`));
         this.puzzleLineIndex += 1;
@@ -291,8 +329,11 @@ export default class EnglishPuzzleManager {
 
         if (this.checkLineAnswers()) {
           this.isUserWordsMode ? this.statistics.updateWordStatistics(this.words[this.puzzleLineIndex].id, true) : null;
+
           this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`));
           this.view.renameCheckButton();
+          !this.isBackgroundShow ? this.applyBackgroundToPuzzleLine() : null;
+          this.view.addCanvasHighlight(this.puzzleLineIndex);
           this.view.removePuzzleLinePointerEvents(this.puzzleLineIndex);
           // update statisticks with correct answer
         }
@@ -305,6 +346,9 @@ export default class EnglishPuzzleManager {
   pushNewLinePuzzleToPuzzleArr() {
     [...this.puzzleCompelete[this.puzzleLineIndex].children].forEach((child) => {
       this.puzzleArr[this.puzzleLineIndex].push(child);
+    });
+    [...this.puzzleBumper[this.puzzleLineIndex].children].forEach((child) => {
+      this.puzzleBumperArr[this.puzzleLineIndex].push(child);
     });
   }
 
@@ -327,7 +371,13 @@ export default class EnglishPuzzleManager {
     const dragZone = document.querySelector(`.${engPuzConst.content.DRAGSECTION}`);
     this.pushNewLinePuzzleToPuzzleArr();
 
-    const toShuffle = Array.from(this.puzzleCompelete[this.puzzleLineIndex].children);
+    let toShuffle;
+    if (this.isBackgroundShow) {
+      toShuffle = Array.from(this.puzzleCompelete[this.puzzleLineIndex].children);
+    } else {
+      toShuffle = Array.from(this.puzzleBumper[this.puzzleLineIndex].children);
+    }
+
     const lineShuffled = Utils.arrayShuffle(toShuffle);
 
     const div = document.createElement('div');
@@ -345,7 +395,10 @@ export default class EnglishPuzzleManager {
 
   async getPuzzleElements() {
     // insert preloader
-    this.puzzleCompelete = await this.view.getPuzzleElements(this.imgSrc, this.sentences);
+    const puzzleData = await this.view.getPuzzleElements(this.imgSrc, this.sentences);
+    this.puzzleCompelete = puzzleData.originalImage;
+    this.puzzleBumper = puzzleData.bumperImage;
+    console.log(this.puzzleCompelete);
     // delete preloader
   }
 
