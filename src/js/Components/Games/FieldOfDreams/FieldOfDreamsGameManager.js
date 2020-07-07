@@ -1,11 +1,11 @@
 import FieldOfDreamsView from './FieldOfDreamsView';
 import AppNavigator from '../../../lib/AppNavigator';
 import LocalStorageAdapter from '../../../Utils/LocalStorageAdapter';
-import { roundSize } from './constants';
 import Statistics from '../../../Classes/Statistics';
 import { GAMES, MODES } from '../../../../config';
 import FieldOfDreamsWordsApi from './FieldOfDreamsWordsApi';
 import VoiceApi from './VoiceApi';
+import { hintsCount } from './constants';
 
 export const SPEAKIT_GAME_STATS = 'SPEAKIT_GAME_STATS';
 
@@ -14,13 +14,18 @@ const FINISH_GAME_DELAY_MS = 1000;
 export default class FieldOfDreamsGameManager {
   constructor(userWordsMode = false, difficulty = 0, round = 1) {
     this.userWords = userWordsMode;
-    this.api = new FieldOfDreamsWordsApi();
-    this.voiceControl = new VoiceApi(this.acceptAnswer());
+
+    this.voiceControl = new VoiceApi(this.acceptAnswer.bind(this));
     this.difficulty = difficulty;
     this.round = round;
     this.wordsState = [];
     this.results = [];
-    this.view = new FieldOfDreamsView(this.goNextWord.bind(this));
+    this.hints = 0;
+    this.view = new FieldOfDreamsView(
+      this.goNextWord.bind(this),
+      this.useHint.bind(this),
+      this.voiceControl.startRecognition.bind(this.voiceControl),
+    );
     const mode = userWordsMode ? MODES.REPITITION : MODES.GAME;
     this.statistics = new Statistics(GAMES.SPEAKIT, mode, true);
   }
@@ -41,7 +46,7 @@ export default class FieldOfDreamsGameManager {
     // putting stats to storage to use them on /speakit/results page
     LocalStorageAdapter.set(SPEAKIT_GAME_STATS, stats);
     // and navigatin to results, with slight delay in case it was triggeren on last word
-    setTimeout(() => AppNavigator.replace('speakit', 'results'), withDelay ? FINISH_GAME_DELAY_MS : 0);
+    setTimeout(() => AppNavigator.replace('fieldOfDreams', 'results'), withDelay ? FINISH_GAME_DELAY_MS : 0);
   }
 
   calculateStats() {
@@ -85,35 +90,49 @@ export default class FieldOfDreamsGameManager {
           return wordState;
         });
         this.wordsState = wordsState;
-        this.displayWords(wordsState);
+        this.goNextWord();
       });
   }
 
   // SpeechRecognition might give several options
   acceptAnswer(phrases) {
-    const findResult = phrases.findIndex((phrase) => {
-      const wordCandidate = phrase.toLowerCase().trim();
-      if (phrase.split(' ').length > 1) return false;
-      return (this.currentWord.word === wordCandidate);
-    });
-    const result = (findResult !== -1);
+    let result = false;
+    if (phrases instanceof Array) {
+      const findResult = phrases.findIndex((phrase) => {
+        const wordCandidate = phrase.toLowerCase().trim();
+        if (phrase.split(' ').length > 1) return false;
+        return (this.currentWord.word === wordCandidate);
+      });
+      result = (findResult !== -1);
 
-    this.currentWord.guessed = result;
+      this.currentWord.guessed = result;
 
-    this.results.push(this.currentWord);
+      this.results.push(this.currentWord);
 
-    this.view.openAnswer(result);
+      this.view.openAnswer(result);
 
-    this.statistics.updateWordStatistics(this.currentWord.id, result);
+      this.statistics.updateWordStatistics(this.currentWord.id, result);
+    }
   }
 
   goNextWord() {
+    this.hints = 0;
     this.currentWord = this.wordsState.pop();
     const isLast = !(this.wordsState.length);
     this.view.drawWordToDOM(this.currentWord, isLast);
   }
 
+  useHint(letter) {
+    const result = (this.hints < hintsCount);
+    if (result && letter) {
+      this.hints += 1;
+      console.log(letter);
+      // TODO открытие букв
+    }
+    return result;
+  }
+
   getInitialLayout() {
-    return this.view.getGameLayout(roundSize);
+    return this.view.getGameLayout();
   }
 }

@@ -1,4 +1,4 @@
-import './style.scss';
+// import './style.scss';
 import {
   FIELD_OF_DREAMS_QUERIES,
   APLHABET_LETTER_HTML_TEMPLATE,
@@ -7,6 +7,7 @@ import {
   ALPHABET_REPLACE_STRING,
   ANSWER_LETTER_HTML_TEMPLATE,
   CLASS_HIDE_CARD,
+  CLASS_BUTTON_DISABLED,
 } from './gameTemplate';
 import SoundPlayer from '../../../Classes/SoundPlayer';
 
@@ -21,16 +22,19 @@ const soundEffects = {
 };
 
 export default class FieldOfDreamsView {
-  constructor(getNextWordCallback) {
+  constructor(getNextWordCallback, useHintCallback, startListeningCallback) {
+    this.startListening = startListeningCallback;
     this.goNext = getNextWordCallback;
+    this.useHint = useHintCallback;
     this.soundPlayer = new SoundPlayer(this.onSoundEffectsEnd.bind(this));
     this.soundEffect = null;
-    this.answer = this.element.querySelector(FIELD_OF_DREAMS_QUERIES.answer);
-    this.question = this.element.querySelector(FIELD_OF_DREAMS_QUERIES.question);
   }
 
   attach(element) {
     this.element = element;
+    this.selectedLetters = [];
+    this.answer = this.element.querySelector(FIELD_OF_DREAMS_QUERIES.answer);
+    this.question = this.element.querySelector(FIELD_OF_DREAMS_QUERIES.question);
     this.initButtons();
   }
 
@@ -55,6 +59,18 @@ export default class FieldOfDreamsView {
 
   initButtons() {
     this.skipButton = this.element.querySelector(FIELD_OF_DREAMS_QUERIES.skipButton);
+    this.alphabet = this.element.querySelector(FIELD_OF_DREAMS_QUERIES.alphabet);
+    this.alphabet.addEventListener('click', (e) => {
+      const { target } = e;
+      if (!this.useHint(target.innerText)) {
+        return;
+      }
+      target.classList.add(CLASS_BUTTON_DISABLED);
+      this.selectedLetters.push(target);
+      if (!this.useHint()) {
+        this.startListening();
+      }
+    });
   }
 
   static createAlphabetButtons() {
@@ -70,7 +86,7 @@ export default class FieldOfDreamsView {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getInitialLayout() {
+  getGameLayout() {
     const alphabetHtml = FieldOfDreamsView.createAlphabetButtons();
     const html = FIELD_OF_DREAMS_GAME_HTML.replace(ALPHABET_REPLACE_STRING, alphabetHtml);
     return html;
@@ -81,10 +97,10 @@ export default class FieldOfDreamsView {
   drawAnswer(word) {
     const wordElement = this.element.querySelector(FIELD_OF_DREAMS_QUERIES.answer);
 
-    const wordArray = word.word.toUpperCase.split('');
+    const wordArray = word.word.toUpperCase().split('');
     const answerHtml = wordArray.reduce((html, letter) => {
       const letterHtml = ANSWER_LETTER_HTML_TEMPLATE.replace(LETTER_REPLACE_STRING, letter);
-      return letterHtml;
+      return html + letterHtml;
     }, '');
 
     wordElement.innerHTML = answerHtml;
@@ -99,7 +115,8 @@ export default class FieldOfDreamsView {
   }
 
   drawWordToDOM(word, lastWord = false) {
-    this.question.innerText = word.textMeaningTranslate;
+    this.selectedLetters.forEach((letter) => letter.classList.remove(CLASS_BUTTON_DISABLED));
+    this.question.innerText = word.MeaningTranslate;
 
     this.hideCard();
     this.drawAnswer(word);

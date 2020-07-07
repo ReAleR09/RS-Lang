@@ -10,3 +10,5 @@ export const title = 'Field of Dreams: mini-game';
 export const description = 'In this game You have to pronounce words using a microphone!';
 
 export const roundSize = 10;
+
+export const hintsCount = 3;
