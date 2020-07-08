@@ -5,7 +5,6 @@ import {
   MAX_RANDOMPAGE_WORDS_INDEX,
   MAX_REQUEST_COUNT,
   MAX_PAGE_INDEX,
-  GROUPS,
 } from './constants';
 import Utils from '../../Utils/Utils';
 
@@ -131,11 +130,8 @@ export default class WordsApi {
       'userWord.optional.nextDate': { $lt: dateNow },
     });
 
-    const requestArray = GROUPS.map((group) => this.getAggregatedWords(undefined, group, filter));
+    let repeatedWords = await this.getAggregatedWords(undefined, undefined, filter);
 
-    let repeatedWords = await Promise.all(requestArray);
-
-    repeatedWords = repeatedWords.flat();
     repeatedWords = Utils.arrayShuffle(repeatedWords);
     if (count) {
       repeatedWords = repeatedWords.slice(0, count);
