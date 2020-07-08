@@ -4,10 +4,13 @@ import PlayView from '../Views/Savannah/PlayView';
 import ResultsView from '../Views/Savannah/ResultsView';
 import SavannahGameManager from '../Components/Games/Savannah/SavannahGameManager';
 import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
-import { difficulties, title, description } from '../Components/Games/Savannah/const';
+import {
+  difficulties, title, description, roundSize,
+} from '../Components/Games/Savannah/const';
 import SettingsModel from '../Classes/UserSettings';
 import { GAMES } from '../../config';
 import AppNavigator from '../lib/AppNavigator';
+import WordsApi from '../Classes/Api/WordsApi';
 
 export default class SavannahController extends Controller {
   constructor() {
@@ -19,15 +22,16 @@ export default class SavannahController extends Controller {
     super(viewClasses);
   }
 
-  indexAction() {
+  async indexAction() {
     const game = {
       title,
       description,
       difficulties,
     };
 
-    // TODO вычислить может ли пользовать сыграть с пользовательскими словами
-    game.userWordsPlay = true;
+    const wordsApi = new WordsApi();
+    const countNeedWords = await wordsApi.getRepitionWordsCount(false);
+    game.userWordsPlay = (countNeedWords >= 10);
 
     const { difficulty, round } = SettingsModel.loadGame(GAMES.SAVANNAH);
     game.currentDifficulty = difficulty;
@@ -48,7 +52,7 @@ export default class SavannahController extends Controller {
       difficulty = Number.parseInt(difficulty, 10);
 
       let round = params.get('round');
-      round = Number.parseInt(round, 10);
+      round = Number.parseInt(round, roundSize);
 
       gameManager = new SavannahGameManager(false, difficulty, round);
     }
