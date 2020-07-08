@@ -1,5 +1,5 @@
-const inProgressSprintGame = 'in-progress';
-const finishedSprintGame = 'finished';
-const eventNameSprintGame = 'status';
+const IN_PROGRESS_SPRINT_GAME = 'in-progress';
+const FINISHED_SPRINT_GAME = 'finished';
+const EVENT_NAME_SPRINT_GAME = 'status';
 
-export { inProgressSprintGame, finishedSprintGame, eventNameSprintGame };
+export { IN_PROGRESS_SPRINT_GAME, FINISHED_SPRINT_GAME, EVENT_NAME_SPRINT_GAME };

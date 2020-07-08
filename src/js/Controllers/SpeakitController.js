@@ -8,6 +8,7 @@ import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
 import { difficulties, title, description } from '../Components/Games/Speakit/const';
 import SettingsModel from '../Classes/UserSettings';
 import { GAMES } from '../../config';
+import WordsApi from '../Classes/Api/WordsApi';
 
 export default class SpeakitController extends Controller {
   constructor() {
@@ -19,15 +20,16 @@ export default class SpeakitController extends Controller {
     super(viewClasses);
   }
 
-  indexAction() {
+  async indexAction() {
     const game = {
       title,
       description,
       difficulties,
     };
 
-    // TODO вычислить может ли пользовать сыграть с пользовательскими словами
-    game.userWordsPlay = true;
+    const wordsApi = new WordsApi();
+    const repWordsCount = await wordsApi.getRepitionWordsCount(false);
+    game.userWordsPlay = (repWordsCount >= 10);
 
     // load saved difficulty and round
     const { difficulty, round } = SettingsModel.loadGame(GAMES.SPEAKIT);
