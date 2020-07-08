@@ -8,6 +8,7 @@ export default class PlayView extends View {
 
   onUnmount() {
     // removing reference to the game instance (just in case)
+    this.props.gameManager.detach();
     this.props.gameManager = null;
   }
 

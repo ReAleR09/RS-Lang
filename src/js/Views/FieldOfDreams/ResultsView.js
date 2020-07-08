@@ -12,7 +12,6 @@ export default class ResultsView extends View {
     const words = guessed ? this.props.stats.guessed : this.props.stats.notGuessed;
     const wordsHtml = words.reduce((html, wordInfo) => {
       const wordHTML = `<div class="${CLASS_RESULTS_WORDCARD} col s4 card">
-        <i class="${CLASS_RESULTS_WORDCARD}_sound-icon material-icons prefix" data-wordid="${wordInfo.id}" data-wordsound="1">micro</i>
         <div class="">${wordInfo.word}</div>
         <div class="">${wordInfo.transcription}</div>
         <div class="">${wordInfo.wordTranslate}</div>
@@ -39,7 +38,7 @@ export default class ResultsView extends View {
   onMount() {
     const playAgainButton = this.element.querySelector(`#${ID_BUTTON_PLAYAGAIN}`);
     playAgainButton.addEventListener('click', () => {
-      AppNavigator.replace('speakit');
+      AppNavigator.replace('fieldOfDreams');
     });
 
     if (this.props.nextRound) {
@@ -47,7 +46,7 @@ export default class ResultsView extends View {
       const difficulty = this.props.nextDifficulty;
       const round = this.props.nextRound;
       nextButton.addEventListener('click', () => {
-        AppNavigator.go('speakit', 'play', { difficulty, round });
+        AppNavigator.go('fieldOfDreams', 'play', { difficulty, round });
       });
     }
   }
