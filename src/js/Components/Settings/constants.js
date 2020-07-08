@@ -63,22 +63,22 @@ export const SETTINGS_QUERIES = {
 
 const MAIN_SETTINGS = `
 <p>
-<label class="range-field">
-  <input class="${CLASSES.DIFFICULTY}" type="range" min="0" max="5" value="0">
-  <span>Уровень сложности изучаемых слов</span>
-</label>
+  <label class="range-field">
+    <input class="${CLASSES.DIFFICULTY}" type="range" min="0" max="5" value="0">
+    <span>Уровень сложности изучаемых слов</span>
+  </label>
 </p>
 <p>
-<label>
-  <input class="${CLASSES.NEW_CARDS}" type="range" min="5" max="50" step="5" value="10">
-  <span>Новых карточек в день</span>
-</label>
+  <label class="range-field">
+    <input class="${CLASSES.NEW_CARDS}" type="range" min="5" max="50" step="5" value="10">
+    <span>Новых карточек в день</span>
+  </label>
 </p>
 <p>
-<label>
-  <input class="${CLASSES.CARDS_PER_DAY}" type="range" min="10" max="200" step="10" value="40">
-  <span>Количество карточек в день</span>
-</label>
+  <label class="range-field">
+    <input class="${CLASSES.CARDS_PER_DAY}" type="range" min="10" max="200" step="10" value="40">
+    <span>Количество карточек в день</span>
+  </label>
 </p>
 <div class="divider"></div>
 <p class="${CLASSES.WARNING_PARAGRAPH}">Выберите хотя бы один пункт</p>

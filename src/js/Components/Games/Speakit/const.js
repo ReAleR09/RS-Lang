@@ -4,7 +4,7 @@ export const difficulties = [
   60, 60, 60,
 ];
 
-export const title = 'SpeakIt: mini-game';
-export const description = 'In this game You have to pronounce words using a microphone!';
+export const title = 'SpeakIt: мини-игра';
+export const description = 'В этой игре нужно правильно произносить слова на английском языке';
 
 export const roundSize = 10;
