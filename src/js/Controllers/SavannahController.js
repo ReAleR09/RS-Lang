@@ -4,6 +4,10 @@ import PlayView from '../Views/Savannah/PlayView';
 import ResultsView from '../Views/Savannah/ResultsView';
 import SavannahGameManager from '../Components/Games/Savannah/SavannahGameManager';
 import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
+import { difficulties, title, description } from '../Components/Games/Savannah/const';
+import SettingsModel from '../Classes/UserSettings';
+import { GAMES } from '../../config';
+import AppNavigator from '../lib/AppNavigator';
 
 export default class SavannahController extends Controller {
   constructor() {
@@ -16,11 +20,45 @@ export default class SavannahController extends Controller {
   }
 
   indexAction() {
-    this.props.data = 'Savannah';
+    const game = {
+      title,
+      description,
+      difficulties,
+    };
+
+    // TODO вычислить может ли пользовать сыграть с пользовательскими словами
+    game.userWordsPlay = true;
+
+    const { difficulty, round } = SettingsModel.loadGame(GAMES.SAVANNAH);
+    game.currentDifficulty = difficulty;
+    game.currentRound = round;
+    this.props.game = game;
   }
 
   playAction() {
-    const gameManager = new SavannahGameManager();
+    const params = AppNavigator.getRequestParams();
+
+    const userWordsMode = params.get('userWords');
+    let gameManager;
+
+    if (userWordsMode) {
+      gameManager = new SavannahGameManager(true);
+    } else {
+      let difficulty = params.get('difficulty');
+      difficulty = Number.parseInt(difficulty, 10);
+
+      let round = params.get('round');
+      round = Number.parseInt(round, 10);
+      // navigate to main game page if user somehow entered the page with invalid params
+      if (
+        difficulty < 0 || difficulty > 5
+        || round < 1 || round > difficulties[difficulty]
+      ) {
+        AppNavigator.go('speakit');
+        this.cancelAction();
+      }
+      gameManager = new SavannahGameManager(false, difficulty, round);
+    }
     this.props.gameManager = gameManager;
   }
 

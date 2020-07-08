@@ -1,7 +1,7 @@
 import AppNavigator from '../../../lib/AppNavigator';
 
-const GUESSED_SOUND = '/audio/savannah-right.mp3';
-const NOT_GUESSED_SOUND = '/audio/savannah-wrong.mp3';
+const GUESSED_SOUND = '/assets/audio/savannah-right.mp3';
+const NOT_GUESSED_SOUND = '/assets/audio/savannah-wrong.mp3';
 
 const CLASS_LIVES = 'savannah__lives';
 const CLASS_LIFE = 'savannah-life';
