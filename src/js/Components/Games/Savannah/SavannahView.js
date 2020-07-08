@@ -14,8 +14,9 @@ const START_LEFT_COORDINATE = '45%';
 const INTERVAL = 40;
 
 export default class SavannahView {
-  constructor(changeState) {
+  constructor(changeState, sendStatisticToServer) {
     this.changeState = changeState;
+    this.sendStatisticToServer = sendStatisticToServer;
     this.play = this.play.bind(this);
     this.mistakes = 0;
     this.keyHandler = this.keyHandler.bind(this);
@@ -56,6 +57,7 @@ export default class SavannahView {
     } else {
       clearInterval(this.interval);
       window.removeEventListener('keyup', this.keyHandler);
+      this.sendStatisticToServer();
       AppNavigator.replace('savannah', 'results');
     }
   }

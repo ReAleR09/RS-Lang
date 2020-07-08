@@ -14,10 +14,11 @@ export default class SavannahGameManager {
     this.wordsState = [];
     this.view = new SavannahView(
       this.changeState.bind(this),
+      this.sendStatisticToServer.bind(this),
     );
 
     const mode = userWordsMode ? MODES.REPITITION : MODES.GAME;
-    this.statistics = new Statistics(GAMES.SPEAKIT, mode, true);
+    this.statistics = new Statistics(GAMES.SAVANNAH, mode, true);
   }
 
   attach(element) {
@@ -109,7 +110,26 @@ export default class SavannahGameManager {
     LocalStorageAdapter.set('savannah-current-words-state', this.wordsState);
   }
 
+  sendStatisticToServer() {
+    this.wordsState.forEach((wordState) => {
+      this.statistics.updateWordStatistics(wordState.id, wordState.guessed);
+    });
+    this.statistics.sendGameResults();
+  }
+
   getInitialLayout() {
     return this.view.getGameLayout(this.difficulty);
+  }
+
+  calculateStats() {
+    const guessed = this.wordsState.filter((wordState) => wordState.guessed);
+    const notGuessed = this.wordsState.filter((wordState) => !wordState.guessed);
+    return {
+      guessed,
+      notGuessed,
+      difficulty: this.difficulty,
+      round: this.round,
+      isUserWordsMode: this.userWordsMode,
+    };
   }
 }
