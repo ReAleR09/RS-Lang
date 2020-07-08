@@ -132,11 +132,11 @@ export default class EnglisPuzzleView {
     <div class="flex-between EP-start__buttons">
     <div class="engPuz__settings flex-center">
     </div>
-    <div class="engPuz__tooltips flex-between">
-      <a class="engPuz__tooltips-autoPlay green btn-floating waves-effect"> <i class="engPuz__tooltips-autoPlay medium material-icons">volume_up</i></a>
-      <a class="engPuz__tooltips-translation red btn-floating circle waves-effect"> <i class="engPuz__tooltips-translation medium material-icons">translate</i></a>
-      <a class="engPuz__tooltips-audioSwitcher orange btn-floating circle waves-effect"> <i class="engPuz__tooltips-audioSwitcher medium material-icons">music_video</i></a>
-      <a class="engPuz__tooltips-picture btn-floating blue circle waves-effect"> <i class="engPuz__tooltips-picture medium material-icons">photo</i></a>
+    <div class="engPuz__tooltips flex-between margin-bottom">
+      <a class="engPuz__tooltips-autoPlay mar-left green btn-floating waves-effect"> <i class="engPuz__tooltips-autoPlay medium material-icons">volume_up</i></a>
+      <a class="engPuz__tooltips-translation mar-left red btn-floating circle waves-effect"> <i class="engPuz__tooltips-translation medium material-icons">translate</i></a>
+      <a class="engPuz__tooltips-audioSwitcher mar-left orange btn-floating circle waves-effect"> <i class="engPuz__tooltips-audioSwitcher medium material-icons">music_video</i></a>
+      <a class="engPuz__tooltips-picture mar-left btn-floating blue circle waves-effect"> <i class="engPuz__tooltips-picture medium material-icons">photo</i></a>
     </div>
     </div>
     <div class="flex-center">
@@ -146,7 +146,7 @@ export default class EnglisPuzzleView {
     <blockquote class="engPuz__translation center flex-center"></blockquote>
     </div>
     </div>
-    <div id="engPuz__drop-section" class="engPuz__drop-section card-panel">
+    <div id="engPuz__drop-section" class="engPuz__drop-section card-panel min-padding">
       <div class="engPuz__drop-section--line row-0 flex-center"></div>
       <div class="engPuz__drop-section--line row-1 flex-center"></div>
       <div class="engPuz__drop-section--line row-2 flex-center"></div>
