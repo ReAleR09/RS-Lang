@@ -172,13 +172,14 @@ export default class EnglishPuzzleManager {
       LocalStorageAdapter.set(engPuzConst.localstorage.SHOW_PUZZLEBACK_BTN, !this.isBackgroundShow);
       this.view.toggleGreyBtnBackground(this.view.element.querySelector(`a.${engPuzConst.switchers.PICTURE}`));
       this.applyBackgroundToPuzzleLine();
+      this.isBackgroundShow = !this.isBackgroundShow;
     }
   }
 
   async applyBackgroundToPuzzleLine() {
     const canvasLineAll = this.view.element.querySelectorAll(`.canvas-row-${this.puzzleLineIndex + 1}`);
     console.log('isBackgroundShow');
-    console.log(this.isBackgroundShow);
+
     if (this.isBackgroundShow) {
       canvasLineAll.forEach(async (canvas) => {
         const data = await canvas.dataset.item;
@@ -188,7 +189,6 @@ export default class EnglishPuzzleManager {
         await parent.appendChild(toReplace[0]);
         // canvas.parentNode.append()
       });
-      this.isBackgroundShow = !this.isBackgroundShow;
     } else {
       canvasLineAll.forEach(async (canvas) => {
         const data = await canvas.dataset.item;
@@ -198,8 +198,8 @@ export default class EnglishPuzzleManager {
         await parent.appendChild(toReplace[0]);
         // canvas.parentNode.append()
       });
-      this.isBackgroundShow = !this.isBackgroundShow;
     }
+    console.log(this.isBackgroundShow);
   }
 
   resultAudioHandler(e) {
@@ -373,10 +373,10 @@ export default class EnglishPuzzleManager {
 
         if (this.checkLineAnswers()) {
           this.isUserWordsMode ? this.statistics.updateWordStatistics(this.words[this.puzzleLineIndex].id, true) : null;
-
+          this.view.toggleShowBackgroundBtnNoPointer();
           this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`));
           this.view.renameCheckButton();
-          !this.isBackgroundShow ? this.applyBackgroundToPuzzleLine() : null;
+          !this.isBackgroundShow ? await this.applyBackgroundToPuzzleLine() : null;
           this.view.addCanvasHighlight(this.puzzleLineIndex);
           this.view.removePuzzleLinePointerEvents(this.puzzleLineIndex);
           // update statisticks with correct answer

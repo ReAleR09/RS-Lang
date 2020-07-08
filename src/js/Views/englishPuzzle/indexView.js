@@ -108,7 +108,7 @@ export default class IndexView extends View {
       </div>
       <div class="flex-evenly">
           <a id="${ARCADE_BUTTON}" class="#fce4ec pink lighten-3 waves-effect waves-light btn flex-center"><i class="material-icons left">description</i>Arcade mode</a>
-          <a id="${TRAIN_WORDS_BUTTON}" class="#fce4ec disabled mar-left pink lighten-3 waves-effect waves-light btn flex-center"><i class="material-icons left">description</i>Train my words</a>
+          <a id="${TRAIN_WORDS_BUTTON}" class="#fce4ec mar-left pink lighten-3 waves-effect waves-light btn flex-center"><i class="material-icons left">description</i>Train my words</a>
       </div>
       </div>
     </div>
