@@ -21,7 +21,9 @@ export default class LearningWordsModel {
   constructor(mode = MODES.REPITITION) {
     this.statistics = new Statistics(GAMES.LEARNING, mode);
     this.dictionary = new Dictionary();
-    this.settings = SettingsModel;
+    this.settingsObject = SettingsModel;
+    this.settings = this.settingsObject.settings;
+    this.dayNorms = this.settingsObject.wordLimitsPerDay;
     this.difficulty = this.settings.difficulty;
 
     this.view = new LearningWordsView(this);
@@ -44,11 +46,12 @@ export default class LearningWordsModel {
 
   async attach(element) {
     await this.statistics.get();
-    await this.settings.loadSettings();
+
     const limits = await this.statistics.getLimits();
     this.cards.init(
       this.difficulty,
       this.settings,
+      this.dayNorms,
       limits,
       this.mode,
     );
@@ -67,7 +70,7 @@ export default class LearningWordsModel {
       this.changeDifficulty(this.game.level);
     }
 
-    this.view.init(this.settings.settings);
+    this.view.init(this.settings);
 
     await this.cards.fillCards();
     if (this.cards.isCardReady) {
@@ -118,7 +121,7 @@ export default class LearningWordsModel {
     if (this.mode === MODES.GAME) {
       this.game.inputResult(result);
       if (this.game.isEnded) {
-        this.settings.setDifficulty(this.game.level);
+        this.settingsObject.setDifficulty(this.game.level);
         this.showResult();
       } else {
         if (this.game.level !== this.difficulty) {

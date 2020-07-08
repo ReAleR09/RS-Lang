@@ -14,6 +14,7 @@ import {
   CLASS_SUCCESS,
   HTML_COMPONENT,
   CLASS_VISIBLE,
+  CLASS_CARD_LOCKED,
 } from './IndexTemplate';
 import { DIFFICULTIES, DICT_CATEGORIES } from '../../Classes/Api/constants';
 
@@ -250,17 +251,20 @@ export default class LearningWordsView {
 
     this.element.classList.add(CLASS_VISIBLE);
     this.updateSettings();
+    this.wordInput.focus();
   }
 
   lockCard() {
     this.isLocked = true;
     this.wordInput.setAttribute(lockAttribute, '');
+    this.element.classList.add(CLASS_CARD_LOCKED);
     this.updateSettings();
   }
 
   unlockCard() {
     this.isLocked = false;
     this.wordInput.removeAttribute(lockAttribute);
+    this.element.classList.remove(CLASS_CARD_LOCKED);
     this.updateSettings();
   }
 

@@ -1,5 +1,7 @@
 const githubAccount = 'yafimchik';
 
+export const WORD_REPLACEMENT = '<span>...</span>';
+
 export const chunkCount = 10;
 export const difficultyMax = 5;
 
