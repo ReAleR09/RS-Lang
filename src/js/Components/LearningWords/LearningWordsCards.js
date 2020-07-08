@@ -25,12 +25,15 @@ export default class LearnindWordsCards {
     this.wordsApi = new WordsApi();
   }
 
-  init(difficulty, limits, statistics, mode) {
+  init(difficulty, settings, statistics, mode) {
+    if (settings) {
+      this.settings = settings;
+      if (this.settings.wordLimitsPerDay) {
+        this.limits = this.settings.wordLimitsPerDay;
+      }
+    }
     if (difficulty) {
       this.difficulty = difficulty;
-    }
-    if (limits) {
-      this.limits = limits;
     }
     if (statistics) {
       this.counts = statistics;
@@ -179,6 +182,11 @@ export default class LearnindWordsCards {
 
       const firstIndexOfWord = word.textExample.indexOf(wordStartTag);
       const lastIndexOfWord = word.textExample.indexOf(wordEndTag) + wordEndTag.length;
+      if (this.settings.showExample) {
+        const wordStart = firstIndexOfWord + wordStartTag.length;
+        const wordEnd = word.textExample.indexOf(wordEndTag);
+        newWord.word = word.textExample.slice(wordStart, wordEnd).trim();
+      }
       newWord.exampleStart = word.textExample.slice(0, firstIndexOfWord);
       newWord.exampleEnd = word.textExample.slice(lastIndexOfWord);
 

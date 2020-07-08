@@ -19,6 +19,10 @@ export const WIDTH_ADDITION = 1;
 
 export const wordStartTag = '<b>';
 export const wordEndTag = '</b>';
+
+export const MeaningWordStartTag = '<i>';
+export const MeaningWordEndTag = '</i>';
+
 export const lockAttribute = 'readonly';
 export const styleAttribute = 'style';
 

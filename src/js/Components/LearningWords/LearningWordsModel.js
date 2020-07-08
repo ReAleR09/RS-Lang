@@ -23,7 +23,7 @@ export default class LearningWordsModel {
     this.dictionary = new Dictionary();
     this.settings = SettingsModel;
     this.difficulty = this.settings.difficulty;
-    this.wordsState = [];
+
     this.view = new LearningWordsView(this);
     this.player = new LearningWordsSoundPlayer(this);
 
@@ -48,7 +48,7 @@ export default class LearningWordsModel {
     const limits = await this.statistics.getLimits();
     this.cards.init(
       this.difficulty,
-      this.settings.wordLimitsPerDay,
+      this.settings,
       limits,
       this.mode,
     );
