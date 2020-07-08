@@ -4,6 +4,7 @@ const languages = {
 };
 
 const defaultVolume = 0.5;
+const voiceIndex = 18;
 
 export default class VoiceApi {
   constructor(acceptAnswerCallback) {
@@ -23,6 +24,12 @@ export default class VoiceApi {
     this.volume = value;
   }
 
+  stopSpeaking() {
+    if (this.speechSynth.speaking) {
+      this.speechSynth.cancel();
+    }
+  }
+
   speak(text) {
     if (this.speechSynth.speaking) {
       return;
@@ -32,14 +39,15 @@ export default class VoiceApi {
     speechUtterance.onerror = (error) => {
       this.onError(error);
     };
+    const voices = this.speechSynth.getVoices();
     speechUtterance.volume = this.volume;
     speechUtterance.lang = languages.ru;
+    speechUtterance.voice = voices[voiceIndex];
     this.speechSynth.speak(speechUtterance);
   }
 
   // eslint-disable-next-line class-methods-use-this
-  onError(error) {
-    console.log(error);
+  onError() {
   }
 
   startRecognition() {

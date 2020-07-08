@@ -6,8 +6,9 @@ import { GAMES, MODES } from '../../../../config';
 import FieldOfDreamsWordsApi from './FieldOfDreamsWordsApi';
 import VoiceApi from './VoiceApi';
 import { hintsCount } from './constants';
+import Timers from './Timers';
 
-export const SPEAKIT_GAME_STATS = 'SPEAKIT_GAME_STATS';
+export const GAME_STATS = 'GAME_STATS';
 
 const FINISH_GAME_DELAY_MS = 1000;
 
@@ -25,13 +26,25 @@ export default class FieldOfDreamsGameManager {
       this.goNextWord.bind(this),
       this.useHint.bind(this),
       this.voiceControl.startRecognition.bind(this.voiceControl),
+      this.acceptAnswer.bind(this),
+      this.startQuestionUtterance.bind(this),
     );
     const mode = userWordsMode ? MODES.REPITITION : MODES.GAME;
-    this.statistics = new Statistics(GAMES.SPEAKIT, mode, true);
+    this.statistics = new Statistics(GAMES.FIELDOFDREAMS, mode, true);
   }
 
   attach(element) {
-    this.view.attach(element);
+    this.timers = new Timers();
+    this.view.attach(element, this.timers.setNewTimer.bind(this.timers));
+  }
+
+  detach() {
+    this.timers.deleteTimers();
+    this.timers = null;
+  }
+
+  startQuestionUtterance() {
+    this.voiceControl.speak(this.currentWord.MeaningTranslate);
   }
 
   finishGame(withDelay = false) {
@@ -44,9 +57,10 @@ export default class FieldOfDreamsGameManager {
     const stats = this.calculateStats();
 
     // putting stats to storage to use them on /speakit/results page
-    LocalStorageAdapter.set(SPEAKIT_GAME_STATS, stats);
+    LocalStorageAdapter.set(GAME_STATS, stats);
     // and navigatin to results, with slight delay in case it was triggeren on last word
-    setTimeout(() => AppNavigator.replace('fieldOfDreams', 'results'), withDelay ? FINISH_GAME_DELAY_MS : 0);
+
+    this.timers.setNewTimer(() => AppNavigator.replace('fieldOfDreams', 'results'), withDelay ? FINISH_GAME_DELAY_MS : 0);
   }
 
   calculateStats() {
@@ -84,6 +98,7 @@ export default class FieldOfDreamsGameManager {
             audio: wordInfo.audio,
             image: wordInfo.image,
             transcription: wordInfo.transcription,
+            wordTranslate: wordInfo.wordTranslate,
             MeaningTranslate: wordInfo.textMeaningTranslate,
           };
 
@@ -96,6 +111,7 @@ export default class FieldOfDreamsGameManager {
 
   // SpeechRecognition might give several options
   acceptAnswer(phrases) {
+    this.voiceControl.stopRecognition();
     let result = false;
     if (phrases instanceof Array) {
       const findResult = phrases.findIndex((phrase) => {
@@ -104,30 +120,43 @@ export default class FieldOfDreamsGameManager {
         return (this.currentWord.word === wordCandidate);
       });
       result = (findResult !== -1);
-
-      this.currentWord.guessed = result;
-
-      this.results.push(this.currentWord);
-
-      this.view.openAnswer(result);
-
-      this.statistics.updateWordStatistics(this.currentWord.id, result);
     }
+
+    this.currentWord.guessed = result;
+
+    this.results.push(this.currentWord);
+
+    this.view.openAnswer(result);
+
+    this.statistics.updateWordStatistics(this.currentWord.id, result);
   }
 
   goNextWord() {
     this.hints = 0;
+    if (!this.wordsState.length) {
+      this.finishGame(true);
+      return;
+    }
+    this.voiceControl.stopSpeaking();
     this.currentWord = this.wordsState.pop();
     const isLast = !(this.wordsState.length);
     this.view.drawWordToDOM(this.currentWord, isLast);
   }
 
-  useHint(letter) {
+  useHint(hintLetter) {
     const result = (this.hints < hintsCount);
-    if (result && letter) {
+    if (result && hintLetter) {
       this.hints += 1;
-      console.log(letter);
-      // TODO открытие букв
+      const letters = this.currentWord.word.toUpperCase().trim().split('');
+      const indexArray = [];
+      letters.forEach((letter, index) => {
+        if (letter === hintLetter) {
+          indexArray.push(index);
+        }
+      });
+      if (indexArray.length) {
+        this.view.flipLetters(indexArray);
+      }
     }
     return result;
   }

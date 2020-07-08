@@ -1,13 +1,14 @@
+import '../../sass/Components/FieldOfDreams.scss';
 import Controller from '../lib/Controller';
 import UniversalGameStartView from '../Views/UniversalGameStartView';
 import PlayView from '../Views/FieldOfDreams/PlayView';
 import AppNavigator from '../lib/AppNavigator';
 import ResultsView from '../Views/FieldOfDreams/ResultsView';
-// import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
+import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
 import { difficulties, title, description } from '../Components/Games/FieldOfDreams/constants';
 import SettingsModel from '../Classes/UserSettings';
 import { GAMES } from '../../config';
-import FieldOfDreamsGameManager from '../Components/Games/FieldOfDreams/FieldOfDreamsGameManager';
+import FieldOfDreamsGameManager, { GAME_STATS } from '../Components/Games/FieldOfDreams/FieldOfDreamsGameManager';
 
 export default class FieldOfDreamsController extends Controller {
   constructor() {
@@ -65,28 +66,28 @@ export default class FieldOfDreamsController extends Controller {
   }
 
   resultsAction() {
-    // const stats = LocalStorageAdapter.get(SPEAKIT_GAME_STATS);
+    const stats = LocalStorageAdapter.get(GAME_STATS);
     // if no stats stored, redirect to start page
-    // if (!stats) {
-    //   // AppNavigator.go('speakit');
-    //   // we have to do this in order to not cause any errors to the console
-    //   this.cancelAction();
-    // }
+    if (!stats) {
+      AppNavigator.go('fieldOfDreams');
+      // we have to do this in order to not cause any errors to the console
+      this.cancelAction();
+    }
     // that's only for one time use
-    // LocalStorageAdapter.remove(SPEAKIT_GAME_STATS);
-    // this.props.stats = stats;
+    LocalStorageAdapter.remove(GAME_STATS);
+    this.props.stats = stats;
 
     // if not user words, we can proceed to the next round
     // here we decide if to show "next round" button by setting two params:
-    // if (!stats.isUserWordsMode) {
-    //   if (stats.round < difficulties[stats.difficulty]) {
-    //     this.props.nextDifficulty = stats.difficulty;
-    //     this.props.nextRound = stats.round + 1;
-    //   } else if (stats.difficulty < difficulties.length - 1) {
-    //     this.props.nextDifficulty = stats.difficulty + 1;
-    //     this.props.nextRound = 1;
-    //   }
-    // }
+    if (!stats.isUserWordsMode) {
+      if (stats.round < difficulties[stats.difficulty]) {
+        this.props.nextDifficulty = stats.difficulty;
+        this.props.nextRound = stats.round + 1;
+      } else if (stats.difficulty < difficulties.length - 1) {
+        this.props.nextDifficulty = stats.difficulty + 1;
+        this.props.nextRound = 1;
+      }
+    }
     // and save it
     SettingsModel.saveGame(
       GAMES.FIELDOFDREAMS,
