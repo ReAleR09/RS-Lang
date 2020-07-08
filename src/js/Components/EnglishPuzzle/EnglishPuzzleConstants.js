@@ -31,6 +31,10 @@ const engPuzConst = {
     URL: 'https://raw.githubusercontent.com/tlmnnk/rslang_data_paintings/master/',
   },
   localstorage: {
+    AUTOPLAY_BTN: 'engPuz__tooltips-autoPlay',
+    SHOW_TRANSLATION_BTN: 'engPuz__tooltips-translation',
+    SHOW_AUDIO_BTN: 'engPuz__tooltips-audioSwitcher',
+    SHOW_PUZZLEBACK_BTN: 'engPuz__tooltips-picture',
     RESULTS: 'RS7__engPuz--results',
   },
 };

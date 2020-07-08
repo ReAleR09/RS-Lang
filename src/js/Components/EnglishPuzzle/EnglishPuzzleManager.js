@@ -28,7 +28,7 @@ export default class EnglishPuzzleManager {
     this.puzzleLineIndex = 0;
     this.isAutoPlay = true;
     this.isTranslation = true;
-    this.isPlayActive = true;
+    this.isPlayBtnActive = true;
     this.isBackgroundShow = true;
     this.imageInfo = null;
     this.answers = {};
@@ -52,7 +52,6 @@ export default class EnglishPuzzleManager {
       this.round,
     );
     this.words = words;
-
     this.words.forEach((word) => {
       this.sentences.push(word.textExample);
     });
@@ -80,6 +79,8 @@ export default class EnglishPuzzleManager {
   }
 
   async init() {
+    await this.getSavedGameSettings();
+    this.applyGameSettingsOnStart();
     if (this.isUserWordsMode) {
       const userWordsData = await SpeakitWordsApi.getUserWords();
       console.log(userWordsData);
@@ -95,12 +96,41 @@ export default class EnglishPuzzleManager {
     }
   }
 
+  async getSavedGameSettings() {
+    const autoPlay = await LocalStorageAdapter.get(engPuzConst.localstorage.AUTOPLAY_BTN);
+    const showTranslation = await LocalStorageAdapter.get(engPuzConst.localstorage.SHOW_TRANSLATION_BTN);
+    const showAudioBtn = await LocalStorageAdapter.get(engPuzConst.localstorage.SHOW_AUDIO_BTN);
+    const showBackground = await LocalStorageAdapter.get(engPuzConst.localstorage.SHOW_PUZZLEBACK_BTN);
+
+    autoPlay !== null ? this.isAutoPlay = autoPlay : null;
+    showTranslation !== null ? this.isTranslation = showTranslation : null;
+    showAudioBtn !== null ? this.isPlayBtnActive = showAudioBtn : null;
+    showBackground !== null ? this.isBackgroundShow = showBackground : null;
+  }
+
+  applyGameSettingsOnStart() {
+    if (!this.isAutoPlay) {
+      this.view.toggleGreyBtnBackground(this.view.element.querySelector(`a.${engPuzConst.switchers.AUTOPLAY}`));
+    }
+    if (!this.isTranslation) {
+      this.view.element.querySelector('blockquote').classList.toggle('visually-hidden');
+      this.view.toggleGreyBtnBackground(this.view.element.querySelector(`a.${engPuzConst.switchers.TRANSLATION}`));
+    }
+    if (!this.isPlayBtnActive) {
+      this.view.togglePlayBtn();
+      this.view.toggleGreyBtnBackground(this.view.element.querySelector(`a.${engPuzConst.switchers.AUDIOBTN}`));
+    }
+    if (!this.isBackgroundShow) {
+      this.view.toggleGreyBtnBackground(this.view.element.querySelector(`a.${engPuzConst.switchers.PICTURE}`));
+    }
+  }
+
   eventListenersInit() {
     this.view.element.addEventListener('click', (e) => {
       this.canvasClickHandler(e);
       this.checkButtonHandler(e);
       this.idkClickHandler(e);
-      this.view.toggleTranlation(e);
+      this.toggleTranlationHandler(e);
       this.audioBtnHandler(e);
       this.audioSwitcherHandler(e);
       this.autoPlayBtnClickHandler(e);
@@ -113,6 +143,15 @@ export default class EnglishPuzzleManager {
     console.log('User words mode');
   }
 
+  toggleTranlationHandler(e) {
+    if (e.target.classList.contains('engPuz__tooltips-translation')) {
+      this.isTranslation = !this.isTranslation;
+      LocalStorageAdapter.set(engPuzConst.localstorage.SHOW_TRANSLATION_BTN, this.isTranslation);
+      this.view.element.querySelector('blockquote').classList.toggle('visually-hidden');
+      this.view.toggleGreyBtnBackground(this.view.element.querySelector(`a.${engPuzConst.switchers.TRANSLATION}`));
+    }
+  }
+
   audioBtnHandler(e) {
     if (e.target.classList.contains('engPuz__audio')) {
       new Audio(this.words[this.puzzleLineIndex].audioExample).play();
@@ -121,6 +160,8 @@ export default class EnglishPuzzleManager {
 
   audioSwitcherHandler(e) {
     if (e.target.classList.contains('engPuz__tooltips-audioSwitcher')) {
+      this.isPlayBtnActive = !this.isPlayBtnActive;
+      LocalStorageAdapter.set(engPuzConst.localstorage.SHOW_AUDIO_BTN, this.isPlayBtnActive);
       this.view.togglePlayBtn();
       this.view.toggleGreyBtnBackground(e.target.parentNode);
     }
@@ -128,34 +169,36 @@ export default class EnglishPuzzleManager {
 
   showPuzzleBackgroundHandler(e) {
     if (e.target.classList.contains('engPuz__tooltips-picture')) {
+      LocalStorageAdapter.set(engPuzConst.localstorage.SHOW_PUZZLEBACK_BTN, !this.isBackgroundShow);
+      this.view.toggleGreyBtnBackground(this.view.element.querySelector(`a.${engPuzConst.switchers.PICTURE}`));
       this.applyBackgroundToPuzzleLine();
     }
   }
 
   async applyBackgroundToPuzzleLine() {
     const canvasLineAll = this.view.element.querySelectorAll(`.canvas-row-${this.puzzleLineIndex + 1}`);
+    console.log('isBackgroundShow');
+    console.log(this.isBackgroundShow);
     if (this.isBackgroundShow) {
       canvasLineAll.forEach(async (canvas) => {
         const data = await canvas.dataset.item;
         const parent = await canvas.parentNode;
         const toReplace = this.puzzleBumperArr[this.puzzleLineIndex].filter((canvasTo) => canvasTo.dataset.item === data);
-        console.log(toReplace[0]);
         canvas.remove();
         await parent.appendChild(toReplace[0]);
         // canvas.parentNode.append()
       });
-      this.isBackgroundShow = false;
+      this.isBackgroundShow = !this.isBackgroundShow;
     } else {
       canvasLineAll.forEach(async (canvas) => {
         const data = await canvas.dataset.item;
         const toReplace = this.puzzleArr[this.puzzleLineIndex].filter((canvasTo) => canvasTo.dataset.item === data);
-        console.log(toReplace[0]);
         const parent = await canvas.parentNode;
         canvas.remove();
         await parent.appendChild(toReplace[0]);
         // canvas.parentNode.append()
       });
-      this.isBackgroundShow = true;
+      this.isBackgroundShow = !this.isBackgroundShow;
     }
   }
 
@@ -166,9 +209,10 @@ export default class EnglishPuzzleManager {
     }
   }
 
-  autoPlayBtnClickHandler(e) {
+  async autoPlayBtnClickHandler(e) {
     if (e.target.classList.contains('engPuz__tooltips-autoPlay')) {
       this.isAutoPlay = !this.isAutoPlay;
+      await LocalStorageAdapter.set(engPuzConst.localstorage.AUTOPLAY_BTN, this.isAutoPlay);
       this.view.toggleGreyBtnBackground(this.view.element.querySelector('a.engPuz__tooltips-autoPlay'));
     }
   }
@@ -398,7 +442,6 @@ export default class EnglishPuzzleManager {
     const puzzleData = await this.view.getPuzzleElements(this.imgSrc, this.sentences);
     this.puzzleCompelete = puzzleData.originalImage;
     this.puzzleBumper = puzzleData.bumperImage;
-    console.log(this.puzzleCompelete);
     // delete preloader
   }
 

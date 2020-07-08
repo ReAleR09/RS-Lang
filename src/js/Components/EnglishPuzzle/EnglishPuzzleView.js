@@ -118,13 +118,6 @@ export default class EnglisPuzzleView {
     translation.innerText = words[lineIndex].textExampleTranslate;
   }
 
-  toggleTranlation(e) {
-    if (e.target.classList.contains('engPuz__tooltips-translation')) {
-      document.querySelector('blockquote').classList.toggle('visually-hidden');
-      this.toggleGreyBtnBackground(e.target.parentNode);
-    }
-  }
-
   removeCanvasHighlight(puzzleLineIndex) {
     const canvasDropToCheck = document.querySelectorAll(`.${engPuzConst.content.DROPSECTION} .canvas-row-${puzzleLineIndex + 1}`);
     [...canvasDropToCheck].forEach((canvas) => {
@@ -140,10 +133,10 @@ export default class EnglisPuzzleView {
     <div class="engPuz__settings flex-center">
     </div>
     <div class="engPuz__tooltips flex-between">
-      <a class="engPuz__tooltips-autoPlay teal btn-floating waves-effect"> <i class="engPuz__tooltips-autoPlay medium material-icons">volume_up</i></a>
-      <a class="engPuz__tooltips-translation teal btn-floating circle waves-effect"> <i class="engPuz__tooltips-translation medium material-icons">translate</i></a>
-      <a class="engPuz__tooltips-audioSwitcher teal btn-floating circle waves-effect"> <i class="engPuz__tooltips-audioSwitcher medium material-icons">music_video</i></a>
-      <a class="engPuz__tooltips-picture btn-floating teal circle waves-effect"> <i class="engPuz__tooltips-picture medium material-icons">photo</i></a>
+      <a class="engPuz__tooltips-autoPlay green btn-floating waves-effect"> <i class="engPuz__tooltips-autoPlay medium material-icons">volume_up</i></a>
+      <a class="engPuz__tooltips-translation red btn-floating circle waves-effect"> <i class="engPuz__tooltips-translation medium material-icons">translate</i></a>
+      <a class="engPuz__tooltips-audioSwitcher orange btn-floating circle waves-effect"> <i class="engPuz__tooltips-audioSwitcher medium material-icons">music_video</i></a>
+      <a class="engPuz__tooltips-picture btn-floating blue circle waves-effect"> <i class="engPuz__tooltips-picture medium material-icons">photo</i></a>
     </div>
     </div>
     <div class="flex-center">
