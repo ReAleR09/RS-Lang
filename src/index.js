@@ -11,6 +11,7 @@ import RegistrationController from './js/Controllers/RegistrationController';
 import AuthorizationController from './js/Controllers/AuthorizationController';
 import EnglishPuzzleController from './js/Controllers/englishPuzzleController';
 import SettingsController from './js/Controllers/SettingsController';
+import FieldOfDreamsController from './js/Controllers/FieldOfDreamsController';
 import PageAboutTeamController from './js/Controllers/PageAboutTeamController';
 import GameAudioCallController from './js/Controllers/GameAudioCallController';
 
@@ -32,6 +33,8 @@ async function appInit() {
     authorization: AuthorizationController,
     savannah: SavannahController,
     settings: SettingsController,
+    learningWords: LearningWordsController,
+    fieldOfDreams: FieldOfDreamsController,
     'game-sprint': GameSprintController,
     speakit: SpeakitController,
     'game-audio-call': GameAudioCallController,
