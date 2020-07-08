@@ -35,9 +35,11 @@ export default class UniversalGameStartView extends View {
     });
 
     const startButtonUserEl = this.element.querySelector(`#${ID_START_BUTTON_USER}`);
-    startButtonUserEl.addEventListener('click', () => {
-      AppNavigator.go(controllerAlias, PLAY_VIEW_ALIAS, { userWords: 1 });
-    });
+    if (startButtonUserEl) {
+      startButtonUserEl.addEventListener('click', () => {
+        AppNavigator.go(controllerAlias, PLAY_VIEW_ALIAS, { userWords: 1 });
+      });
+    }
 
     this.initSliders();
   }

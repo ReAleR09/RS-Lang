@@ -1,5 +1,5 @@
 import Controller from '../lib/Controller';
-import IndexView from '../Views/Savannah/IndexView';
+import UniversalGameStartView from '../Views/UniversalGameStartView';
 import PlayView from '../Views/Savannah/PlayView';
 import ResultsView from '../Views/Savannah/ResultsView';
 import SavannahGameManager from '../Components/Games/Savannah/SavannahGameManager';
@@ -15,7 +15,7 @@ import WordsApi from '../Classes/Api/WordsApi';
 export default class SavannahController extends Controller {
   constructor() {
     const viewClasses = {
-      index: IndexView,
+      index: UniversalGameStartView,
       play: PlayView,
       results: ResultsView,
     };
