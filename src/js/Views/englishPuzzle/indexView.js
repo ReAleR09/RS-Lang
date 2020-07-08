@@ -22,7 +22,6 @@ export default class IndexView extends View {
     initMaterialSelects();
 
     const { difficulty, round } = SettingsModel.loadGame(GAMES.PUZZLE);
-    console.log(difficulty, round);
 
     playArcadeBtn.addEventListener('click', () => {
       const difficultyValue = document.querySelector('.engPuz__difficulty select').value;

@@ -178,7 +178,6 @@ export default class EnglishPuzzleManager {
 
   async applyBackgroundToPuzzleLine() {
     const canvasLineAll = this.view.element.querySelectorAll(`.canvas-row-${this.puzzleLineIndex + 1}`);
-    console.log('isBackgroundShow');
 
     if (this.isBackgroundShow) {
       canvasLineAll.forEach(async (canvas) => {
@@ -199,7 +198,6 @@ export default class EnglishPuzzleManager {
         // canvas.parentNode.append()
       });
     }
-    console.log(this.isBackgroundShow);
   }
 
   resultAudioHandler(e) {
