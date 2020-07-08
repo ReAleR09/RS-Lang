@@ -1,9 +1,9 @@
 import View from '../../lib/View';
-import { showPreloader, hidePreloader } from '../../Classes/Preloader';
-// import AppNavigator from '../../lib/AppNavigator';
+import { CLASS_VISIBLE, CLASS_COMPONENT } from '../../Components/LearningWords/IndexTemplate';
+import { TEST_RESULT_HTML, QUERY_DIFFICULTY } from '../../Components/LearningWords/TestResultTemplate';
 // import LearningWordsView from '../../Components/LearningWords/LearningWordsView';
 
-export default class IndexView extends View {
+export default class TestResultView extends View {
   /**
    * This method will be automatically called oncewhen navigation to the page occured,
    * but before html is added to browser's DOM.
@@ -14,19 +14,24 @@ export default class IndexView extends View {
    * it references actual DOM root element of this view
    */
   async onMount() {
-    showPreloader();
-    await this.props.model.attach(this.element);
-    await this.props.model.init();
-    hidePreloader();
+    const difficultyLevel = this.element.querySelector(QUERY_DIFFICULTY);
+
+    difficultyLevel.innerText = this.props.difficulty;
+
+    const componentElement = this.element.querySelector(`.${CLASS_COMPONENT}`);
+    componentElement.classList.add(CLASS_VISIBLE);
+    const difficulty = this.element.querySelector(QUERY_DIFFICULTY);
+
+    difficulty.innerText = this.props.difficulty;
   }
 
   /**
    * This method will be automatically called oncewhen user leaving the page
    * This is used to release resources: cancel timers, subscriptions, cancel some async actions etc
    */
+
+  // eslint-disable-next-line class-methods-use-this
   onUnmount() {
-    this.props.model.detach();
-    this.props.model = null;
   }
 
   /**
@@ -34,11 +39,10 @@ export default class IndexView extends View {
    * Must return html markup.
    * Note that there should only one root element!
    */
+
+  // eslint-disable-next-line class-methods-use-this
   render() {
-    const { model } = this.props;
-
-    const html = model.getInitialLayout();
-
+    const html = TEST_RESULT_HTML;
     return html;
   }
 }

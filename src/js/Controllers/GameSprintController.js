@@ -1,6 +1,7 @@
 import Controller from '../lib/Controller';
 import IndexView from '../Views/GameSprint/IndexView';
-import { inProgressSprintGame, finishedSprintGame, eventNameSprintGame } from '../Utils/ConstantsGameSprint';
+import { BACKEND_URL } from '../../config';
+import { IN_PROGRESS_SPRINT_GAME, FINISHED_SPRINT_GAME, EVENT_NAME_SPRINT_GAME } from '../Utils/ConstantsGameSprint';
 
 /**
  * Controller is a sctructure that describes a set of "actions",
@@ -18,11 +19,11 @@ export default class GameSprintController extends Controller {
       index: IndexView,
     };
     super(viewClasses);
-    this.wordsUrl = 'https://afternoon-falls-25894.herokuapp.com/words?page=1&group=0';
+    this.wordsUrl = `${BACKEND_URL}words?page=1&group=0`;
     this.correctTranslation = 0;
     this.wrongTranslation = 1;
 
-    this.audioClickBtn = new Audio('../../audio/piu.mp3');
+    this.audioClickBtn = new Audio('/assets/audio/piu.mp3');
   }
 
   /**
@@ -43,7 +44,7 @@ export default class GameSprintController extends Controller {
   }
 
   startGame() {
-    this.status = inProgressSprintGame;
+    this.status = IN_PROGRESS_SPRINT_GAME;
     this.rightAnswersInRow = 0;
     this.numberElement = 0;
     this.multiplier = 1;
@@ -76,7 +77,7 @@ export default class GameSprintController extends Controller {
   }
 
   updateView() {
-    IndexView.publish(eventNameSprintGame, {
+    IndexView.publish(EVENT_NAME_SPRINT_GAME, {
       status: this.status,
       timer: this.gameTimer,
       score: this.score,
@@ -88,7 +89,7 @@ export default class GameSprintController extends Controller {
   }
 
   stopGame() {
-    this.status = finishedSprintGame;
+    this.status = FINISHED_SPRINT_GAME;
   }
 
   async getWordsFromDataBase() {
@@ -111,11 +112,11 @@ export default class GameSprintController extends Controller {
 
   static calculateMultiplier(rightAnswersInRow) {
     let multiplier = 1;
-    if (rightAnswersInRow > 3 && rightAnswersInRow < 7) {
+    if (rightAnswersInRow > 3 && rightAnswersInRow <= 7) {
       multiplier = 2;
-    } else if (rightAnswersInRow > 7 && rightAnswersInRow < 11) {
+    } else if (rightAnswersInRow > 7 && rightAnswersInRow <= 11) {
       multiplier = 3;
-    } else if (rightAnswersInRow > 11 && rightAnswersInRow < 15) {
+    } else if (rightAnswersInRow > 11) {
       multiplier = 4;
     }
     return multiplier;

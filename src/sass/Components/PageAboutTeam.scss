@@ -1,0 +1,49 @@
+.col {
+  position: relative;
+}
+.about-team__title {
+  font-weight: 600;
+}
+.about-team__photo-container {
+  margin-top: 35px;
+}
+.about-team__person-photo-hide {
+  width: 100%;
+}
+.about-team__person-photo-visible {
+  position: absolute;
+  width: calc(100% - 20px);
+  left: 10px;
+  opacity: 0;
+  transition: 300ms ease-in-out;
+}
+.about-team__person-photo-visible:hover {
+  opacity: 1;
+  transition: 300ms ease-in-out;
+}
+.about-team__person-info {
+  margin-bottom: 20px;
+}
+.about-team__name {
+  font-size: 26px;
+  font-weight: 600;
+}
+.about-team__position {
+  font-size: 20px;
+}
+.about-team__btn {
+  width: 100%;
+  margin-top: 10px;
+}
+.tooltip-content {
+  min-width: 176px;
+}
+@media only screen and (min-width: 601px) {
+  .about-team__name {
+    font-size: 22px;
+    font-weight: 600;
+  }
+  .about-team__position {
+    font-size: 18px;
+  }
+}

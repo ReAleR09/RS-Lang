@@ -4,6 +4,7 @@
 @import "./Components/GameAudioCall.scss";
 @import "./Components/savannah.scss";
 @import "./Components/dictionary.scss";
+@import "./Components/PageAboutTeam.scss";
 
 // plugins
 @import "./plugins";
@@ -15,6 +16,8 @@
 @import "./Components/helpers";
 @import "./Components/base";
 @import "./Components/EnglishPuzzle";
+
+@import "./Components/Preloader";
 
 body {
   -webkit-touch-callout: none; /* iOS Safari */

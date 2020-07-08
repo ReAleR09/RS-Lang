@@ -23,28 +23,39 @@ export const BACKEND_URL = 'https://afternoon-falls-25894.herokuapp.com/';
 
 export const SIDENAV = [
   {
-    title: 'Main page',
+    title: 'Изучаем слова',
     path: ['/'],
     icon: 'accessibility',
   },
   {
-    title: 'Learning words',
-    path: ['learningWords'],
+    title: 'Игры',
     icon: 'accessibility',
-  },
-  {
-    title: 'Spint [mini-game]',
-    path: ['game-sprint'],
-    icon: 'accessibility',
-  },
-  {
-    title: 'SpeakIt [mini-game]',
-    path: ['speakit'],
-    icon: 'accessibility',
-  },
-  {
-    title: 'EnglishPuzzle [mini-game]',
-    path: ['englishpuzzle'],
-    icon: 'extension',
+    nested: [
+      {
+        title: 'Спринт',
+        path: ['game-sprint'],
+        icon: 'accessibility',
+      },
+      {
+        title: 'SpeakIt',
+        path: ['speakit'],
+        icon: 'accessibility',
+      },
+      {
+        title: 'Аудиовызов',
+        path: ['game-audio-call'],
+        icon: 'accessibility',
+      },
+      {
+        title: 'Английский Паззл',
+        path: ['englishpuzzle'],
+        icon: 'extension',
+      },
+      {
+        title: 'Саванна',
+        path: ['savannah'],
+        icon: 'extension',
+      },
+    ],
   },
 ];

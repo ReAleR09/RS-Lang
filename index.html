@@ -10,26 +10,28 @@
 </head>
 <body>
   <ul class="sidenav #fff3e0 orange lighten-5" id="sidenav-left">
-    <li class="center"><a class="btn-flat">Username</a></li>
+    <li class="center"><a class="btn-flat" id="application_username" ></a></li>
     <li><div class="divider"></div></li>
     <div id="sidebar__items_container"></div>
     <li><div class="divider"></div></li>
-    <li data-controller="dashboard">
-      <a class="waves-effect waves-teal"><i class="material-icons">dashboard</i>Dashboard</a>
-    </li>
     <li data-controller="dictionary">
-      <a class="waves-effect waves-yellow"><i class="material-icons">g_translate</i>Dictionary</a></li>
+      <a class="waves-effect waves-yellow"><i class="material-icons">g_translate</i>Словарь</a></li>
     <li data-controller="settings">
-      <a class="waves-effect waves-green"><i class="material-icons">settings_applications</i>Settings</a>
+      <a class="waves-effect waves-green"><i class="material-icons">settings_applications</i>Настройки</a>
     </li>
     <li data-controller="statistics">
-      <a class="waves-effect waves-red"><i class="material-icons">equalizer</i>Statistics</a>
+      <a class="waves-effect waves-red"><i class="material-icons">equalizer</i>Статистика</a>
     </li>
     <li><div class="divider bottom"></div></li>
-    <li>
-      <a class="btn-flat waves-effect waves-teal"><i class="material-icons">hearing</i>Audio <span data-audio-side>On</span></a>
+    <li data-controller="about-team">
+      <a class="waves-effect waves-red"><i class="material-icons">equalizer</i>О команде</a>
     </li>
-    <li data-controller="signin" class="center"><a class="waves-effect waves-red"><i class="material-icons">exit_to_app</i>Logout</a></li>
+    <!-- <li>
+      <a class="btn-flat waves-effect waves-teal"><i class="material-icons">hearing</i>Audio <span data-audio-side>On</span></a>
+    </li> -->
+    <li data-controller="authorization" data-action="logout" class="center">
+      <a class="waves-effect waves-red"><i class="material-icons">exit_to_app</i>Logout</a>
+    </li>
   </ul>
   <ul class="sidenav #81d4fa light-blue lighten-3" id="sidenav-right">
     <li class="center"><a href="#">Username</a></li>
@@ -40,7 +42,7 @@
     <div class="nav-wrapper #ff7043 deep-orange lighten-1">
       <div class="container">
         <a data-target="sidenav-left" class="sidenav-trigger btn transparent waves-effect waves-orange vert-align sidenav-trigger-custom"><i class="material-icons">menu</i></a>
-        <span class="brand-logo center">Dashboard</span>
+        <span class="brand-logo center">RS Lang: Team #7</span>
       </div>  
     </div>
   </nav>
