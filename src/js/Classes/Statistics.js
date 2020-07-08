@@ -71,7 +71,7 @@ export default class Statistics {
 
   async sendGameResults() {
     await this.get();
-    const dateNow = new Date();
+    const dateNow = new Date().getTime();
     const gameResult = { date: dateNow, ...this.results };
 
     if (!Object.prototype.hasOwnProperty.call(this.statistics, this.game)) {
