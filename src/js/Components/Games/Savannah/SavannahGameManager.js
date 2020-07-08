@@ -87,23 +87,7 @@ export default class SavannahGameManager {
 
         this.saveCurrentWordsState();
         this.startGame(words);
-        // this.displayWords(wordsState);
       });
-
-    // const words = SavannahWordsApi.getRandomWordsForDifficulty(this.difficulty);
-    // const wordsState = words.map((wordInfo) => {
-    //   const wordState = {
-    //     id: wordInfo.id,
-    //     guessed: false,
-    //     word: wordInfo.word,
-    //   };
-
-    //   return wordState;
-    // });
-    // this.wordsState = wordsState;
-    // this.saveCurrentWordsState();
-
-    // this.startGame(words);
   }
 
   saveCurrentWordsState() {

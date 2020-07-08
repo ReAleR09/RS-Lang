@@ -1,4 +1,3 @@
-// import MockWordsApi from './mockWords';
 import Utils from '../../../Utils/Utils';
 import { roundSize } from './const';
 import WordsApi from '../../../Classes/Api/WordsApi';
@@ -21,7 +20,6 @@ const getUserWords = async () => {
 };
 
 const SavannahWordsApi = {
-  // getRandomWordsForDifficulty,
   getWordsForDifficultyAndRound,
   getUserWords,
 };

@@ -49,14 +49,7 @@ export default class SavannahController extends Controller {
 
       let round = params.get('round');
       round = Number.parseInt(round, 10);
-      // navigate to main game page if user somehow entered the page with invalid params
-      if (
-        difficulty < 0 || difficulty > 5
-        || round < 1 || round > difficulties[difficulty]
-      ) {
-        AppNavigator.go('speakit');
-        this.cancelAction();
-      }
+
       gameManager = new SavannahGameManager(false, difficulty, round);
     }
     this.props.gameManager = gameManager;

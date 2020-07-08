@@ -1,32 +1,3 @@
-// import View from '../../lib/View';
-// import AppNavigator from '../../lib/AppNavigator';
-
-// const START_BUTTON = 'savannah__start-button';
-
-// export default class IndexView extends View {
-//   onMount() {
-//     const startButton = this.element.querySelector(`#${START_BUTTON}`);
-//     startButton.addEventListener('click', () => {
-//       AppNavigator.go('savannah', 'play');
-//     });
-//   }
-
-//   // onUnmount() {
-//   // }
-
-//   render() {
-//     const html = `
-//     <div>
-//       <div> ${this.props.data} </div>
-//       <div class="description">The Savannah training helps you build
-// your vocabulary. The more words you know, the more experience points you'll get.</div>
-//       <div id="${START_BUTTON}">START</div>
-//     </div>`;
-
-//     return html;
-//   }
-// }
-
 import Materialize from 'materialize-css';
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
@@ -47,8 +18,8 @@ export default class GameStartView extends View {
     this.difficultySlider.addEventListener('change', (e) => {
       const newDifficultyVal = e.target.value;
       const maxRoundsForDifficulty = this.props.game.difficulties[newDifficultyVal];
-      this.roundSlider.max = maxRoundsForDifficulty; // update rounds countm depends on difficulty
-      this.roundSlider.value = 1; // default round to 1
+      this.roundSlider.max = maxRoundsForDifficulty;
+      this.roundSlider.value = 1;
     });
   }
 
