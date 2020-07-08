@@ -188,8 +188,9 @@ export default class LearnindWordsCards {
       if (this.settings.showExample) {
         const wordStart = firstIndexOfWord + wordStartTag.length;
         const wordEnd = word.textExample.indexOf(wordEndTag);
-        newWord.word = word.textExample.slice(wordStart, wordEnd).trim();
+        newWord.word = word.textExample.slice(wordStart, wordEnd);
       }
+      newWord.word = newWord.word.trim();
       newWord.exampleStart = word.textExample.slice(0, firstIndexOfWord);
       newWord.exampleEnd = word.textExample.slice(lastIndexOfWord);
 

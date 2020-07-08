@@ -150,14 +150,15 @@ export default class LearningWordsModel {
   }
 
   checkInput(value) {
-    const textResult = value.trim();
+    const textResult = value.toLowerCase().trim();
+    const original = this.card.word.toLowerCase().trim();
 
-    const checkingResult = (textResult === this.card.word.trim());
+    const checkingResult = (textResult === original);
 
     if (!checkingResult) {
       this.cards.CurrentErrors += 1;
     }
-    return (textResult === this.card.word);
+    return (checkingResult);
   }
 
   showFilledCard(showWordRate = false) {
