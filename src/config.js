@@ -8,6 +8,7 @@ export const GAMES = {
   AUDIOCALL: 'audioCall',
   SPRINT: 'sprint',
   PUZZLE: 'puzzle',
+  FIELDOFDREAMS: 'fieldOfDreams',
 };
 
 export const MODES = {
@@ -23,33 +24,44 @@ export const BACKEND_URL = 'https://afternoon-falls-25894.herokuapp.com/';
 
 export const SIDENAV = [
   {
-    title: 'Main page',
+    title: 'Изучаем слова',
     path: ['/'],
     icon: 'accessibility',
   },
   {
-    title: 'Learning words',
-    path: ['learningWords'],
+    title: 'Игры',
     icon: 'accessibility',
+    nested: [
+      {
+        title: 'Спринт',
+        path: ['game-sprint'],
+        icon: 'accessibility',
+      },
+      {
+        title: 'SpeakIt',
+        path: ['speakit'],
+        icon: 'accessibility',
+      },
+      {
+        title: 'Аудиовызов',
+        path: ['game-audio-call'],
+        icon: 'accessibility',
+      },
+      {
+        title: 'Английский Паззл',
+        path: ['englishpuzzle'],
+        icon: 'extension',
+      },
+      {
+        title: 'Саванна',
+        path: ['savannah'],
+        icon: 'extension',
+      },
+    ],
   },
   {
-    title: 'Sprint [mini-game]',
-    path: ['game-sprint'],
-    icon: 'accessibility',
-  },
-  {
-    title: 'SpeakIt [mini-game]',
-    path: ['speakit'],
-    icon: 'accessibility',
-  },
-  {
-    title: 'Audio call [mini-game]',
-    path: ['game-audio-call'],
-    icon: 'accessibility',
-  },
-  {
-    title: 'EnglishPuzzle [mini-game]',
-    path: ['englishpuzzle'],
-    icon: 'extension',
+    title: 'Field of Dreams [mini-game]',
+    path: ['fieldOfDreams'],
+    icon: 'slow_motion_video',
   },
 ];

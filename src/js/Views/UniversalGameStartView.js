@@ -1,13 +1,15 @@
 import Materialize from 'materialize-css';
 import View from '../lib/View';
 import AppNavigator from '../lib/AppNavigator';
+import Router from '../Router';
 
-const ID_START_BUTTON = 'speakit__start-button';
-const ID_START_BUTTON_USER = 'speakit__start-button-user';
-const ID_DIFFICULTY_SELECTOR = 'speakit__difficulty-selector';
-const ID_ROUND_SELECTOR = 'speakit__round-selector';
+const ID_START_BUTTON = 'start-button';
+const ID_START_BUTTON_USER = 'start-button-user';
+const ID_DIFFICULTY_SELECTOR = 'difficulty-selector';
+const ID_ROUND_SELECTOR = 'round-selector';
+const PLAY_VIEW_ALIAS = 'play';
 
-export default class GameStartView extends View {
+export default class UniversalGameStartView extends View {
   initSliders() {
     const rangeDomEls = document.querySelectorAll('input[type=range]');
     Materialize.Range.init(rangeDomEls);
@@ -24,17 +26,18 @@ export default class GameStartView extends View {
   }
 
   onMount() {
+    const { controllerAlias } = Router.getUrlParts();
     const startButtonEl = this.element.querySelector(`#${ID_START_BUTTON}`);
     startButtonEl.addEventListener('click', () => {
       const difficulty = parseInt(this.difficultySlider.value, 10);
       const round = parseInt(this.roundSlider.value, 10);
-      AppNavigator.go('speakit', 'play', { difficulty, round });
+      AppNavigator.go(controllerAlias, PLAY_VIEW_ALIAS, { difficulty, round });
     });
 
     const startButtonUserEl = this.element.querySelector(`#${ID_START_BUTTON_USER}`);
     if (startButtonUserEl) {
       startButtonUserEl.addEventListener('click', () => {
-        AppNavigator.go('speakit', 'play', { userWords: 1 });
+        AppNavigator.go(controllerAlias, PLAY_VIEW_ALIAS, { userWords: 1 });
       });
     }
 
@@ -48,7 +51,7 @@ export default class GameStartView extends View {
     if (game.userWordsPlay) {
       userWordsPlay = `
         <div class='row'>
-          <div class="waves-effect waves-light btn col s12" id="${ID_START_BUTTON_USER}">Играть с изучаемыми словами</div>
+          <div class="waves-effect waves-light btn col s12" id="${ID_START_BUTTON_USER}">Start game with learned words</div>
         </div>
       `;
     }
@@ -61,7 +64,7 @@ export default class GameStartView extends View {
       </blockquote>
       <div class='row'>
         <p class="range-field col s12">
-          Сложность:
+          Difficulty:
         </p>
         <p class="range-field col s12">
           <input
@@ -75,7 +78,7 @@ export default class GameStartView extends View {
           />
         </p>
         <p class="range-field col s12">
-          Раунд:
+          Round:
         </p>
         <p class="range-field col s12">
           <input
@@ -87,7 +90,7 @@ export default class GameStartView extends View {
             value="${game.currentRound}"
           />
         </p>
-        <div class="waves-effect waves-light btn col s12" id="${ID_START_BUTTON}">Играть</div>
+        <div class="waves-effect waves-light btn col s12" id="${ID_START_BUTTON}">Start game</div>
       </div>
       ${userWordsPlay}
     </div>`;
