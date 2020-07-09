@@ -19,8 +19,8 @@ export const STATISTICS_HTML = `
   <div class="row">
     <div class="col s12">
       <ul class="tabs">
-        <li class="tab col s6"><a class="active" href="#forgames">Mini-games</a></li>
-        <li class="tab col s6"><a href="#bydays">By days</a></li>
+        <li class="tab col s6"><a class="active" href="#forgames">Статистика по играм</a></li>
+        <li class="tab col s6"><a href="#bydays">Статистика по дням</a></li>
       </ul>
     </div>
     <div id="forgames" class="col s12">
@@ -30,7 +30,7 @@ export const STATISTICS_HTML = `
         ${gamesTabsHtml}
     </div>
     <div id="bydays" class="col s12">
-      Leraning by days chart
+      <div><canvas id="byDaysChart" width="400" height="250"></canvas></div>
     </div>
   </div>
 `;
