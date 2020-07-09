@@ -2,6 +2,7 @@ import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
 import Form from '../../Classes/Form';
 import SettingsModel from '../../Classes/UserSettings';
+import initProgressBar from '../../Utils/ProgressBarUtils';
 
 const errors = {
   server: 'Server error',
@@ -28,6 +29,7 @@ const logIn = async (e) => {
       }, 2000);
     }
   } else {
+    await initProgressBar();
     AppNavigator.go();
   }
 };

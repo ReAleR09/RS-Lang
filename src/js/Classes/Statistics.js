@@ -4,6 +4,7 @@ import SpacedRepititions from './SpacedRepititions';
 import { GAME_RESULTS_KEY, WORDS_LEARNING_RESULTS_KEY } from './Api/constants';
 import WordsApi from './Api/WordsApi';
 import Utils from '../Utils/Utils';
+import ProgressBarInstance from './ProgressBar';
 
 export default class Statistics {
   constructor(game = GAMES.LEARNING, mode = MODES.REPITITION, wordsSendAtEnd = false) {
@@ -25,16 +26,18 @@ export default class Statistics {
   }
 
   async updateRepititionsStatistics(wordId, isNewWordStatus) {
-    if (this.game !== GAMES.LEARNING) return;
-    if (!this.isLoaded) {
-      await this.get();
-    }
-
     let isNewWord;
     if (isNewWordStatus !== undefined) {
       isNewWord = isNewWordStatus;
     } else {
       isNewWord = await this.wordsApi.checkUserWordInBase(wordId);
+    }
+
+    ProgressBarInstance.addCard(isNewWord);
+
+    if (this.game !== GAMES.LEARNING) return;
+    if (!this.isLoaded) {
+      await this.get();
     }
 
     const dateNow = Utils.getDateNoTime().getTime();

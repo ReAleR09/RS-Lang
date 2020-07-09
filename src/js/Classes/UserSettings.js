@@ -5,6 +5,7 @@ import {
   FIELD_USER_ID, FIELD_TOKEN, FIELD_REFRESH_TOKEN, FIELD_EMAIL,
 } from '../Utils/Constants';
 import { GAMES } from '../../config';
+import ProgressBarInstance from './ProgressBar';
 
 class UserSettings {
   constructor() {
@@ -114,7 +115,6 @@ class UserSettings {
       // if success - get saved settings
       await this.loadSettings();
     }
-
     return userData;
   }
 
@@ -143,6 +143,7 @@ class UserSettings {
   logout() {
     UserSettings.removeUserLogin();
     UserSettings.clearLocalStorage();
+    ProgressBarInstance.clearProgressBar();
     this.settingsObject = {};
     this.isAuth = false;
   }

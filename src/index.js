@@ -19,6 +19,7 @@ import './js/plugins';
 import { SIDENAV } from './config';
 
 import { showPreloader, hidePreloader } from './js/Classes/Preloader';
+import initProgressBar from './js/Utils/ProgressBarUtils';
 
 async function appInit() {
   showPreloader();
@@ -64,6 +65,7 @@ async function appInit() {
     SettingsModel.logout();
     AppNavigator.go('authorization');
   } else {
+    await initProgressBar();
     await router.route(true);
   }
   hidePreloader();
