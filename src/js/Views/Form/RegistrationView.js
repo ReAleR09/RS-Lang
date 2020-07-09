@@ -6,6 +6,7 @@ import Toaster from '../../Classes/Toaster';
 
 const errors = {
   server: 'Server error',
+  styles: 'red darken-1',
 };
 
 const validMail = (email) => {
@@ -57,7 +58,7 @@ const register = async (e) => {
     const userData = await api.register(user);
     if (userData.error) {
       if (userData.error >= 500) {
-        Toaster.showToast(errors.server);
+        Toaster.showToast(errors.server, errors.styles);
       }
     } else {
       AppNavigator.go('authorization');

@@ -8,6 +8,7 @@ import Toaster from '../../Classes/Toaster';
 const errors = {
   server: 'Server error',
   signIn: 'Incorrect e-mail or password',
+  styles: 'red darken-1',
 };
 
 const logIn = async (e) => {
@@ -19,9 +20,9 @@ const logIn = async (e) => {
   const userData = await SettingsModel.auth(user);
   if (userData.error) {
     if (userData.error >= 500) {
-      Toaster.showToast(errors.server);
+      Toaster.showToast(errors.server, errors.styles);
     } else {
-      Toaster.showToast(errors.signIn);
+      Toaster.showToast(errors.signIn, errors.styles);
     }
   } else {
     await initProgressBar();
