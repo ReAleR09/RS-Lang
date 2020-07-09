@@ -42,7 +42,7 @@ export default class IndexView extends View {
   render() {
     this.eslint = true;
     const html = `
-      <div>
+      <div class="page__about-team">
         <div class="row center-align">
           <div class="col s12">
             <h2 class="about-team__title">About Team</h2>
