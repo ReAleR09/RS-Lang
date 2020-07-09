@@ -61,7 +61,7 @@ export default class Statistics {
       statResults.errors += this.results.errors;
       statResults.success += this.results.success;
       if (statResults.bestResult < this.results.bestResult) {
-        statResults.bestResult.bestResult = this.results.bestResult;
+        statResults.bestResult = this.results.bestResult;
       }
       statResults.currentResult = this.results.currentResult;
     } else {
