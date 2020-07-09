@@ -16,9 +16,11 @@ import Dictionary from '../../Classes/Dictionary';
 import { DICT_CATEGORIES, DIFFICULTIES } from '../../Classes/Api/constants';
 import LearningWordsGameMode from './LearningWordsGameMode';
 import { PARAM_MODE } from '../../Utils/Constants';
+import Timers from '../Games/FieldOfDreams/Timers';
 
 export default class LearningWordsModel {
   constructor(mode = MODES.REPITITION) {
+    this.timer = new Timers();
     this.statistics = new Statistics(GAMES.LEARNING, mode);
     this.dictionary = new Dictionary();
     this.settingsObject = SettingsModel;
@@ -59,6 +61,7 @@ export default class LearningWordsModel {
   }
 
   detach() {
+    this.timer.deleteTimers();
     this.view.detach();
     this.view = null;
   }
@@ -212,9 +215,13 @@ export default class LearningWordsModel {
   showResult() {
     const params = { [PARAM_MODE]: this.mode, difficulty: this.difficulty };
     if (this.mode === MODES.GAME) {
-      AppNavigator.go(LEARNING_WORDS_CONTROLLER, TEST_RESULT_ACTION, params);
+      this.timer.setNewTimer(() => {
+        AppNavigator.go(LEARNING_WORDS_CONTROLLER, TEST_RESULT_ACTION, params);
+      }, 0);
     } else {
-      AppNavigator.go(LEARNING_WORDS_CONTROLLER, RESULTS_ACTION, params);
+      this.timer.setNewTimer(() => {
+        AppNavigator.go(LEARNING_WORDS_CONTROLLER, RESULTS_ACTION, params);
+      }, 0);
     }
   }
 }

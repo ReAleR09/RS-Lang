@@ -22,6 +22,7 @@ export default class LearningWordsView {
   constructor(model) {
     this.model = model;
     this.mode = this.model.mode;
+    this.buttonNextLock = false;
   }
 
   init(settings) {
@@ -168,12 +169,14 @@ export default class LearningWordsView {
   }
 
   async onButtonNext() {
+    if (this.buttonNextLock) return;
     const inputValue = this.wordInput.value;
     this.wordInput.value = '';
 
     const checkResult = await this.model.acceptInput(inputValue);
 
     if (this.isCardLocked()) {
+      this.buttonNextLock = true;
       this.placeSuccessPlaceHolder();
     } else if (checkResult) {
       this.removePlaceHolder();
@@ -252,6 +255,7 @@ export default class LearningWordsView {
     this.element.classList.add(CLASS_VISIBLE);
     this.updateSettings();
     this.wordInput.focus();
+    this.buttonNextLock = false;
   }
 
   lockCard() {
