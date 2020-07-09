@@ -26,16 +26,16 @@ export default class Form {
         <div class="feature feature-five">Design for better memorization</div>
       </div>
     </div>
-    
+
     <div class="form-action">
       <p>${describe}</p>
       <form class="form">
         <input class="email" type="email" title="Email should contains '@' and '.'">
         <input class="password" type="password" minlength="8" ${autocompleteOff} title="Password should be > 8 characters and contains one digit, one letter(uppercase), one letter(lowercase) and one special char">
-        <button>${this.type}</button>
+        <button class="waves-effect waves-light btn">${this.type}</button>
       </form>
       <p class="error"></p>
-      <p>${question} <a href="#" id="form-link">${offer}</a></p> 
+      <p>${question} <a href="#" id="form-link">${offer}</a></p>
     </div>
     </div>`;
 
