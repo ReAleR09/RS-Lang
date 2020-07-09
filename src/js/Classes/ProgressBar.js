@@ -1,17 +1,20 @@
-import SettingsModel from './UserSettings';
-
 const progressContainerClass = 'day-progress';
 const newWordsProgressClass = 'new-words-progress';
 const allWordsProgressClass = 'all-words-progress';
 const queries = {
+  progressBar: `.${progressContainerClass}`,
   newWordsProgress: `.${progressContainerClass} .${newWordsProgressClass}`,
   allWordsProgress: `.${progressContainerClass} .${allWordsProgressClass}`,
 };
 
+const barHideClass = 'hidden';
+
 class ProgressBar {
   constructor() {
-    this.progress = {};
-    this.settings = SettingsModel;
+    this.firstInit();
+  }
+
+  firstInit() {
     this.dayResults = {
       totalWordsCount: 0,
       newWordsCount: 0,
@@ -48,6 +51,16 @@ class ProgressBar {
 
     newWordsProgress.setAttribute('style', `width: ${this.newWordsPercents}%`);
     allWordsProgress.setAttribute('style', `width: ${this.allWordsPercents}%`);
+
+    const progressBar = document.querySelector(queries.progressBar);
+    progressBar.classList.remove(barHideClass);
+    console.log(progressBar.className);
+  }
+
+  clearProgressBar() {
+    const progressBar = document.querySelector(queries.progressBar);
+    progressBar.classList.add(barHideClass);
+    this.firstInit();
   }
 
   get newWordsPercents() {
