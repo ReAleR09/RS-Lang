@@ -1,7 +1,7 @@
 import AppNavigator from '../../../lib/AppNavigator';
 
-const GUESSED_SOUND = '/audio/savannah-right.mp3';
-const NOT_GUESSED_SOUND = '/audio/savannah-wrong.mp3';
+const GUESSED_SOUND = '/assets/audio/savannah-right.mp3';
+const NOT_GUESSED_SOUND = '/assets/audio/savannah-wrong.mp3';
 
 const CLASS_LIVES = 'savannah__lives';
 const CLASS_LIFE = 'savannah-life';
@@ -14,8 +14,9 @@ const START_LEFT_COORDINATE = '45%';
 const INTERVAL = 40;
 
 export default class SavannahView {
-  constructor(changeState) {
+  constructor(changeState, sendStatisticToServer) {
     this.changeState = changeState;
+    this.sendStatisticToServer = sendStatisticToServer;
     this.play = this.play.bind(this);
     this.mistakes = 0;
     this.keyHandler = this.keyHandler.bind(this);
@@ -56,6 +57,7 @@ export default class SavannahView {
     } else {
       clearInterval(this.interval);
       window.removeEventListener('keyup', this.keyHandler);
+      this.sendStatisticToServer();
       AppNavigator.replace('savannah', 'results');
     }
   }

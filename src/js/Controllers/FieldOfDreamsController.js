@@ -1,38 +1,37 @@
+import '../../sass/Components/FieldOfDreams.scss';
 import Controller from '../lib/Controller';
-import GameStartView from '../Views/GameStartView';
-import SpeakitGameManager, { SPEAKIT_GAME_STATS } from '../Components/Games/Speakit/SpeakitGameManager';
-import PlayView from '../Views/Speakit/PlayView';
+import UniversalGameStartView from '../Views/UniversalGameStartView';
+import PlayView from '../Views/FieldOfDreams/PlayView';
 import AppNavigator from '../lib/AppNavigator';
-import ResultsView from '../Views/Speakit/ResultsView';
+import ResultsView from '../Views/FieldOfDreams/ResultsView';
 import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
-import { difficulties, title, description } from '../Components/Games/Speakit/const';
+import { difficulties, title, description } from '../Components/Games/FieldOfDreams/constants';
 import SettingsModel from '../Classes/UserSettings';
 import { GAMES } from '../../config';
-import WordsApi from '../Classes/Api/WordsApi';
+import FieldOfDreamsGameManager, { GAME_STATS } from '../Components/Games/FieldOfDreams/FieldOfDreamsGameManager';
 
-export default class SpeakitController extends Controller {
+export default class FieldOfDreamsController extends Controller {
   constructor() {
     const viewClasses = {
-      index: GameStartView,
+      index: UniversalGameStartView,
       play: PlayView,
       results: ResultsView,
     };
     super(viewClasses);
   }
 
-  async indexAction() {
+  indexAction() {
     const game = {
       title,
       description,
       difficulties,
     };
 
-    const wordsApi = new WordsApi();
-    const repWordsCount = await wordsApi.getRepitionWordsCount(false);
-    game.userWordsPlay = (repWordsCount >= 10);
+    // TODO вычислить может ли пользовать сыграть с пользовательскими словами
+    game.userWordsPlay = true;
 
     // load saved difficulty and round
-    const { difficulty, round } = SettingsModel.loadGame(GAMES.SPEAKIT);
+    const { difficulty, round } = SettingsModel.loadGame(GAMES.FIELDOFDREAMS);
     game.currentDifficulty = difficulty;
     game.currentRound = round;
     this.props.game = game;
@@ -45,7 +44,7 @@ export default class SpeakitController extends Controller {
     let gameManager;
 
     if (userWordsMode) {
-      gameManager = new SpeakitGameManager(true);
+      gameManager = new FieldOfDreamsGameManager(true);
     } else {
       let difficulty = params.get('difficulty');
       difficulty = Number.parseInt(difficulty, 10);
@@ -57,25 +56,25 @@ export default class SpeakitController extends Controller {
         difficulty < 0 || difficulty > 5
         || round < 1 || round > difficulties[difficulty]
       ) {
-        AppNavigator.go('speakit');
+        AppNavigator.go('fieldsOfDreams');
         this.cancelAction();
       }
-      gameManager = new SpeakitGameManager(false, difficulty, round);
+      gameManager = new FieldOfDreamsGameManager(false, difficulty, round);
     }
 
     this.props.gameManager = gameManager;
   }
 
   resultsAction() {
-    const stats = LocalStorageAdapter.get(SPEAKIT_GAME_STATS);
+    const stats = LocalStorageAdapter.get(GAME_STATS);
     // if no stats stored, redirect to start page
     if (!stats) {
-      AppNavigator.go('speakit');
+      AppNavigator.go('fieldOfDreams');
       // we have to do this in order to not cause any errors to the console
       this.cancelAction();
     }
     // that's only for one time use
-    LocalStorageAdapter.remove(SPEAKIT_GAME_STATS);
+    LocalStorageAdapter.remove(GAME_STATS);
     this.props.stats = stats;
 
     // if not user words, we can proceed to the next round
@@ -91,7 +90,7 @@ export default class SpeakitController extends Controller {
     }
     // and save it
     SettingsModel.saveGame(
-      GAMES.SPEAKIT,
+      GAMES.FIELDOFDREAMS,
       {
         difficulty: this.props.nextDifficulty,
         round: this.props.nextRound,
