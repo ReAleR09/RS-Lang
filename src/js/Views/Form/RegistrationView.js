@@ -17,6 +17,7 @@ const validMail = (email) => {
     const output = 'Email is wrong!';
     document.querySelector('.email').value = '';
     document.querySelector('.email').placeholder = output;
+    Toaster.showToast(output, errors.styles);
   }
   return valid;
 };
@@ -40,6 +41,7 @@ const validPassword = (password) => {
     const output = 'Password is wrong!';
     document.querySelector('.password').value = '';
     document.querySelector('.password').placeholder = output;
+    Toaster.showToast(output, errors.styles);
   }
   return valid;
 };
