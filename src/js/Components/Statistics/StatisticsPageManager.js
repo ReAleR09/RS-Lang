@@ -32,7 +32,7 @@ export default class StatisticsPageManager {
       const gameResults = stats.gameResults[gameTitle];
       if (gameResults && Array.isArray(gameResults) && gameResults.length > 0) {
         gameResults.forEach((result) => {
-          const dateObj = new Date(Date.parse(result.date));
+          const dateObj = new Date(result.date);
           if (!dateObj) return;
           const resultMapped = {
             date: `${dateObj.toLocaleDateString()} ${dateObj.toLocaleTimeString()}`,

@@ -116,7 +116,6 @@ export default class SpeakitGameManager {
 
   async init() {
     showPreloader();
-    // TODO show load animation?
     let words;
 
     if (this.userWordsMode) {

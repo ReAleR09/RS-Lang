@@ -136,7 +136,7 @@ export default class Statistics {
     const dateNow = new Date().getTime();
     const gameResult = { date: dateNow, ...this.results };
 
-    if (!Object.prototype.hasOwnProperty.call(this.statistics, this.game)) {
+    if (!Object.prototype.hasOwnProperty.call(this.statistics[GAME_RESULTS_KEY], this.game)) {
       this.statistics[GAME_RESULTS_KEY][this.game] = [];
     }
     this.statistics[GAME_RESULTS_KEY][this.game].push(gameResult);
