@@ -54,7 +54,6 @@ class ProgressBar {
 
     const progressBar = document.querySelector(queries.progressBar);
     progressBar.classList.remove(barHideClass);
-    console.log(progressBar.className);
   }
 
   clearProgressBar() {
