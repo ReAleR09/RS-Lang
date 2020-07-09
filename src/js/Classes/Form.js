@@ -34,7 +34,6 @@ export default class Form {
         <input class="password" type="password" minlength="8" ${autocompleteOff} title="Password should be > 8 characters and contains one digit, one letter(uppercase), one letter(lowercase) and one special char">
         <button class="waves-effect waves-light btn">${this.type}</button>
       </form>
-      <p class="error"></p>
       <p>${question} <a href="#" id="form-link">${offer}</a></p>
     </div>
     </div>`;

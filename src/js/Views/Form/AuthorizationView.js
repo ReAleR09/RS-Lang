@@ -3,6 +3,7 @@ import AppNavigator from '../../lib/AppNavigator';
 import Form from '../../Classes/Form';
 import SettingsModel from '../../Classes/UserSettings';
 import initProgressBar from '../../Utils/ProgressBarUtils';
+import Toaster from '../../Classes/Toaster';
 
 const errors = {
   server: 'Server error',
@@ -18,15 +19,9 @@ const logIn = async (e) => {
   const userData = await SettingsModel.auth(user);
   if (userData.error) {
     if (userData.error >= 500) {
-      document.querySelector('.error').innerHTML = errors.server;
-      setTimeout(() => {
-        document.querySelector('.error').innerHTML = '';
-      }, 2000);
+      Toaster.showToast(errors.server);
     } else {
-      document.querySelector('.error').innerHTML = errors.signIn;
-      setTimeout(() => {
-        document.querySelector('.error').innerHTML = '';
-      }, 2000);
+      Toaster.showToast(errors.signIn);
     }
   } else {
     await initProgressBar();
