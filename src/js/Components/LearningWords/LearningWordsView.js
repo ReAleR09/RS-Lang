@@ -13,6 +13,7 @@ import {
   HTML_COMPONENT,
   CLASS_VISIBLE,
   CLASS_CARD_LOCKED,
+  CLASS_COMPONENT_LOCKED,
 } from './IndexTemplate';
 import { DIFFICULTIES, DICT_CATEGORIES } from '../../Classes/Api/constants';
 
@@ -20,7 +21,7 @@ export default class LearningWordsView {
   constructor(model) {
     this.model = model;
     this.mode = this.model.mode;
-    this.buttonNextLock = false;
+    this.componentLock = false;
   }
 
   init(settings) {
@@ -167,14 +168,16 @@ export default class LearningWordsView {
   }
 
   async onButtonNext() {
-    if (this.buttonNextLock) return;
+    if (this.componentLock) {
+      this.element.classList.add(CLASS_COMPONENT_LOCKED);
+    }
     const inputValue = this.wordInput.value;
     this.wordInput.value = '';
 
     const checkResult = await this.model.acceptInput(inputValue);
 
     if (this.isCardLocked()) {
-      this.buttonNextLock = true;
+      this.componentLock = true;
       this.placeSuccessPlaceHolder();
     } else if (checkResult) {
       this.removePlaceHolder();
@@ -253,7 +256,8 @@ export default class LearningWordsView {
     this.element.classList.add(CLASS_VISIBLE);
     this.updateSettings();
     this.wordInput.focus();
-    this.buttonNextLock = false;
+    this.element.classList.remove(CLASS_COMPONENT_LOCKED);
+    this.componentLock = false;
   }
 
   lockCard() {
