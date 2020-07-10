@@ -9,6 +9,10 @@ import {
   LEARNING_WORDS_CONTROLLER,
   RESULTS_ACTION,
   TEST_RESULT_ACTION,
+  gameRoundsCount,
+  gameLevelCount,
+  minBestResult,
+  maxWorstResult,
 } from './constants';
 import Statistics from '../../Classes/Statistics';
 import { GAMES, MODES } from '../../../config';
@@ -69,7 +73,7 @@ export default class LearningWordsModel {
   async init() {
     if (this.mode === MODES.GAME) {
       this.view.turnOnGameMode();
-      this.game.startGame();
+      this.game.startGame(gameLevelCount, gameRoundsCount, minBestResult, maxWorstResult);
       this.changeDifficulty(this.game.level);
     }
 
