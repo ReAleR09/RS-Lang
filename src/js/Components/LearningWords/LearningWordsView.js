@@ -102,6 +102,7 @@ export default class LearningWordsView {
   }
 
   detach() {
+    this.material.detach();
     this.model = null;
     this.element = null;
     this.material = null;
