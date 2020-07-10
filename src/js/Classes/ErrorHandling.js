@@ -1,15 +1,17 @@
 import showToast from './Toaster';
 import AppNavigator from '../lib/AppNavigator';
+import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
 
 const toastStyleError = 'red darken-1';
 const toastNonCriticalError = 'red darken-1';
 
-const errorPageController = 'errorHandling';
-const errorPageACtion = 'index';
+const errorPageController = 'error';
+const ERROR_DATA_KEY = 'RS7--error';
 
-function handleError(error, type) {
-  showToast(type, toastStyleError);
-  AppNavigator.replace(errorPageController, errorPageACtion);
+function handleError(code, info) {
+  showToast(info, toastStyleError);
+  LocalStorageAdapter.set(ERROR_DATA_KEY, { code, info });
+  AppNavigator.go(errorPageController);
 }
 
 function handleUnhandledError() {
