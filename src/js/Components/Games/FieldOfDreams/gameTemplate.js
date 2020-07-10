@@ -11,6 +11,9 @@ const CLASSES = {
   drum: 'drum',
 };
 
+export const CLASS_COMPONENT_LOCKED = 'component-locked';
+const COMPONENT_LOCK_CLASS = 'component-lock';
+
 export const CLASS_LETTER_WRAP = 'button-letter-wrap';
 export const CLASS_LETTER_FLIP = 'letter-flipped';
 export const CLASS_DRUM_ROTATE = 'drum-rotation';
@@ -66,5 +69,6 @@ export const FIELD_OF_DREAMS_GAME_HTML = `
       <img src="/assets/img/fieldOfDreams_drum.png">
     </div>
   </div>
+  <div class="${COMPONENT_LOCK_CLASS}"></div>
 </section>
 `;

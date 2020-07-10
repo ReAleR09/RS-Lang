@@ -11,6 +11,7 @@ import {
   CLASS_LETTER_FLIP,
   CLASS_DRUM_ROTATE,
   CLASS_LETTER_WRAP,
+  CLASS_COMPONENT_LOCKED,
 } from './gameTemplate';
 import SoundPlayer from '../../../Classes/SoundPlayer';
 
@@ -166,6 +167,7 @@ export default class FieldOfDreamsView {
     }
     this.showCard();
     this.setTimer(this.startQuestionUtterance, 1000);
+    this.view.unlockComponent();
   }
 
   startDrum() {
@@ -174,5 +176,13 @@ export default class FieldOfDreamsView {
 
   stopDrum() {
     this.drum.classList.remove(CLASS_DRUM_ROTATE);
+  }
+
+  lockComponent() {
+    this.element.classList.add(CLASS_COMPONENT_LOCKED);
+  }
+
+  unlockComponent() {
+    this.element.classList.remove(CLASS_COMPONENT_LOCKED);
   }
 }

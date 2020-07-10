@@ -111,6 +111,7 @@ export default class FieldOfDreamsGameManager {
 
   // SpeechRecognition might give several options
   acceptAnswer(phrases) {
+    this.view.lockComponent();
     this.voiceControl.stopRecognition();
     let result = false;
     if (phrases instanceof Array) {
