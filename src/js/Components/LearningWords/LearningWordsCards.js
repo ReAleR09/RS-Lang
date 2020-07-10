@@ -36,7 +36,7 @@ export default class LearnindWordsCards {
       this.limits = dayNorms;
     }
     if (difficulty) {
-      this.difficulty = difficulty;
+      this.difficultyLevel = difficulty;
     }
     if (statistics) {
       this.counts = statistics;
