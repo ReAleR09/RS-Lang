@@ -71,20 +71,15 @@ export default class LearningWordsModel {
   }
 
   async init() {
+    this.view.init(this.settings);
+
     if (this.mode === MODES.GAME) {
       this.view.turnOnGameMode();
       this.game.startGame(gameLevelCount, gameRoundsCount, minBestResult, maxWorstResult);
       this.changeDifficulty(this.game.level);
     }
 
-    this.view.init(this.settings);
-
-    await this.cards.fillCards();
-    if (this.cards.isCardReady) {
-      this.updateWordCard(this.card);
-    } else {
-      this.showResult();
-    }
+    await this.goNext();
   }
 
   updateWordCard(word) {
@@ -119,7 +114,7 @@ export default class LearningWordsModel {
       return true;
     }
 
-    if (!value.trim().length) {
+    if (!value.trim().length && this.mode !== MODES.GAME) {
       return false;
     }
 
@@ -128,7 +123,7 @@ export default class LearningWordsModel {
     if (this.mode === MODES.GAME) {
       this.game.inputResult(result);
       if (this.game.isEnded) {
-        this.settingsObject.setDifficulty(this.game.level);
+        await this.settingsObject.setDifficultyLevel(this.game.level);
         this.showResult();
       } else {
         if (this.game.level !== this.difficulty) {
