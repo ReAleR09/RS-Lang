@@ -67,7 +67,6 @@ export default class Statistics {
     } else {
       this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].results = { ...this.results };
     }
-    await this.statisticsApi.update(this.statistics);
   }
 
   async updateWordStatistics(wordId, result = true, isNewWord) {
@@ -88,6 +87,7 @@ export default class Statistics {
     if (this.mode === MODES.REPITITION && !(this.wordsSendAtEnd)) {
       await this.updateRepititionsStatistics(wordId, isNewWord);
       await this.spacedRepititions.putTrainingData(wordId, result);
+      await this.statisticsApi.update(this.statistics);
     }
     this.wordStat.push({ wordId, result });
   }
@@ -144,8 +144,6 @@ export default class Statistics {
     }
     this.statistics[GAME_RESULTS_KEY][this.game].push(gameResult);
 
-    const report = await this.statisticsApi.update(this.statistics);
-
     if (this.wordsSendAtEnd && this.mode === MODES.REPITITION) {
       let words = this.wordStat.map(({ wordId }) => wordId);
       const bestResults = [];
@@ -166,6 +164,8 @@ export default class Statistics {
       await Promise.all(requestStatArrays);
       await Promise.all(requestRepitArrays);
     }
+
+    const report = await this.statisticsApi.update(this.statistics);
 
     return report;
   }
