@@ -1,6 +1,8 @@
 import { BACKEND_URL } from '../../../config';
 import LocalStorageAdapter from '../../Utils/LocalStorageAdapter';
 import { FIELD_TOKEN, FIELD_USER_ID } from '../../Utils/Constants';
+import ErrorHandling from '../ErrorHandling';
+import { API_ERROR } from './constants';
 
 const REQUESTS = {
   PUT: 'PUT',
@@ -58,16 +60,20 @@ export default class Api {
       fetchOptions.body = JSON.stringify(bodyObject);
     }
 
-    const rawResponse = await fetch(url, fetchOptions);
+    try {
+      const rawResponse = await fetch(url, fetchOptions);
 
-    let content = {};
-    if (rawResponse.status >= 400) {
-      content.error = rawResponse.status;
-    } else if (type !== REQUESTS.DELETE) {
-      content = await rawResponse.json();
+      let content = {};
+      if (rawResponse.status >= 400) {
+        content.error = rawResponse.status;
+      } else if (type !== REQUESTS.DELETE) {
+        content = await rawResponse.json();
+      }
+      return content;
+    } catch (error) {
+      ErrorHandling.handleError(error, API_ERROR);
+      return { error };
     }
-
-    return content;
   }
 
   async post(endpoint, params, body) {
