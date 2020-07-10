@@ -8,7 +8,7 @@ const ID_WORD = 'word';
 export const TOOLTIP_ATTRIBUTE = 'data-tooltip';
 
 export const CLASS_COMPONENT = 'learn-words';
-
+export const CLASS_CARD_LOCKED = 'locked';
 const CLASS_CARD_SETTINGS = 'card-settings';
 
 const CLASS_MODAL_INTERVAL_REPEAT = 'modal-interval-repeat';

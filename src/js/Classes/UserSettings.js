@@ -5,6 +5,9 @@ import {
   FIELD_USER_ID, FIELD_TOKEN, FIELD_REFRESH_TOKEN, FIELD_EMAIL,
 } from '../Utils/Constants';
 import { GAMES } from '../../config';
+import ProgressBarInstance from './ProgressBar';
+import ErrorHandling from './ErrorHandling';
+import { API_SEND_ERROR } from './Api/constants';
 
 class UserSettings {
   constructor() {
@@ -26,7 +29,11 @@ class UserSettings {
   }
 
   async saveSettings() {
-    await this.settingsApi.update(this.settingsObject);
+    const result = await this.settingsApi.update(this.settingsObject);
+    if (result.error) {
+      ErrorHandling.handleNonCriticalError(result.error, API_SEND_ERROR);
+    }
+    return result;
   }
 
   /**
@@ -114,7 +121,6 @@ class UserSettings {
       // if success - get saved settings
       await this.loadSettings();
     }
-
     return userData;
   }
 
@@ -143,6 +149,7 @@ class UserSettings {
   logout() {
     UserSettings.removeUserLogin();
     UserSettings.clearLocalStorage();
+    ProgressBarInstance.clearProgressBar();
     this.settingsObject = {};
     this.isAuth = false;
   }

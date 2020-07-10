@@ -5,9 +5,14 @@ import {
   MAX_RANDOMPAGE_WORDS_INDEX,
   MAX_REQUEST_COUNT,
   MAX_PAGE_INDEX,
-  GROUPS,
+  API_ERROR,
+  API_SEND_ERROR,
 } from './constants';
 import Utils from '../../Utils/Utils';
+import ErrorHandling from '../ErrorHandling';
+
+const puzzleMaxLength = 10;
+const puzzlePageSize = 10;
 
 export default class WordsApi {
   constructor() {
@@ -45,6 +50,13 @@ export default class WordsApi {
       .map((page) => this.api.getChunkOfWords({ group: difficulty, page }));
 
     const arrayOfResults = await Promise.all(arrayOfRequests);
+
+    const error = WordsApi.checkPromiseArrayErrors(arrayOfResults);
+    if (error) {
+      ErrorHandling.handleError(error, API_ERROR);
+      return [];
+    }
+
     let restWordCount = count;
     const arrayOfWords = [];
     let indexOfResults = 0;
@@ -87,17 +99,21 @@ export default class WordsApi {
     if (filterString) {
       params.filter = filterString;
     }
-    const totalCountResult = await this.api.getAggregatedWords(params);
 
-    let totalCount = 0;
-    try {
-      totalCount = totalCountResult[0].totalCount[0].count;
-    } catch (error) {
+    const totalCount = await this.getTotalCountByAggregatedWordsRequest(params);
+
+    if (!totalCount) {
       return [];
     }
 
     params.wordsPerPage = totalCount;
     let arrayOfResults = await this.api.getAggregatedWords(params);
+    const error = WordsApi.checkPromiseArrayErrors(arrayOfResults);
+    if (error) {
+      ErrorHandling.handleError(error, API_ERROR);
+      return [];
+    }
+
     arrayOfResults = arrayOfResults[0].paginatedResults;
 
     let resultCount = totalCount;
@@ -117,10 +133,16 @@ export default class WordsApi {
     const filter = JSON.stringify({ userWord: null });
 
     const newWords = await this.getAggregatedWords(count, difficulty, filter);
+
+    if (newWords.error) {
+      ErrorHandling.handleError(newWords.error, API_ERROR);
+      return [];
+    }
+
     return newWords;
   }
 
-  async getRepeatedWords(count, day) {
+  async getRepeatedWords(count, day, forPuzzle = false) {
     let dateNow = Date.now();
     if (day) {
       dateNow = day.getTime();
@@ -131,13 +153,23 @@ export default class WordsApi {
       'userWord.optional.nextDate': { $lt: dateNow },
     });
 
-    const requestArray = GROUPS.map((group) => this.getAggregatedWords(undefined, group, filter));
+    let repeatedWords = await this.getAggregatedWords(undefined, undefined, filter);
 
-    let repeatedWords = await Promise.all(requestArray);
+    if (repeatedWords.error) {
+      ErrorHandling.handleError(repeatedWords.error, API_ERROR);
+      return [];
+    }
 
-    repeatedWords = repeatedWords.flat();
+    if (forPuzzle) {
+      repeatedWords = repeatedWords.filter((word) => {
+        const exampleLength = word.textExample.trim().split(' ').length;
+        return (exampleLength <= puzzleMaxLength);
+      });
+    }
+
     repeatedWords = Utils.arrayShuffle(repeatedWords);
-    if (count) {
+
+    if (count < repeatedWords.length) {
       repeatedWords = repeatedWords.slice(0, count);
     }
 
@@ -167,6 +199,10 @@ export default class WordsApi {
       result = await this.api.putUserWordById(wordId, userWordStructure);
     }
 
+    if (result.error) {
+      ErrorHandling.handleNonCriticalError(result.error, API_SEND_ERROR);
+    }
+
     return result;
   }
 
@@ -182,7 +218,7 @@ export default class WordsApi {
     return userWordData;
   }
 
-  async getUserWordsCount(difficulty) {
+  async getUserWordsCount(difficulty = false) {
     const params = {
       wordsPerPage: 1,
     };
@@ -196,14 +232,8 @@ export default class WordsApi {
       userWord: { $ne: null },
     });
 
-    const totalCountResult = await this.api.getAggregatedWords(params);
+    const totalCount = await this.getTotalCountByAggregatedWordsRequest(params);
 
-    let totalCount = 0;
-    try {
-      totalCount = totalCountResult[0].totalCount[0].count;
-    } catch (error) {
-      return 0;
-    }
     return totalCount;
   }
 
@@ -228,14 +258,8 @@ export default class WordsApi {
       'userWord.optional.nextDate': { $lt: dateNow },
     });
 
-    const totalCountResult = await this.api.getAggregatedWords(params);
+    const totalCount = await this.getTotalCountByAggregatedWordsRequest(params);
 
-    let totalCount = 0;
-    try {
-      totalCount = totalCountResult[0].totalCount[0].count;
-    } catch (error) {
-      return 0;
-    }
     return totalCount;
   }
 
@@ -245,7 +269,7 @@ export default class WordsApi {
    * @param {int} gameRound 1-*
    * У апи сложности 0-5 и страницы 0-29
    */
-  async getWordsForGame(difficulty, gameRoundSize, gameRound) {
+  async getWordsForGame(difficulty, gameRoundSize, gameRound, forPuzzle = false) {
     /**
      * Сначала нужно спроецировать "игровую страницу" (ака номер раунда)
      * в страницу(ы) апи (в каждой сложности 600/20=30 страниц,
@@ -265,10 +289,27 @@ export default class WordsApi {
       arrayOfPages.push(pageNum);
     }
 
+    const requestParams = {
+      group: difficulty,
+    };
+    if (forPuzzle) {
+      requestParams.wordsPerExampleSentenceLTE = puzzleMaxLength;
+      requestParams.wordsPerPage = puzzlePageSize;
+    }
+
     const arrayOfRequests = arrayOfPages
-      .map((page) => this.api.getChunkOfWords({ group: difficulty, page }));
+      .map((page) => {
+        requestParams.page = page;
+        return this.api.getChunkOfWords(requestParams);
+      });
 
     let arrayOfResults = await Promise.all(arrayOfRequests);
+
+    const error = WordsApi.checkPromiseArrayErrors(arrayOfResults);
+    if (error) {
+      ErrorHandling.handleError(error, API_ERROR);
+      return [];
+    }
     /**
      * Now need to cut unneeded words.
      * For example, we are requesting page 3 with gameRoundSize 14. Then
@@ -302,5 +343,30 @@ export default class WordsApi {
   async deleteWordById(wordId) {
     const result = await this.api.deleteUserWordById(wordId);
     return result;
+  }
+
+  async getTotalCountByAggregatedWordsRequest(params) {
+    const totalCountResult = await this.api.getAggregatedWords(params);
+
+    if (totalCountResult.error) {
+      ErrorHandling.handleNonCriticalError(totalCountResult.error, API_ERROR);
+      return 0;
+    }
+
+    let totalCount = 0;
+    try {
+      totalCount = totalCountResult[0].totalCount[0].count;
+    } catch (error) {
+      return 0;
+    }
+    return totalCount;
+  }
+
+  static checkPromiseArrayErrors(array) {
+    const result = array.findIndex((requestResult) => requestResult.error);
+    if (result === -1) {
+      return false;
+    }
+    return array[result].error;
   }
 }

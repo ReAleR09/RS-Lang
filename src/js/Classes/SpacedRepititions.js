@@ -1,6 +1,12 @@
 import WordsApi from './Api/WordsApi';
-import { MILLIS_PER_MINUTE, MILLIS_PER_DAY, DIFFICULTIES } from './Api/constants';
+import {
+  MILLIS_PER_MINUTE,
+  MILLIS_PER_DAY,
+  DIFFICULTIES,
+  API_ERROR,
+} from './Api/constants';
 import Dictionary from './Dictionary';
+import ErrorHandling from './ErrorHandling';
 
 const SETTINGS = {
   firstIntervalMinutes: 5,
@@ -63,6 +69,12 @@ export default class SpacedRepititions {
     if (!this.wordsApi.checkUserWordInBase(wordId)) return status;
 
     const userWordData = await this.wordsApi.getWordDataById(wordId);
+
+    if (userWordData.error) {
+      ErrorHandling.handleNonCriticalError(userWordData.error, API_ERROR);
+      return status;
+    }
+
     const totalSteps = this.getStep(this.settings.maxIntervalDays);
 
     const curStep = this.getStep(userWordData);
@@ -73,7 +85,6 @@ export default class SpacedRepititions {
   }
 
   async putTrainingData(wordId, result) {
-    let userWordData;
     const DateNow = Date.now();
 
     let isFirstStep = await this.wordsApi.checkUserWordInBase(wordId);
@@ -81,14 +92,20 @@ export default class SpacedRepititions {
 
     if (isFirstStep) {
       await this.wordsApi.changeWordDataById(wordId);
-      userWordData = await this.wordsApi.getWordDataById(wordId);
-    } else {
-      userWordData = await this.wordsApi.getWordDataById(wordId);
+    }
+    const userWordData = await this.wordsApi.getWordDataById(wordId);
+
+    if (userWordData.error) {
+      ErrorHandling.handleError(userWordData.error, API_ERROR);
+      return userWordData;
+    }
+
+    if (!isFirstStep) {
       isFirstStep = (userWordData.nextDate === 0);
     }
 
     if (userWordData.errors >= this.settings.annoyingLimit) {
-      await this.dictionary.putOnCategory(wordId, this.settings.annoyingAction);
+      userWordData.dictCategory = this.settings.annoyingAction;
     }
 
     if (isFirstStep) {

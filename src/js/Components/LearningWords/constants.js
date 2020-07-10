@@ -1,5 +1,7 @@
 const githubAccount = 'yafimchik';
 
+export const WORD_REPLACEMENT = '<span>...</span>';
+
 export const chunkCount = 10;
 export const difficultyMax = 5;
 
@@ -19,6 +21,10 @@ export const WIDTH_ADDITION = 1;
 
 export const wordStartTag = '<b>';
 export const wordEndTag = '</b>';
+
+export const MeaningWordStartTag = '<i>';
+export const MeaningWordEndTag = '</i>';
+
 export const lockAttribute = 'readonly';
 export const styleAttribute = 'style';
 

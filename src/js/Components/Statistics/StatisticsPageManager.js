@@ -2,10 +2,12 @@ import Chart from 'chart.js';
 import StatisticsApi from '../../Classes/Api/StatisticsApi';
 import { GAMES } from '../../../config';
 import { getGameHistoryView } from './Templates';
+import WordsApi from '../../Classes/Api/WordsApi';
 
 export default class StatisticsPageManager {
   constructor(element) {
     this.statsApi = new StatisticsApi();
+    this.wordsApi = new WordsApi();
     this.element = element;
   }
 
@@ -21,7 +23,10 @@ export default class StatisticsPageManager {
     const mappedStats = {
       games: [],
       days: false,
+      totalWordsCount: 0,
     };
+
+    mappedStats.totalWordsCount = stats.totalWordsCount;
 
     const gamesNames = Object.values(GAMES);
     gamesNames.forEach((gameTitle) => {
@@ -130,6 +135,8 @@ export default class StatisticsPageManager {
   async requestStatistics() {
     const stats = await this.statsApi.get();
     if (stats.error) return false;
+    const totalWordsCount = await this.wordsApi.getUserWordsCount();
+    stats.totalWordsCount = totalWordsCount;
     return stats;
   }
 }
