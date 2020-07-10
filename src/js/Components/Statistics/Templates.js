@@ -27,6 +27,7 @@ export const STATISTICS_HTML = `
     <div id="totalstats" class="col s12 offset-m2 m8">
       <div class="stats__chart-container">
         <div><canvas id="learningCurveChart" width="400" height="250"></canvas></div>
+        <div>Изучаемых слов: <span id="learnedWordsCount"></span></div>
       </div>
     </div>
     <div id="bydays" class="col s12">

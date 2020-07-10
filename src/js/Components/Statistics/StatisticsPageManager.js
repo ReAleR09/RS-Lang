@@ -140,6 +140,8 @@ export default class StatisticsPageManager {
     const totalWordsCount = skippedWords + learningWordsCount;
 
     const learningChartCanvas = this.element.querySelector('#learningCurveChart');
+    const learnedWordsCountEl = this.element.querySelector('#learnedWordsCount');
+    learnedWordsCountEl.innerHTML = learningWordsCount;
 
     const learnCurvePoints = getLearnChartData();
 
