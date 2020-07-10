@@ -7,6 +7,7 @@ import Toaster from '../../Classes/Toaster';
 const errors = {
   server: 'Server error',
   styles: 'red darken-1',
+  email: 'this email exists',
 };
 
 const validMail = (email) => {
@@ -59,7 +60,9 @@ const register = async (e) => {
     const api = new Api();
     const userData = await api.register(user);
     if (userData.error) {
-      if (userData.error >= 500) {
+      if (userData.error === 417) {
+        Toaster.showToast(errors.email, errors.styles);
+      } else if (userData.error >= 500) {
         Toaster.showToast(errors.server, errors.styles);
       }
     } else {
