@@ -15,6 +15,7 @@ import DictionaryController from './js/Controllers/DictionaryController';
 import FieldOfDreamsController from './js/Controllers/FieldOfDreamsController';
 import PageAboutTeamController from './js/Controllers/PageAboutTeamController';
 import GameAudioCallController from './js/Controllers/GameAudioCallController';
+import ErrorsController from './js/Controllers/ErrorsController';
 
 import './js/plugins';
 import { SIDENAV } from './config';
@@ -49,6 +50,7 @@ async function appInit() {
     'game-audio-call': GameAudioCallController,
     englishpuzzle: EnglishPuzzleController,
     'about-team': PageAboutTeamController,
+    error: ErrorsController,
   };
 
   /**
