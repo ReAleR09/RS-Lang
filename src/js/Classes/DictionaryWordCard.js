@@ -38,6 +38,7 @@ class DictionaryWordCard {
           <div class="${CLASS_WORD_COUNT}"><b>Repeated:</b> ${this.word.userWord.optional.errors + this.word.userWord.optional.success || 0} </div>
           <div class="${CLASS_WORD_STAT_PREV}"><b>Last</b> ${new Date(this.word.userWord.optional.lastDate).toLocaleString()} </div>
           <div class="${CLASS_WORD_STAT_NEXT}"><b>Next</b> ${new Date(this.word.userWord.optional.nextDate).toLocaleString()} </div>`;
+    /* eslint no-underscore-dangle: 0 */
     if (this.flag) {
       html += `<div class="${CLASS_WORD_DELETE_BUTTON}" idWord="${this.word._id}"> <i class="fa fa-trash" aria-hidden="true"></i> </div>`;
     } else {
