@@ -363,10 +363,10 @@ export default class WordsApi {
   }
 
   static checkPromiseArrayErrors(array) {
-    const result = array.find((requestResult) => requestResult.error);
+    const result = array.findIndex((requestResult) => requestResult.error);
     if (result === -1) {
       return false;
     }
-    return result.error;
+    return array[result].error;
   }
 }
