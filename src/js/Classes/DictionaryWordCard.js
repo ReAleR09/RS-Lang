@@ -6,7 +6,6 @@ const CLASS_TRANSCRIPTION = 'word-data__transcription';
 const CLASS_WORD_EXPLANATION = 'word-data__sentence-explanation';
 const CLASS_WORD_EXAMPLE = 'word-data__example';
 const CLASS_WORD_PICTURE = 'word-data__picture';
-// const CLASS_WORD_STATUS = 'word-data__status';
 const CLASS_WORD_COUNT = 'word-data__count';
 const CLASS_WORD_STAT_PREV = 'word-data__stat-prev';
 const CLASS_WORD_STAT_NEXT = 'word-data__stat-next';

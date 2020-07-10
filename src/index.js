@@ -12,7 +12,6 @@ import AuthorizationController from './js/Controllers/AuthorizationController';
 import EnglishPuzzleController from './js/Controllers/englishPuzzleController';
 import SettingsController from './js/Controllers/SettingsController';
 import DictionaryController from './js/Controllers/DictionaryController';
-import AudioCallController from './js/Controllers/GameAudioCallController';
 import PageAboutTeamController from './js/Controllers/PageAboutTeamController';
 import GameAudioCallController from './js/Controllers/GameAudioCallController';
 
@@ -43,7 +42,6 @@ async function appInit() {
     'game-sprint': GameSprintController,
     speakit: SpeakitController,
     dictionary: DictionaryController,
-    'game-audio-call': AudioCallController,
     'game-audio-call': GameAudioCallController,
     englishpuzzle: EnglishPuzzleController,
     'about-team': PageAboutTeamController,
