@@ -14,7 +14,7 @@ export default class LearningWordsMaterial {
 
   init() {
     let elems = this.element.querySelectorAll('.tooltipped');
-    Materialize.Tooltip.init(elems);
+    this.tooltips = Materialize.Tooltip.init(elems);
 
     elems = this.element.querySelectorAll('.fixed-action-btn');
     Materialize.FloatingActionButton.init(elems, {
@@ -30,6 +30,10 @@ export default class LearningWordsMaterial {
     Materialize.Modal.init(elems);
 
     this.assignButtonListeners();
+  }
+
+  detach() {
+    this.tooltips.forEach((tooltip) => tooltip.destroy());
   }
 
   assignButtonListeners() {
