@@ -218,7 +218,7 @@ export default class WordsApi {
     return userWordData;
   }
 
-  async getUserWordsCount(difficulty) {
+  async getUserWordsCount(difficulty = false) {
     const params = {
       wordsPerPage: 1,
     };

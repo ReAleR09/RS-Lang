@@ -15,6 +15,7 @@ import DictionaryController from './js/Controllers/DictionaryController';
 import FieldOfDreamsController from './js/Controllers/FieldOfDreamsController';
 import PageAboutTeamController from './js/Controllers/PageAboutTeamController';
 import GameAudioCallController from './js/Controllers/GameAudioCallController';
+import StatisticsController from './js/Controllers/StatisticsController';
 import ErrorsController from './js/Controllers/ErrorsController';
 
 import './js/plugins';
@@ -50,6 +51,7 @@ async function appInit() {
     'game-audio-call': GameAudioCallController,
     englishpuzzle: EnglishPuzzleController,
     'about-team': PageAboutTeamController,
+    statistics: StatisticsController,
     error: ErrorsController,
   };
 

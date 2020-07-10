@@ -200,8 +200,8 @@ export const SETTINGS_HTML = `
     <div class="row">
       <div class="col s12">
         <ul class="${CLASSES.TABS} tabs">
-          <li class="tab col offset-s2 s4"><a class="active" href="#main-settings">Основные</a></li>
-          <li class="tab col s4"><a href="#interval-settings">Интервальные повторения</a></li>
+          <li class="tab col s6"><a class="active" href="#main-settings">Основные</a></li>
+          <li class="tab col s6"><a href="#interval-settings">Интервальные повторения</a></li>
         </ul>
       </div>
       <div id="main-settings" class="col offset-s2 s8 left-align">
