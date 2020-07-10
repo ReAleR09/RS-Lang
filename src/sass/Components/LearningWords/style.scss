@@ -66,6 +66,15 @@
         padding-left: 1rem;
         padding-right: 1rem;
       }
+
+      .description {
+        i {
+          display: none;
+        }
+        span {
+          display: inline;
+        }
+      }
     }
   }
 
@@ -99,5 +108,18 @@
 
   .flex-justify-center {
     justify-content: center;
+  }
+
+  &.locked {
+    .hints {
+      .description {
+        i {
+          display: inline;
+        }
+        span {
+          display: none;
+        }
+      }
+    }
   }
 }

@@ -8,6 +8,7 @@ export const GAMES = {
   AUDIOCALL: 'audioCall',
   SPRINT: 'sprint',
   PUZZLE: 'puzzle',
+  FIELDOFDREAMS: 'fieldOfDreams',
 };
 
 export const MODES = {
@@ -57,5 +58,10 @@ export const SIDENAV = [
         icon: 'extension',
       },
     ],
+  },
+  {
+    title: 'Field of Dreams [mini-game]',
+    path: ['fieldOfDreams'],
+    icon: 'slow_motion_video',
   },
 ];

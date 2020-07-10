@@ -5,9 +5,11 @@ import {
   MAX_RANDOMPAGE_WORDS_INDEX,
   MAX_REQUEST_COUNT,
   MAX_PAGE_INDEX,
-  GROUPS,
 } from './constants';
 import Utils from '../../Utils/Utils';
+
+const puzzleMaxLength = 10;
+const puzzlePageSize = 10;
 
 export default class WordsApi {
   constructor() {
@@ -120,7 +122,7 @@ export default class WordsApi {
     return newWords;
   }
 
-  async getRepeatedWords(count, day) {
+  async getRepeatedWords(count, day, forPuzzle = false) {
     let dateNow = Date.now();
     if (day) {
       dateNow = day.getTime();
@@ -131,13 +133,18 @@ export default class WordsApi {
       'userWord.optional.nextDate': { $lt: dateNow },
     });
 
-    const requestArray = GROUPS.map((group) => this.getAggregatedWords(undefined, group, filter));
+    let repeatedWords = await this.getAggregatedWords(undefined, undefined, filter);
 
-    let repeatedWords = await Promise.all(requestArray);
+    if (forPuzzle) {
+      repeatedWords = repeatedWords.filter((word) => {
+        const exampleLength = word.textExample.trim().split(' ').length;
+        return (exampleLength <= puzzleMaxLength);
+      });
+    }
 
-    repeatedWords = repeatedWords.flat();
     repeatedWords = Utils.arrayShuffle(repeatedWords);
-    if (count) {
+
+    if (count < repeatedWords.length) {
       repeatedWords = repeatedWords.slice(0, count);
     }
 
@@ -245,7 +252,7 @@ export default class WordsApi {
    * @param {int} gameRound 1-*
    * У апи сложности 0-5 и страницы 0-29
    */
-  async getWordsForGame(difficulty, gameRoundSize, gameRound) {
+  async getWordsForGame(difficulty, gameRoundSize, gameRound, forPuzzle = false) {
     /**
      * Сначала нужно спроецировать "игровую страницу" (ака номер раунда)
      * в страницу(ы) апи (в каждой сложности 600/20=30 страниц,
@@ -265,8 +272,19 @@ export default class WordsApi {
       arrayOfPages.push(pageNum);
     }
 
+    const requestParams = {
+      group: difficulty,
+    };
+    if (forPuzzle) {
+      requestParams.wordsPerExampleSentenceLTE = puzzleMaxLength;
+      requestParams.wordsPerPage = puzzlePageSize;
+    }
+
     const arrayOfRequests = arrayOfPages
-      .map((page) => this.api.getChunkOfWords({ group: difficulty, page }));
+      .map((page) => {
+        requestParams.page = page;
+        return this.api.getChunkOfWords(requestParams);
+      });
 
     let arrayOfResults = await Promise.all(arrayOfRequests);
     /**

@@ -12,6 +12,7 @@ import AuthorizationController from './js/Controllers/AuthorizationController';
 import EnglishPuzzleController from './js/Controllers/englishPuzzleController';
 import SettingsController from './js/Controllers/SettingsController';
 import DictionaryController from './js/Controllers/DictionaryController';
+import FieldOfDreamsController from './js/Controllers/FieldOfDreamsController';
 import PageAboutTeamController from './js/Controllers/PageAboutTeamController';
 import GameAudioCallController from './js/Controllers/GameAudioCallController';
 
@@ -25,6 +26,7 @@ import '@fortawesome/fontawesome-free/js/brands';
 
 // function appInit() {
 import { showPreloader, hidePreloader } from './js/Classes/Preloader';
+import initProgressBar from './js/Utils/ProgressBarUtils';
 
 async function appInit() {
   showPreloader();
@@ -39,6 +41,8 @@ async function appInit() {
     authorization: AuthorizationController,
     savannah: SavannahController,
     settings: SettingsController,
+    learningWords: LearningWordsController,
+    fieldOfDreams: FieldOfDreamsController,
     'game-sprint': GameSprintController,
     speakit: SpeakitController,
     dictionary: DictionaryController,
@@ -69,6 +73,7 @@ async function appInit() {
     SettingsModel.logout();
     AppNavigator.go('authorization');
   } else {
+    await initProgressBar();
     await router.route(true);
   }
   hidePreloader();

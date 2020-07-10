@@ -19,6 +19,24 @@ const engPuzConst = {
     DIFFICULTY: 'engPuz__difficulty',
     PAGE: 'engPuz__page',
   },
+  gameMode: {
+    ARCADE: 'arcade',
+    MYWORDS: 'mywords',
+  },
+  pagesPerDifficulties: [
+    44, 40, 39,
+    28, 28, 24,
+  ],
+  paintings: {
+    URL: 'https://raw.githubusercontent.com/tlmnnk/rslang_data_paintings/master/',
+  },
+  localstorage: {
+    AUTOPLAY_BTN: 'engPuz__tooltips-autoPlay',
+    SHOW_TRANSLATION_BTN: 'engPuz__tooltips-translation',
+    SHOW_AUDIO_BTN: 'engPuz__tooltips-audioSwitcher',
+    SHOW_PUZZLEBACK_BTN: 'engPuz__tooltips-picture',
+    RESULTS: 'RS7__engPuz--results',
+  },
 };
 
 export default engPuzConst;

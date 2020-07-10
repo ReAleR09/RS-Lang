@@ -1,7 +1,7 @@
 import Materialize from 'materialize-css';
 
-const showToast = (text) => {
-  Materialize.toast({ html: text });
+const showToast = (text, styles = '') => {
+  Materialize.toast({ html: text, classes: styles });
 };
 
 export default {

@@ -35,6 +35,10 @@
 .engPuz__drop-section {
   min-height: 400px;
 }
+
+.min-padding {
+  padding: 10px;
+}
 .engPuz__drag-section {
   min-height: 106px;
 }
@@ -71,4 +75,25 @@
 }
 .fullWidth {
   width: 100%;
+}
+.margin-bottom {
+  margin-bottom: 20px;
+}
+.mar-left {
+  margin-left: 10px;
+}
+
+.flex-evenly a {
+  
+  @include media-mobie-mini {
+    font-size: 12px;
+    line-height: unset;
+    padding: 0 3px;
+  }
+}
+
+.engPuz__selects input.select-dropdown {
+  @include media-mobie-mini {
+    font-size: 14px;
+  }
 }
