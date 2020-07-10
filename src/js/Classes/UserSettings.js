@@ -6,6 +6,8 @@ import {
 } from '../Utils/Constants';
 import { GAMES } from '../../config';
 import ProgressBarInstance from './ProgressBar';
+import ErrorHandling from './ErrorHandling';
+import { API_SEND_ERROR } from './Api/constants';
 
 class UserSettings {
   constructor() {
@@ -27,7 +29,11 @@ class UserSettings {
   }
 
   async saveSettings() {
-    await this.settingsApi.update(this.settingsObject);
+    const result = await this.settingsApi.update(this.settingsObject);
+    if (result.error) {
+      ErrorHandling.handleNonCriticalError(result.error, API_SEND_ERROR);
+    }
+    return result;
   }
 
   /**
