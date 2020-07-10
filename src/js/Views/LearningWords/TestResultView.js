@@ -1,5 +1,5 @@
 import View from '../../lib/View';
-import { CLASS_VISIBLE, CLASS_COMPONENT } from '../../Components/LearningWords/IndexTemplate';
+import { CLASS_VISIBLE } from '../../Components/LearningWords/IndexTemplate';
 import { TEST_RESULT_HTML, QUERY_DIFFICULTY } from '../../Components/LearningWords/TestResultTemplate';
 // import LearningWordsView from '../../Components/LearningWords/LearningWordsView';
 
@@ -18,8 +18,7 @@ export default class TestResultView extends View {
 
     difficultyLevel.innerText = this.props.difficulty;
 
-    const componentElement = this.element.querySelector(`.${CLASS_COMPONENT}`);
-    componentElement.classList.add(CLASS_VISIBLE);
+    this.element.classList.add(CLASS_VISIBLE);
     const difficulty = this.element.querySelector(QUERY_DIFFICULTY);
 
     difficulty.innerText = this.props.difficulty;

@@ -48,7 +48,7 @@ export default class LearnindWordsCards {
     this.cards = [];
     this.newWords = [];
     this.repeatWords = [];
-    this.currentCardIndex = 0;
+    this.currentCardIndex = -1;
   }
 
   set difficulty(value) {

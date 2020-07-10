@@ -4,8 +4,6 @@ import LearningWordsMaterial from './LearningWordsMaterial';
 import {
   DATA_URL,
   lockAttribute,
-  ONE_LETTER_WIDTH,
-  WIDTH_ADDITION,
 } from './constants';
 import {
   INDEX_QUERIES as QUERIES,
@@ -15,6 +13,7 @@ import {
   HTML_COMPONENT,
   CLASS_VISIBLE,
   CLASS_CARD_LOCKED,
+  CLASS_COMPONENT_LOCKED,
 } from './IndexTemplate';
 import { DIFFICULTIES, DICT_CATEGORIES } from '../../Classes/Api/constants';
 
@@ -22,6 +21,7 @@ export default class LearningWordsView {
   constructor(model) {
     this.model = model;
     this.mode = this.model.mode;
+    this.componentLock = false;
   }
 
   init(settings) {
@@ -102,6 +102,7 @@ export default class LearningWordsView {
   }
 
   detach() {
+    this.material.detach();
     this.model = null;
     this.element = null;
     this.material = null;
@@ -168,12 +169,16 @@ export default class LearningWordsView {
   }
 
   async onButtonNext() {
+    if (this.componentLock) {
+      this.element.classList.add(CLASS_COMPONENT_LOCKED);
+    }
     const inputValue = this.wordInput.value;
     this.wordInput.value = '';
 
     const checkResult = await this.model.acceptInput(inputValue);
 
     if (this.isCardLocked()) {
+      this.componentLock = true;
       this.placeSuccessPlaceHolder();
     } else if (checkResult) {
       this.removePlaceHolder();
@@ -221,7 +226,7 @@ export default class LearningWordsView {
 
   drawWordToDOM(word) {
     // TODO clever placeholder: input width = placeholder.width
-    this.wordInput.setAttribute('style', `width: ${ONE_LETTER_WIDTH * (word.word.length + WIDTH_ADDITION)}rem;`);
+    this.wordInput.setAttribute('size', word.word.length);
     this.wordInput.setAttribute('maxlength', word.word.length);
     this.removePlaceHolder();
 
@@ -252,6 +257,8 @@ export default class LearningWordsView {
     this.element.classList.add(CLASS_VISIBLE);
     this.updateSettings();
     this.wordInput.focus();
+    this.element.classList.remove(CLASS_COMPONENT_LOCKED);
+    this.componentLock = false;
   }
 
   lockCard() {

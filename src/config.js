@@ -66,11 +66,11 @@ export const SIDENAV = [
         path: ['savannah'],
         icon: 'extension',
       },
+      {
+        title: 'Field of Dreams [mini-game]',
+        path: ['fieldOfDreams'],
+        icon: 'slow_motion_video',
+      },
     ],
-  },
-  {
-    title: 'Field of Dreams [mini-game]',
-    path: ['fieldOfDreams'],
-    icon: 'slow_motion_video',
   },
 ];
