@@ -19,15 +19,14 @@ export const STATISTICS_HTML = `
   <div class="row">
     <div class="col s12">
       <ul class="tabs">
-        <li class="tab col s6"><a class="active" href="#totalstats">Общая статистика</a></li>
-        <li class="tab col s6"><a href="#bydays">Статистика по дням</a></li>
-        <li class="tab col s6"><a href="#forgames">Статистика по играм</a></li>
+        <li class="tab col s4"><a class="active" href="#totalstats">Общая статистика</a></li>
+        <li class="tab col s4"><a href="#bydays">Статистика по дням</a></li>
+        <li class="tab col s4"><a href="#forgames">Статистика по играм</a></li>
       </ul>
     </div>
-    <div id="totalstats" class="col s12">
-      <div>
-        <canvas id="totalsChart" width="400" height="250"></canvas>
-        <div>Процентажный див</div>
+    <div id="totalstats" class="col s12 offset-m2 m8">
+      <div class="stats__chart-container">
+        <div><canvas id="learningCurveChart" width="400" height="250"></canvas></div>
       </div>
     </div>
     <div id="bydays" class="col s12">
