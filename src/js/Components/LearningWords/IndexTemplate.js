@@ -5,10 +5,13 @@ export const CLASS_ERROR = 'error';
 
 const ID_WORD = 'word';
 
+export const COMPONENT_LOCK_CLASS = 'component-lock';
+
 export const TOOLTIP_ATTRIBUTE = 'data-tooltip';
 
 export const CLASS_COMPONENT = 'learn-words';
-export const CLASS_CARD_LOCKED = 'locked';
+export const CLASS_COMPONENT_LOCKED = 'component-locked';
+export const CLASS_CARD_LOCKED = 'card-locked';
 const CLASS_CARD_SETTINGS = 'card-settings';
 
 const CLASS_MODAL_INTERVAL_REPEAT = 'modal-interval-repeat';
@@ -227,4 +230,5 @@ export const HTML_COMPONENT = `
       ${HTML_MODAL_INTERVAL_REPEAT}
       ${HTML_MODAL_WORD_RATE}
     </div>
+    <div class="${COMPONENT_LOCK_CLASS}"></div>
   </section>`;
