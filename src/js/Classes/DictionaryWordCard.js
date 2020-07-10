@@ -23,7 +23,7 @@ class DictionaryWordCard {
   createWord() {
     let html = `
       <div class="${CLASS_DICTIONARY_WORD}">
-        <div class="${CLASS_DICTIONARY_WORD_SOUND}" sound="${this.word.audio}"><i class="fas fa-volume-up fa-4x"></i></div>
+        <div class="${CLASS_DICTIONARY_WORD_SOUND}" sound="${this.word.audio}"><i class="fas fa-volume-up fa-3x"></i></div>
 
         <div class="${CLASS_WORD_DATA}">
 

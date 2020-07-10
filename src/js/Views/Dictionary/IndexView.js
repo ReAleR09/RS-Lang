@@ -8,18 +8,27 @@ import {
 } from '../../Classes/DictionaryWordCard';
 import initDictionaryTabs from '../../plugins/initMaterial';
 import Dictionary from '../../Classes/Dictionary';
+import AppNavigator from '../../lib/AppNavigator';
 
 const dictionary = new Dictionary();
 
 export default class LearningWordsView extends View {
   onMount() {
-    this.instance = initDictionaryTabs();
+    // this.instance = initDictionaryTabs();
+    const el = document.querySelector('.tabs');
+    this.instance = M.Tabs.init(el);
+    console.log(this.instance);
+
+    const tabs = this.element.querySelector('.tabs');
+    tabs.addEventListener('click', () => {
+      this.instance.updateTabIndicator();
+    })
 
     const recoverButtons = this.element.querySelectorAll(`.${CLASS_WORD_RECOVER_BUTTON}`);
     recoverButtons.forEach((item) => {
-      item.addEventListener('click', () => {
-        dictionary.putOnCategory(item.getAttribute('idWord'));
-
+      item.addEventListener('click', async () => {
+        await dictionary.putOnCategory(item.getAttribute('idWord'));
+        AppNavigator.go('dictionary');
       });
     });
 
@@ -33,16 +42,16 @@ export default class LearningWordsView extends View {
 
     const deleteButtons = this.element.querySelectorAll(`.${CLASS_WORD_DELETE_BUTTON}`);
     deleteButtons.forEach((item) => {
-      item.addEventListener('click', () => {
-        dictionary.putOnCategory(item.getAttribute('idWord'), 'delete');
-
+      item.addEventListener('click', async () => {
+        await dictionary.putOnCategory(item.getAttribute('idWord'), 'delete');
+        AppNavigator.go('dictionary');
       });
     });
   }
 
-  onUnmount() {
-    this.instance.destroy();
-  }
+  // onUnmount() {
+  //   this.instance.destroy();
+  // }
 
   // eslint-disable-next-line class-methods-use-this
   render() {
@@ -60,29 +69,38 @@ export default class LearningWordsView extends View {
             <li class="tab col s3"><a href="#deleted-words">Deleted</a></li>
           </ul>
         </div>
-        <div id="learning-words" class="col s12 blue">
+        <div id="learning-words" class="col s12">
     `;
 
-    learningWords.forEach((item) => {
+    if(learningWords){
+      learningWords.forEach((item) => {
       const card = new DictionaryWordCard(item, 'mine').render();
       html += card;
     });
+    }
+
 
     html += `</div>
-    <div id="difficult-words" class="col s12 red">`;
+    <div id="difficult-words" class="col s12">`;
 
-    difficultWords.forEach((item) => {
+    if(difficultWords){
+      difficultWords.forEach((item) => {
       const card = new DictionaryWordCard(item).render();
       html += card;
     });
+    }
+
 
     html += `</div>
-    <div id="deleted-words" class="col s12 green">`;
+    <div id="deleted-words" class="col s12">`;
 
-    deletedWords.forEach((item) => {
+    if(deletedWords){
+      deletedWords.forEach((item) => {
       const card = new DictionaryWordCard(item).render();
       html += card;
     });
+    }
+
 
     html += `</div>
     </div>
