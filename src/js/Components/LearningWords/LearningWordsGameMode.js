@@ -41,7 +41,9 @@ export default class LearningWordsGameMode {
 
   set level(value) {
     if (value < 0 || value > difficultyMax) return;
-
+    if (value === difficultyMax) {
+      this.ended = true;
+    }
     this.difficultyLevel = value;
   }
 
@@ -65,7 +67,7 @@ export default class LearningWordsGameMode {
   }
 
   set worstResult(value) {
-    if (value <= this.maxWorstResult) {
+    if (value >= this.maxWorstResult) {
       this.level -= 1;
       this.nextRound();
       this.roundWorstResult = 0;
@@ -76,7 +78,6 @@ export default class LearningWordsGameMode {
       return;
     }
     this.roundWorstResult = value;
-    this.round += 1;
   }
 
   get round() {
