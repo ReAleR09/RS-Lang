@@ -4,8 +4,6 @@ import LearningWordsMaterial from './LearningWordsMaterial';
 import {
   DATA_URL,
   lockAttribute,
-  ONE_LETTER_WIDTH,
-  WIDTH_ADDITION,
 } from './constants';
 import {
   INDEX_QUERIES as QUERIES,
@@ -224,7 +222,7 @@ export default class LearningWordsView {
 
   drawWordToDOM(word) {
     // TODO clever placeholder: input width = placeholder.width
-    this.wordInput.setAttribute('style', `width: ${ONE_LETTER_WIDTH * (word.word.length + WIDTH_ADDITION)}rem;`);
+    this.wordInput.setAttribute('size', word.word.length);
     this.wordInput.setAttribute('maxlength', word.word.length);
     this.removePlaceHolder();
 
