@@ -105,7 +105,7 @@ export default class SpeakitView {
       <div id="${ID_WORDS_PANEL}" class="row"></div>
 
       <div class="row">
-        <div id="${ID_BEGIN_BUTTON}" class="pulse waves-effect waves-light btn col s2 offset-s5">START GAME</div>
+        <div id="${ID_BEGIN_BUTTON}" class="waves-effect waves-light btn col s2 offset-s5">START GAME</div>
         <div id="${ID_FINISH_BUTTON}" class="waves-effect waves-light btn col s2 offset-s5 ${CLASS_BUTTON_HIDDEN}">FINISH GAME</div>
       </div>
     </div>`;
