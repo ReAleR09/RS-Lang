@@ -1,12 +1,12 @@
 import showToast from './Toaster';
 import AppNavigator from '../lib/AppNavigator';
 import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
+import { ERROR_DATA_KEY } from '../../config';
 
 const toastStyleError = 'red darken-1';
 const toastNonCriticalError = 'red darken-1';
 
 const errorPageController = 'error';
-const ERROR_DATA_KEY = 'RS7--error';
 
 function handleError(code, info) {
   showToast(info, toastStyleError);
@@ -28,8 +28,5 @@ const ErrorHandling = {
   handleUnhandledError,
   handleNonCriticalError,
 };
-
-// TODO Перехват неотловленных
-// window.addEventListener('unhandledrejection', ErrorHandling.handleUnhandledError);
 
 export default ErrorHandling;

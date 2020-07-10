@@ -1,6 +1,8 @@
 export const TEAM_KEY = 'team';
 export const TEAM_VALUE = 'team7';
 
+export const ERROR_DATA_KEY = 'RS7--error';
+
 export const GAMES = {
   LEARNING: 'learningWords',
   SPEAKIT: 'speakIt',

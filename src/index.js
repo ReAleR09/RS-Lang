@@ -28,9 +28,11 @@ import '@fortawesome/fontawesome-free/js/brands';
 // function appInit() {
 import { showPreloader, hidePreloader } from './js/Classes/Preloader';
 import initProgressBar from './js/Utils/ProgressBarUtils';
+import ErrorHandling from './js/Classes/ErrorHandling';
 
 async function appInit() {
   showPreloader();
+  window.addEventListener('unhandledrejection', ErrorHandling.handleUnhandledError);
   /**
    * On root '/', we will automatically serve indexAction of ExampleController
    * Also, we will serve on /example/* with ExampleController actions
