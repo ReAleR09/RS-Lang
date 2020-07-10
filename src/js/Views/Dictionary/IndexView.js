@@ -14,15 +14,7 @@ const dictionary = new Dictionary();
 
 export default class LearningWordsView extends View {
   onMount() {
-    // this.instance = initDictionaryTabs();
-    const el = document.querySelector('.tabs');
-    this.instance = M.Tabs.init(el);
-    console.log(this.instance);
-
-    const tabs = this.element.querySelector('.tabs');
-    tabs.addEventListener('click', () => {
-      this.instance.updateTabIndicator();
-    })
+    this.instance = initDictionaryTabs();
 
     const recoverButtons = this.element.querySelectorAll(`.${CLASS_WORD_RECOVER_BUTTON}`);
     recoverButtons.forEach((item) => {
@@ -72,35 +64,32 @@ export default class LearningWordsView extends View {
         <div id="learning-words" class="col s12">
     `;
 
-    if(learningWords){
+    if (learningWords) {
       learningWords.forEach((item) => {
-      const card = new DictionaryWordCard(item, 'mine').render();
-      html += card;
-    });
+        const card = new DictionaryWordCard(item, 'mine').render();
+        html += card;
+      });
     }
-
 
     html += `</div>
     <div id="difficult-words" class="col s12">`;
 
-    if(difficultWords){
+    if (difficultWords) {
       difficultWords.forEach((item) => {
-      const card = new DictionaryWordCard(item).render();
-      html += card;
-    });
+        const card = new DictionaryWordCard(item).render();
+        html += card;
+      });
     }
-
 
     html += `</div>
     <div id="deleted-words" class="col s12">`;
 
-    if(deletedWords){
+    if (deletedWords) {
       deletedWords.forEach((item) => {
-      const card = new DictionaryWordCard(item).render();
-      html += card;
-    });
+        const card = new DictionaryWordCard(item).render();
+        html += card;
+      });
     }
-
 
     html += `</div>
     </div>

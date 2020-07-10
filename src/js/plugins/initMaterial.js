@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const initDictionaryTabs = () => {
   const el = document.querySelector('.tabs');
-  Materialize.Tabs.init(el);
+  return Materialize.Tabs.init(el);
 };
 
 export default initDictionaryTabs;

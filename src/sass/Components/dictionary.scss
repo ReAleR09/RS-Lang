@@ -63,3 +63,12 @@
     color: #2c2c2cb0;
   }
 }
+
+.tabs .indicator {
+  display: none;
+}
+
+.tabs .tab .active {
+  transition: 1s;
+  border-bottom: 2px solid #ee6e73;
+}
