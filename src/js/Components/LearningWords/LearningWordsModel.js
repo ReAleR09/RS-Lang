@@ -156,8 +156,9 @@ export default class LearningWordsModel {
   checkInput(value) {
     const textResult = value.toLowerCase().trim();
     const original = this.card.word.toLowerCase().trim();
+    const original2 = this.card.wordFromExample.toLowerCase().trim();
 
-    const checkingResult = (textResult === original);
+    const checkingResult = (textResult === original) || (textResult === original2);
 
     if (!checkingResult) {
       this.cards.CurrentErrors += 1;
