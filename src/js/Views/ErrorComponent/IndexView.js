@@ -16,9 +16,6 @@ export default class IndexView extends View {
 
   render() {
     const { errors } = this.props;
-
-    console.log(errors);
-
     const html = `<div>
     <h3 class="center">Что-то пошло не так...:(</h3>
     <div class="flex-center">

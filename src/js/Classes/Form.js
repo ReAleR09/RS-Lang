@@ -24,13 +24,13 @@ export default class Form {
     const html = `
     <div class="authorization-registration">
     <div class="description container">
-      <h6 class="description__title container">Учите Английский яхык с <span>RSLANG</span></h6>
+      <h6 class="description__title container">Учите Английский язык с <span>RSLANG</span></h6>
       <ul class="description__features">
-        <li class="feature feature-one">3600 слов</li>
-        <li class="feature feature-two">Интерактивные игры</li>
-        <li class="feature feature-three">Получайте статистику каждый день</li>
-        <li class="feature feature-four">Множество настроек</li>
-        <li class="feature feature-five">Спроектировано для оптимального запоминания</li>
+        <li class="feature feature-one"> - 3600 слов</li>
+        <li class="feature feature-two"> - Интерактивные игры</li>
+        <li class="feature feature-three"> - Ежедневная статистика</li>
+        <li class="feature feature-four"> - Гибкие настройки</li>
+        <li class="feature feature-five"> - Спроектировано для оптимального запоминания</li>
       </ul>
     </div>
 
