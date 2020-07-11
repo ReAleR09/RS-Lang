@@ -259,8 +259,9 @@ export default class LearningWordsView {
 
   drawWordToDOM(word) {
     // TODO clever placeholder: input width = placeholder.width
-    this.wordInput.setAttribute('size', word.word.length);
-    this.wordInput.setAttribute('maxlength', word.word.length);
+    const inputLength = Math.max(word.word.length, word.wordFromExample.length);
+    this.wordInput.setAttribute('size', inputLength);
+    this.wordInput.setAttribute('maxlength', inputLength);
     this.removePlaceHolder();
 
     const placeholderText = (this.settings.showExample) ? word.wordFromExample : word.word;
