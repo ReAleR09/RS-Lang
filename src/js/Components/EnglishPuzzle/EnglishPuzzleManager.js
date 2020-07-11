@@ -9,11 +9,11 @@ import SpeakitWordsApi from '../Games/Speakit/SpeakitWordsApi';
 import AppNavigator from '../../lib/AppNavigator';
 import LocalStorageAdapter from '../../Utils/LocalStorageAdapter';
 import Utils from '../../Utils/Utils';
-import Api from '../../Classes/Api/Api';
 import getImageInfo from './EnglishPuzzleImageInfo';
 import SettingsModel from '../../Classes/UserSettings';
 import Statistics from '../../Classes/Statistics';
 import { GAMES, MODES } from '../../../config';
+import WordsApi from '../../Classes/Api/WordsApi';
 
 // import { CONF_MEDIA_BASE_PATH } from '../../../config';
 
@@ -36,7 +36,6 @@ export default class EnglishPuzzleManager {
     this.puzzleBumperArr = [[], [], [], [], [], [], [], [], [], []];
     this.defaultImage = 'https://tlmnnk.github.io/images/rslang/birthOfVenus.jpg';
     this.sentences = [];
-    this.api = new Api();
     this.view = new EnglishPuzzleView();
     const mode = isUserWordsMode ? MODES.REPITITION : MODES.GAME;
     this.statistics = new Statistics(GAMES.PUZZLE, mode, true);
@@ -47,11 +46,21 @@ export default class EnglishPuzzleManager {
   }
 
   async getSentencesForGame() {
-    const words = await SpeakitWordsApi.getWordsForDifficultyAndRound(
-      this.difficulty,
-      this.round,
-    );
-    this.words = words;
+    if (this.isUserWordsMode) {
+      const words = await WordsApi.getRepeatedWords(
+        10,
+        undefined,
+        true,
+      );
+      this.words = words;
+    } else {
+      const words = await SpeakitWordsApi.getWordsForDifficultyAndRound(
+        this.difficulty,
+        this.round,
+      );
+      this.words = words;
+    }
+
     this.words.forEach((word) => {
       this.sentences.push(word.textExample);
     });
@@ -81,19 +90,13 @@ export default class EnglishPuzzleManager {
   async init() {
     await this.getSavedGameSettings();
     this.applyGameSettingsOnStart();
-    if (this.isUserWordsMode) {
-      const userWordsData = await SpeakitWordsApi.getUserWords();
-      console.log(userWordsData);
-      this.playUserWords();
-    } else {
-      // start game with difficulty and round
-      this.getImageForGame();
-      await this.getSentencesForGame();
 
-      await this.getPuzzleElements();
-      this.puzzleLineRender(this.puzzleLineIndex);
-      this.eventListenersInit();
-    }
+    this.getImageForGame();
+    await this.getSentencesForGame();
+
+    await this.getPuzzleElements();
+    this.puzzleLineRender(this.puzzleLineIndex);
+    this.eventListenersInit();
   }
 
   async getSavedGameSettings() {
