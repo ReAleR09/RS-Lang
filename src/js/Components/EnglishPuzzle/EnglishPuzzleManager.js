@@ -5,7 +5,6 @@
 import EnglishPuzzleView from './EnglishPuzzleView';
 import EnglisPuzzleDragDrop from './EnglishPuzzleDragDrop';
 import engPuzConst from './EnglishPuzzleConstants';
-import SpeakitWordsApi from '../Games/Speakit/SpeakitWordsApi';
 import AppNavigator from '../../lib/AppNavigator';
 import LocalStorageAdapter from '../../Utils/LocalStorageAdapter';
 import Utils from '../../Utils/Utils';
@@ -14,6 +13,7 @@ import getImageInfo from './EnglishPuzzleImageInfo';
 import SettingsModel from '../../Classes/UserSettings';
 import Statistics from '../../Classes/Statistics';
 import { GAMES, MODES } from '../../../config';
+import EnglishPuzzleWordsApi from './EnglishPuzzleWordsApi';
 
 // import { CONF_MEDIA_BASE_PATH } from '../../../config';
 
@@ -47,7 +47,7 @@ export default class EnglishPuzzleManager {
   }
 
   async getSentencesForGame() {
-    const words = await SpeakitWordsApi.getWordsForDifficultyAndRound(
+    const words = await EnglishPuzzleWordsApi.getWordsForDifficultyAndRound(
       this.difficulty,
       this.round,
     );
@@ -82,7 +82,7 @@ export default class EnglishPuzzleManager {
     await this.getSavedGameSettings();
     this.applyGameSettingsOnStart();
     if (this.isUserWordsMode) {
-      const userWordsData = await SpeakitWordsApi.getUserWords();
+      const userWordsData = await EnglishPuzzleWordsApi.getUserWords();
       console.log(userWordsData);
       this.playUserWords();
     } else {
