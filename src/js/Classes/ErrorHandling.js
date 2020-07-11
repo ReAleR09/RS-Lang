@@ -23,10 +23,16 @@ function handleNonCriticalError(error, type) {
   showToast(type, toastNonCriticalError);
 }
 
+function handle404(info) {
+  LocalStorageAdapter.set(ERROR_DATA_KEY, { code: 404, info });
+  AppNavigator.go(errorPageController);
+}
+
 const ErrorHandling = {
   handleError,
   handleUnhandledError,
   handleNonCriticalError,
+  handle404,
 };
 
 export default ErrorHandling;
