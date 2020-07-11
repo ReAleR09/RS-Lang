@@ -73,7 +73,6 @@ export default class FieldOfDreamsView {
   }
 
   playSounds() {
-    console.log(this.soundEffect);
     this.soundPlayer.addAudioToQueue(soundsSources[this.soundEffect]);
     this.soundPlayer.play();
   }
@@ -139,8 +138,6 @@ export default class FieldOfDreamsView {
     letters.forEach((letter) => letter.classList.add(CLASS_LETTER_FLIP));
   }
 
-  // e.preventDefault();
-  // e.stopPropagation()
   drawAnswer(word) {
     const wordElement = this.element.querySelector(FIELD_OF_DREAMS_QUERIES.answer);
 
