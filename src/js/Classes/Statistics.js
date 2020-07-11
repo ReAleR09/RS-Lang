@@ -26,20 +26,19 @@ export default class Statistics {
   }
 
   async updateRepititionsStatistics(wordId, isNewWordStatus) {
+    if (this.game !== GAMES.LEARNING) return;
+    if (!this.isLoaded) {
+      await this.get();
+    }
     let isNewWord;
     if (isNewWordStatus !== undefined) {
       isNewWord = isNewWordStatus;
     } else {
       isNewWord = await this.wordsApi.checkUserWordInBase(wordId);
+      isNewWord = !isNewWord;
     }
 
     ProgressBarInstance.addCard(isNewWord);
-
-    if (this.game !== GAMES.LEARNING) return;
-    if (!this.isLoaded) {
-      await this.get();
-    }
-
     const dateNow = Utils.getDateNoTime().getTime();
     if (!Object.prototype.hasOwnProperty.call(
       this.statistics[WORDS_LEARNING_RESULTS_KEY],
@@ -150,15 +149,15 @@ export default class Statistics {
       words = Array.from(new Set(words));
       words.forEach((word) => {
         const results = this.wordStat.filter(({ wordId }) => wordId === word);
-        const bestResult = (results.find((result) => result) !== -1);
+        const bestResult = (results.findIndex(({ result }) => result) !== -1);
         bestResults.push({ word, bestResult });
       });
 
       const requestStatArrays = [];
       const requestRepitArrays = [];
-      this.bestResults.forEach(({ wordId, result }) => {
-        requestStatArrays.push(this.updateRepititionsStatistics(wordId));
-        requestRepitArrays.push(this.spacedRepititions.putTrainingData(wordId, result));
+      bestResults.forEach(({ word, bestResult }) => {
+        requestStatArrays.push(this.updateRepititionsStatistics(word));
+        requestRepitArrays.push(this.spacedRepititions.putTrainingData(word, bestResult));
       });
 
       await Promise.all(requestStatArrays);
@@ -232,6 +231,7 @@ export default class Statistics {
       await this.get();
     }
     const dateNow = Utils.getDateNoTime().getTime();
+
     let limits = {};
 
     try {
