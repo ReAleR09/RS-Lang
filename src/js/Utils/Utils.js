@@ -4,6 +4,12 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
+function getRandomIntInRange(mini, maxi) {
+  const min = Math.ceil(mini);
+  const max = Math.floor(maxi);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 // Fisher-Yates shuffle
 function arrayShuffle(oldArray) {
   const array = oldArray.slice(0); // shallow copy
@@ -35,6 +41,7 @@ const Utils = {
   getRandomInt,
   getDateNoTime,
   getNextDay,
+  getRandomIntInRange,
 };
 
 export default Utils;
