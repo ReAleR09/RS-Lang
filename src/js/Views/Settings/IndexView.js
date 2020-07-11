@@ -9,6 +9,7 @@ import Toaster from '../../Classes/Toaster';
 import AppNavigator from '../../lib/AppNavigator';
 import { PARAM_MODE } from '../../Utils/Constants';
 import { MODES } from '../../../config';
+import ProgressBarInstance from '../../Classes/ProgressBar';
 
 export default class IndexView extends View {
   /**
@@ -112,6 +113,7 @@ export default class IndexView extends View {
     this.annoyingLimit.value = this.settings.annoyinglimit;
 
     this.setAnnoyingAction(this.settings.annoyingAction);
+    console.log(this.settings);
   }
 
   setAnnoyingAction(category) {
@@ -150,6 +152,9 @@ export default class IndexView extends View {
     };
 
     this.props.model.settings = newSettings;
+
+    ProgressBarInstance.changeSettings(this.props.model.wordLimitsPerDay);
+
     if (this.ajaxSettingsTimeout) {
       clearTimeout(this.ajaxSettingsTimeout);
     }
