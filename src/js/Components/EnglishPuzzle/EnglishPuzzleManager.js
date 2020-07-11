@@ -39,7 +39,7 @@ export default class EnglishPuzzleManager {
     this.api = new Api();
     this.view = new EnglishPuzzleView();
     const mode = isUserWordsMode ? MODES.REPITITION : MODES.GAME;
-    this.statistics = new Statistics(GAMES.SPEAKIT, mode, true);
+    this.statistics = new Statistics(GAMES.PUZZLE, mode, true);
   }
 
   attach(element) {
@@ -228,6 +228,7 @@ export default class EnglishPuzzleManager {
   idkClickHandler(e) {
     if (e.target.classList.contains('engPuz__bottom-idk')) {
       if (e.target.innerText === 'RESULTS') {
+        this.statistics.sendGameResults();
         AppNavigator.go('englishpuzzle', 'results');
         return;
       }
@@ -241,7 +242,7 @@ export default class EnglishPuzzleManager {
 
       this.updateCurrentStat(false);
       this.view.toggleShowBackgroundBtnNoPointer();
-      this.isUserWordsMode ? this.statistics.updateWordStatistics(this.words[this.puzzleLineIndex].id, false) : null;
+      this.statistics.updateWordStatistics(this.words[this.puzzleLineIndex].id, false);
       this.view.clearContainer(dropContainer);
       this.appendCorrectLineToDropOnIdkPress();
       this.view.clearContainer(dragContainer);
@@ -370,7 +371,7 @@ export default class EnglishPuzzleManager {
         this.updateCurrentStat(this.checkLineAnswers());
 
         if (this.checkLineAnswers()) {
-          this.isUserWordsMode ? this.statistics.updateWordStatistics(this.words[this.puzzleLineIndex].id, true) : null;
+          this.statistics.updateWordStatistics(this.words[this.puzzleLineIndex].id, true);
           this.view.toggleShowBackgroundBtnNoPointer();
           this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`));
           this.view.renameCheckButton();
