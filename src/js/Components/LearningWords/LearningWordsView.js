@@ -16,12 +16,15 @@ import {
   CLASS_COMPONENT_LOCKED,
 } from './IndexTemplate';
 import { DIFFICULTIES, DICT_CATEGORIES } from '../../Classes/Api/constants';
+import WordStatuses from './WordStatuses';
 
 export default class LearningWordsView {
   constructor(model) {
     this.model = model;
     this.mode = this.model.mode;
     this.componentLock = false;
+
+    this.wordStatusProgress = undefined;
   }
 
   init(settings) {
@@ -99,6 +102,16 @@ export default class LearningWordsView {
     this.assignButtonListeners();
 
     this.assignInputListeners();
+
+    this.wordStatuses = new WordStatuses(element);
+    const wordStatusWrapper = this.element.querySelector(QUERIES.BUTTONS.WORDSTATUS);
+
+    this.wordStatuses.createModalElement();
+
+    this.wordStatusProgress = this.wordStatuses.createStatusElement(wordStatusWrapper);
+
+    this.wordStatuses.attach();
+    this.wordStatuses.initButtons();
   }
 
   detach() {
@@ -106,6 +119,7 @@ export default class LearningWordsView {
     this.model = null;
     this.element = null;
     this.material = null;
+    this.wordStatuses.detach();
   }
 
   assignButtonListeners() {
@@ -259,6 +273,8 @@ export default class LearningWordsView {
     this.wordInput.focus();
     this.element.classList.remove(CLASS_COMPONENT_LOCKED);
     this.componentLock = false;
+    console.log(word.intervalStatus);
+    this.wordStatuses.setStatusByElement(this.wordStatusProgress, word.intervalStatus);
   }
 
   lockCard() {
