@@ -69,9 +69,7 @@ async function appInit() {
   const router = new Router(appContainter, routes);
 
   const sideBarLeft = new Sidebar(SIDENAV);
-  const sideBarFloating = new Sidebar();
   sideBarLeft.attach('sidenav-left');
-  sideBarFloating.attach('sidenav-floatng');
 
   const authRevived = await SettingsModel.reviveAuth();
 
