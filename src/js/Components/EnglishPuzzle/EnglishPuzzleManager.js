@@ -14,6 +14,7 @@ import SettingsModel from '../../Classes/UserSettings';
 import Statistics from '../../Classes/Statistics';
 import { GAMES, MODES, CONF_MEDIA_BASE_PATH } from '../../../config';
 import WordsApi from '../../Classes/Api/WordsApi';
+import { showPreloader, hidePreloader } from '../../Classes/Preloader';
 
 export const EP_GAME_STATS = 'EP_GAME_STATS';
 
@@ -37,7 +38,7 @@ export default class EnglishPuzzleManager {
     this.view = new EnglishPuzzleView();
 
     const mode = isUserWordsMode ? MODES.REPITITION : MODES.GAME;
-    this.statistics = new Statistics(GAMES.PUZZLE, mode, true);
+    this.statistics = new Statistics(GAMES.PUZZLE, mode, false);
     this.wordsApi = new WordsApi();
   }
 
@@ -69,7 +70,6 @@ export default class EnglishPuzzleManager {
       }
       this.words = words;
     }
-    console.log(this.words);
     this.words.forEach((word) => {
       this.sentences.push(word.textExample);
     });
@@ -111,12 +111,12 @@ export default class EnglishPuzzleManager {
   }
 
   async init() {
+    showPreloader();
     await this.getSavedGameSettings();
     this.applyGameSettingsOnStart();
 
     this.getImageForGame();
     await this.getSentencesForGame();
-    console.log(this.words);
     await this.getPuzzleElements();
     this.puzzleLineRender(this.puzzleLineIndex);
     this.eventListenersInit();
@@ -345,8 +345,6 @@ export default class EnglishPuzzleManager {
         this.difficulty < engPuzConst.pagesPerDifficulties.length - 1 ? this.difficulty += 1 : this.difficulty = 0;
       }
     }
-    console.log(this.difficulty);
-    console.log(this.round);
 
     await SettingsModel.saveGame(
       GAMES.PUZZLE,
@@ -475,13 +473,13 @@ export default class EnglishPuzzleManager {
     dragZone.append(div);
     this.view.renderTranslation(this.words, this.puzzleLineIndex);
     this.autoPlaySentenceHandler();
+    hidePreloader();
     // eslint-disable-next-line no-new
     this.dnd = new EnglisPuzzleDragDrop();
   }
 
   async getPuzzleElements() {
     // insert preloader
-    console.log(this.sentences);
     const puzzleData = await this.view.getPuzzleElements(this.imgSrc, this.sentences);
     this.puzzleCompelete = puzzleData.originalImage;
     this.puzzleBumper = puzzleData.bumperImage;
