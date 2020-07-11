@@ -14,10 +14,10 @@ import {
   CLASS_COMPONENT_LOCKED,
 } from './gameTemplate';
 import SoundPlayer from '../../../Classes/SoundPlayer';
+import { alphabet, instructions, phraseAboutMicrophone } from './constants';
+import Toaster from '../../../Classes/Toaster';
 
 // const START_PIC = '/assets/img/speakit_start_pic.jpg';
-
-const alphabet = 'abcdefghijklmnopqrstuvwxyz';
 
 const soundEffects = {
   success: 'success',
@@ -58,14 +58,16 @@ export default class FieldOfDreamsView {
 
     if (result) {
       this.soundEffect = soundEffects.success;
+      this.soundPlayer.addAudioToQueue();
     } else {
       this.soundEffect = soundEffects.error;
+      this.soundPlayer.addAudioToQueue();
     }
+
     this.setTimer(() => {
       this.hideCard();
       this.setTimer(this.goNext, 1000);
     }, 1000);
-    // this.soundPlayer.addAudioToQueue();
   }
 
   onSoundEffectsEnd() {
@@ -90,6 +92,7 @@ export default class FieldOfDreamsView {
       this.selectedLetters.push(target);
       if (!this.useHint()) {
         this.startDrum();
+        Toaster.showToast(phraseAboutMicrophone, '', 1500);
         this.startListening();
       }
     });
@@ -167,7 +170,7 @@ export default class FieldOfDreamsView {
     }
     this.showCard();
     this.setTimer(this.startQuestionUtterance, 1000);
-    this.view.unlockComponent();
+    this.unlockComponent();
   }
 
   startDrum() {
@@ -184,5 +187,9 @@ export default class FieldOfDreamsView {
 
   unlockComponent() {
     this.element.classList.remove(CLASS_COMPONENT_LOCKED);
+  }
+
+  static showInstructions() {
+    Toaster.showToast(instructions, '', 2000);
   }
 }

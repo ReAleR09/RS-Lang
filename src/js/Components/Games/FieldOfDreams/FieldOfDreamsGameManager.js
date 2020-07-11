@@ -106,6 +106,7 @@ export default class FieldOfDreamsGameManager {
         });
         this.wordsState = wordsState;
         this.goNextWord();
+        FieldOfDreamsView.showInstructions();
       });
   }
 

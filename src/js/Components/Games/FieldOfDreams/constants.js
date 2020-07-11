@@ -12,3 +12,7 @@ export const description = 'In this game You have to pronounce words using a mic
 export const roundSize = 10;
 
 export const hintsCount = 3;
+
+export const phraseAboutMicrophone = 'Назовите слово целиком!';
+export const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+export const instructions = 'Выберите 3 буквы и затем назовите слово целиком!';
