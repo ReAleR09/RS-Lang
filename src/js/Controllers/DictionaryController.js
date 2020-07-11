@@ -4,7 +4,7 @@ import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
 import Dictionary from '../Classes/Dictionary';
 import { showPreloader, hidePreloader } from '../Classes/Preloader';
 
-export default class SavannahController extends Controller {
+export default class DictionaryController extends Controller {
   constructor() {
     const viewClasses = {
       index: IndexView,
