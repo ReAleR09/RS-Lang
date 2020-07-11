@@ -177,6 +177,7 @@ export default class LearnindWordsCards {
     return this.currentCardIndex < this.length;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   transformWordsToCards(words, defaultStatus) {
     let cards = words.slice();
     cards = cards.map((word) => {
@@ -185,11 +186,11 @@ export default class LearnindWordsCards {
 
       const firstIndexOfWord = word.textExample.indexOf(wordStartTag);
       const lastIndexOfWord = word.textExample.indexOf(wordEndTag) + wordEndTag.length;
-      if (this.settings.showExample) {
-        const wordStart = firstIndexOfWord + wordStartTag.length;
-        const wordEnd = word.textExample.indexOf(wordEndTag);
-        newWord.word = word.textExample.slice(wordStart, wordEnd);
-      }
+
+      const wordStart = firstIndexOfWord + wordStartTag.length;
+      const wordEnd = word.textExample.indexOf(wordEndTag);
+      newWord.wordFromExample = word.textExample.slice(wordStart, wordEnd);
+
       newWord.word = newWord.word.trim();
       newWord.exampleStart = word.textExample.slice(0, firstIndexOfWord);
       newWord.exampleEnd = word.textExample.slice(lastIndexOfWord);
