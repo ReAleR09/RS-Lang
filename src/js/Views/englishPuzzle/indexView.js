@@ -1,8 +1,7 @@
 import Materialize from 'materialize-css';
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
-import SettingsModel from '../../Classes/UserSettings';
-import { GAMES } from '../../../config';
+import engPuzConst from '../../Components/EnglishPuzzle/EnglishPuzzleConstants';
 
 const ARCADE_BUTTON = 'engPuz__button--arcade';
 const TRAIN_WORDS_BUTTON = 'engPuz__button--myWords';
@@ -12,6 +11,57 @@ const initMaterialSelects = () => {
   Materialize.FormSelect.init(elems);
 };
 
+const clearContainer = (container) => {
+  while (container.firstChild) {
+    container.removeChild(container.lastChild);
+  }
+};
+
+const renderSelectOnStart = (element, difficulty, round) => {
+  console.log(difficulty);
+  console.log(round);
+
+  let fragmentD = '<option value="none" selected>Choose round</option>';
+  let fragmentR = '<option value="none" selected>Choose round</option>';
+  const difficultyContainer = element.querySelectorAll('.engPuz__difficulty select');
+  const roundContainer = element.querySelectorAll('.engPuz__round select');
+
+  for (let i = 0; i <= engPuzConst.difficulties.length - 1; i += 1) {
+    fragmentD += `<option value="${i}">${i}</option>`;
+  }
+  for (let i = 1; i <= round; i += 1) {
+    fragmentR += `<option value="${i}">${i}</option>`;
+  }
+
+  clearContainer(difficultyContainer[0]);
+  clearContainer(roundContainer[0]);
+  difficultyContainer[0].insertAdjacentHTML('afterbegin', fragmentD);
+  roundContainer[0].insertAdjacentHTML('afterbegin', fragmentR);
+
+  difficultyContainer[0].children[0].removeAttribute('selected');
+  difficultyContainer[0].children[difficulty + 1].setAttribute('selected', '');
+
+  roundContainer[0].children[0].removeAttribute('selected');
+  roundContainer[0].children[round].setAttribute('selected', '');
+
+  Materialize.FormSelect.init(difficultyContainer);
+  Materialize.FormSelect.init(roundContainer);
+};
+
+const renderRoundSelectIfDifficultyChange = (element) => {
+  let fragment = '<option value="none" selected>Choose round</option>';
+  const difficultyValue = element.querySelector('.engPuz__difficulty select').value;
+  const selectContainer = element.querySelectorAll('.engPuz__round select');
+
+  for (let i = 1; i <= engPuzConst.pagesPerDifficulties[difficultyValue]; i += 1) {
+    fragment += `<option value="${i}">${i}</option>`;
+  }
+
+  clearContainer(selectContainer[0]);
+  selectContainer[0].insertAdjacentHTML('afterbegin', fragment);
+  Materialize.FormSelect.init(selectContainer);
+};
+
 export default class IndexView extends View {
   onMount() {
     const playArcadeBtn = this.element.querySelector(`#${ARCADE_BUTTON}`);
@@ -19,7 +69,15 @@ export default class IndexView extends View {
 
     initMaterialSelects();
 
-    const { difficulty, round } = SettingsModel.loadGame(GAMES.PUZZLE);
+    const { difficulty, round } = this.props.game;
+
+    if (difficulty || difficulty === 0) {
+      renderSelectOnStart(this.element, difficulty, round);
+    }
+
+    this.element.querySelector('.engPuz__difficulty select').addEventListener('change', () => {
+      renderRoundSelectIfDifficultyChange(this.element);
+    });
 
     playArcadeBtn.addEventListener('click', () => {
       const difficultyValue = document.querySelector('.engPuz__difficulty select').value;
@@ -69,42 +127,12 @@ export default class IndexView extends View {
         <div class="engPuz__difficulty input-field">
           <select>
             <option value="none" selected>Choose difficulty</option>
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
           </select>
         <label>Game difficulty</label>
       </div>
           <div class="engPuz__round input-field ">
             <select>
               <option value="none" selected>Choose round</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-              <option value="13">13</option>
-              <option value="14">14</option>
-              <option value="15">15</option>
-              <option value="16">16</option>
-              <option value="17">17</option>
-              <option value="18">18</option>
-              <option value="19">19</option>
-              <option value="20">20</option>
-              <option value="21">21</option>
-              <option value="22">22</option>
-              <option value="23">23</option>
-              <option value="24">24</option>
             </select>
             <label>Game round</label>
         </div>

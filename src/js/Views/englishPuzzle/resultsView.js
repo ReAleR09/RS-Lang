@@ -3,15 +3,23 @@ import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
 import LocalStorageAdapter from '../../Utils/LocalStorageAdapter';
 import engPuzConst from '../../Components/EnglishPuzzle/EnglishPuzzleConstants';
-import SettingsModel from '../../Classes/UserSettings';
-import { GAMES } from '../../../config';
+import { CONF_MEDIA_BASE_PATH } from '../../../config';
 
 const ID_BUTTON_PLAYAGAIN = 'engPuz__play-again-button';
 const ID_BUTTON_CONTINUE = 'engPuz__continue-button';
 
 const audioSentenceClick = (e) => {
   if (e.target.classList.contains('engPuz__tooltips-autoPlay--results')) {
-    new Audio(`${e.target.dataset.audio}`).play();
+    const url = CONF_MEDIA_BASE_PATH + e.target.dataset.audio;
+    new Audio(url).play();
+  }
+};
+
+const hideContinueBtnIfUserWordsMode = (props, element) => {
+  const { userWordsMode } = props;
+  if (userWordsMode) {
+    const continueBtn = element.querySelector(`.${ID_BUTTON_CONTINUE}`);
+    continueBtn.classList.add('disabled');
   }
 };
 
@@ -24,7 +32,8 @@ const playAgainClick = (e) => {
 export default class ResultsView extends View {
   // eslint-disable-next-line class-methods-use-this
   onMount() {
-    this.saveLastRound();
+    // this.saveLastRound();
+    hideContinueBtnIfUserWordsMode(this.props, this.element);
     this.element.addEventListener('click', (e) => {
       audioSentenceClick(e);
       playAgainClick(e);
@@ -32,7 +41,7 @@ export default class ResultsView extends View {
     });
   }
 
-  async saveLastRound() {
+  /* async saveLastRound() {
     let { difficulty, round } = await SettingsModel.loadGame(GAMES.PUZZLE);
     if (round < engPuzConst.pagesPerDifficulties[difficulty]) {
       round += 1;
@@ -46,17 +55,21 @@ export default class ResultsView extends View {
       difficulty,
       round,
     });
-  }
+  } */
 
   async continueBtnClick(e) {
     if (e.target.classList.contains('engPuz__continue-button')) {
-      AppNavigator.go('englishpuzzle', 'play', { difficulty: this.difficulty, round: this.round });
+      if (this.props.nextRound) {
+        AppNavigator.go('englishpuzzle', 'play', { difficulty: this.props.nextDifficulty, round: this.props.nextRound });
+      } else {
+        AppNavigator.go('englishpuzzle', 'play', { difficulty: 0, round: 1 });
+      }
     }
   }
 
   // eslint-disable-next-line class-methods-use-this
   render() {
-    const stats = LocalStorageAdapter.get(engPuzConst.localstorage.RESULTS);
+    const { stats } = this.props;
     let fragment = '';
     Object.values(stats).forEach((value) => {
       fragment += `<div class="fullWidth flex-center margin-bottom">
@@ -80,6 +93,7 @@ export default class ResultsView extends View {
       </div>
     </div>
     `;
+    LocalStorageAdapter.remove(engPuzConst.localstorage.RESULTS);
     return html;
   }
 }

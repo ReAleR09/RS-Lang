@@ -23,6 +23,9 @@ const engPuzConst = {
     ARCADE: 'arcade',
     MYWORDS: 'mywords',
   },
+  difficulties: [
+    0, 1, 2, 3, 4, 5,
+  ],
   pagesPerDifficulties: [
     44, 40, 39,
     28, 28, 24,
