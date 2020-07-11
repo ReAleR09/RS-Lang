@@ -30,7 +30,7 @@ export const STATISTICS_HTML = `
         <div>Изучаемых слов: <span id="learnedWordsCount"></span></div>
       </div>
     </div>
-    <div id="bydays" class="col s12">
+    <div id="bydays" class="col s12 offset-m2 m8">
       <div><canvas id="byDaysChart" width="400" height="250"></canvas></div>
     </div>
     <div id="forgames" class="col s12">

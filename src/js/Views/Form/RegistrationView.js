@@ -15,7 +15,7 @@ const validMail = (email) => {
 
   const valid = re.test(email);
   if (!valid) {
-    const output = 'Email is wrong!';
+    const output = 'Некорректный емейл!';
     document.querySelector('.email').value = '';
     document.querySelector('.email').placeholder = output;
     Toaster.showToast(output, errors.styles);
@@ -39,7 +39,7 @@ const validPassword = (password) => {
     valid = true;
   } else {
     valid = false;
-    const output = 'Password is wrong!';
+    const output = 'Некорректный пароль!';
     document.querySelector('.password').value = '';
     document.querySelector('.password').placeholder = output;
     Toaster.showToast(output, errors.styles);

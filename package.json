@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack --mode development",
     "prod": "webpack --mode production",
-    "serve": "webpack-dev-server --watch true",
+    "serve": "webpack-dev-server --watch true --host 0.0.0.0",
     "lint": "eslint --ignore-path .gitignore .",
     "lint:fix": "eslint ./src/**/*.js --fix"
   },
