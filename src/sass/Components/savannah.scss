@@ -2,9 +2,14 @@
   font-size: 30px;
   &__translate-words {
     display: flex;
+    flex-wrap: wrap;
     width: 100%;
-    justify-content: space-between;
+    justify-content: space-around;
     margin-top: 150px;
+
+    @media(max-width: 375px) {
+      margin-top: 100px;
+    }
   }
   &__lives {
     display: flex;
@@ -13,12 +18,89 @@
   &__hint {
     font-size: 15px;
     margin-top: 100px;
+    text-align: center;
+  }
+
+  &__english-word {
+    border-radius: 10px;
+    border: 2px solid black;
+    padding: 10px;
+    background-color: #a5a5a5;
+  }
+
+  &__results {
+    font-size: 17px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    background-color: #9b9898ad;
+    border-radius: 10px;
+    border: 1px solid #292828;
+  }
+
+  &__guessed-words {
+    margin: 10px;
+    color: #039139;
+    font-weight: 700;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__not-guessed-words {
+    margin: 10px;
+    color: #e20000;
+    font-weight: 700;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__finish-button {
+    font-weight: 900;
+    border: 1px solid #292828;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: 1s;
+    &:hover {
+      color: #57535f;
+    }
+  }
+
+  &__play-again-button {
+    margin: 10px;
+    font-weight: 900;
+    border: 1px solid #292828;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: 1s;
+    &:hover {
+      color: #57535f;
+    }
   }
 }
 
+.guessed {
+  margin-top: 5px;
+  color: #000000;
+  font-weight: 200;
+}
 
+.not-guessed {
+  margin-top: 5px;
+  color: #000000;
+  font-weight: 200;
+}
 
 .savannah-translate-word {
-  margin: 20px;
-
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+  border: 2px solid black;
+  cursor: pointer;
 }
