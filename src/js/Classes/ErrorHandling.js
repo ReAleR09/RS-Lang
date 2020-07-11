@@ -1,4 +1,4 @@
-import showToast from './Toaster';
+import Toaster from './Toaster';
 import AppNavigator from '../lib/AppNavigator';
 import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
 import { ERROR_DATA_KEY } from '../../config';
@@ -9,7 +9,7 @@ const toastNonCriticalError = 'red darken-1';
 const errorPageController = 'error';
 
 function handleError(code, info) {
-  showToast(info, toastStyleError);
+  Toaster.showToast(info, toastStyleError);
   LocalStorageAdapter.set(ERROR_DATA_KEY, { code, info });
   AppNavigator.go(errorPageController);
 }
@@ -20,7 +20,7 @@ function handleUnhandledError() {
 }
 
 function handleNonCriticalError(error, type) {
-  showToast(type, toastNonCriticalError);
+  Toaster.showToast(type, toastNonCriticalError);
 }
 
 const ErrorHandling = {

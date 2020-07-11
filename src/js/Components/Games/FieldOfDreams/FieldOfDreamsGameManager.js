@@ -106,11 +106,13 @@ export default class FieldOfDreamsGameManager {
         });
         this.wordsState = wordsState;
         this.goNextWord();
+        FieldOfDreamsView.showInstructions();
       });
   }
 
   // SpeechRecognition might give several options
   acceptAnswer(phrases) {
+    this.view.lockComponent();
     this.voiceControl.stopRecognition();
     let result = false;
     if (phrases instanceof Array) {
@@ -149,11 +151,14 @@ export default class FieldOfDreamsGameManager {
       this.hints += 1;
       const letters = this.currentWord.word.toUpperCase().trim().split('');
       const indexArray = [];
+      let trueLetter = false;
       letters.forEach((letter, index) => {
         if (letter === hintLetter) {
+          trueLetter = true;
           indexArray.push(index);
         }
       });
+      this.view.startLetterEffects(trueLetter);
       if (indexArray.length) {
         this.view.flipLetters(indexArray);
       }
