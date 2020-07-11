@@ -9,6 +9,7 @@ import {
 import initDictionaryTabs from '../../plugins/initMaterial';
 import Dictionary from '../../Classes/Dictionary';
 import AppNavigator from '../../lib/AppNavigator';
+import { showPreloader, hidePreloader } from '../../Classes/Preloader';
 
 const dictionary = new Dictionary();
 
@@ -19,7 +20,9 @@ export default class LearningWordsView extends View {
     const recoverButtons = this.element.querySelectorAll(`.${CLASS_WORD_RECOVER_BUTTON}`);
     recoverButtons.forEach((item) => {
       item.addEventListener('click', async () => {
+        showPreloader();
         await dictionary.putOnCategory(item.getAttribute('idWord'));
+        hidePreloader();
         AppNavigator.go('dictionary');
       });
     });
@@ -35,10 +38,13 @@ export default class LearningWordsView extends View {
     const deleteButtons = this.element.querySelectorAll(`.${CLASS_WORD_DELETE_BUTTON}`);
     deleteButtons.forEach((item) => {
       item.addEventListener('click', async () => {
+        showPreloader();
         await dictionary.putOnCategory(item.getAttribute('idWord'), 'delete');
+        hidePreloader();
         AppNavigator.go('dictionary');
       });
     });
+
   }
 
   // onUnmount() {
@@ -47,6 +53,7 @@ export default class LearningWordsView extends View {
 
   // eslint-disable-next-line class-methods-use-this
   render() {
+    showPreloader();
     const learningWords = LocalStorageAdapter.get('learningWords');
     const difficultWords = LocalStorageAdapter.get('difficultWords');
     const deletedWords = LocalStorageAdapter.get('deletedWords');
@@ -94,6 +101,7 @@ export default class LearningWordsView extends View {
     html += `</div>
     </div>
     </div>`;
+    hidePreloader();
     return html;
   }
 }

@@ -2,6 +2,7 @@ import Controller from '../lib/Controller';
 import IndexView from '../Views/Dictionary/IndexView';
 import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
 import Dictionary from '../Classes/Dictionary';
+import { showPreloader, hidePreloader } from '../Classes/Preloader';
 
 export default class SavannahController extends Controller {
   constructor() {
@@ -13,6 +14,7 @@ export default class SavannahController extends Controller {
 
   // eslint-disable-next-line class-methods-use-this
   async indexAction() {
+    showPreloader();
     const dictionary = new Dictionary();
 
     const learningWords = await dictionary.getWordsList('main');
@@ -23,5 +25,6 @@ export default class SavannahController extends Controller {
 
     const deletedWords = await dictionary.getWordsList('delete');
     LocalStorageAdapter.set('deletedWords', deletedWords);
+    hidePreloader();
   }
 }
