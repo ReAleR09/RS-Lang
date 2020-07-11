@@ -16,3 +16,17 @@ export const hintsCount = 3;
 export const phraseAboutMicrophone = 'Назовите слово целиком!';
 export const alphabet = 'abcdefghijklmnopqrstuvwxyz';
 export const instructions = 'Выберите 3 буквы и затем назовите слово целиком!';
+
+export const soundEffects = {
+  success: 'success',
+  error: 'error',
+  letterTrue: 'letterTrue',
+  letterFalse: 'letterFalse',
+};
+
+export const soundsSources = {
+  [soundEffects.success]: '/src/assets/audio/FieldOfDreams/word-true.mp3',
+  [soundEffects.error]: '/src/assets/audio/FieldOfDreams/word-false.mp3',
+  [soundEffects.letterTrue]: '/src/assets/audio/FieldOfDreams/letter-true.mp3',
+  [soundEffects.letterFalse]: '/src/assets/audio/FieldOfDreams/letter-false.mp3',
+};

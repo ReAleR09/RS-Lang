@@ -14,16 +14,16 @@ import {
   CLASS_COMPONENT_LOCKED,
 } from './gameTemplate';
 import SoundPlayer from '../../../Classes/SoundPlayer';
-import { alphabet, instructions, phraseAboutMicrophone } from './constants';
+import {
+  alphabet,
+  instructions,
+  phraseAboutMicrophone,
+  soundEffects,
+  soundsSources,
+} from './constants';
 import Toaster from '../../../Classes/Toaster';
 
 // const START_PIC = '/assets/img/speakit_start_pic.jpg';
-
-const soundEffects = {
-  success: 'success',
-  error: 'error',
-  superGame: 'supergame',
-};
 
 export default class FieldOfDreamsView {
   constructor(
@@ -58,25 +58,29 @@ export default class FieldOfDreamsView {
 
     if (result) {
       this.soundEffect = soundEffects.success;
-      this.soundPlayer.addAudioToQueue();
     } else {
       this.soundEffect = soundEffects.error;
-      this.soundPlayer.addAudioToQueue();
     }
-
-    this.setTimer(() => {
-      this.hideCard();
-      this.setTimer(this.goNext, 1000);
-    }, 1000);
+    this.playSounds();
   }
 
   onSoundEffectsEnd() {
     if (this.soundEffect === soundEffects.success || this.soundEffect === soundEffects.error) {
-      this.hideAnswer();
-      this.goNext();
+      this.hideCard();
+      this.setTimer(this.goNext(), 1000);
     }
-
     this.soundEffect = null;
+  }
+
+  playSounds() {
+    console.log(this.soundEffect);
+    this.soundPlayer.addAudioToQueue(soundsSources[this.soundEffect]);
+    this.soundPlayer.play();
+  }
+
+  startLetterEffects(result) {
+    this.soundEffect = (result) ? soundEffects.letterTrue : soundEffects.letterFalse;
+    this.playSounds();
   }
 
   initButtons() {
@@ -165,8 +169,6 @@ export default class FieldOfDreamsView {
 
     if (lastWord) {
       this.soundEffect = soundEffects.superGame;
-      // this.soundPlayer.addAudioToQueue();
-      // TODO sound effect
     }
     this.showCard();
     this.setTimer(this.startQuestionUtterance, 1000);

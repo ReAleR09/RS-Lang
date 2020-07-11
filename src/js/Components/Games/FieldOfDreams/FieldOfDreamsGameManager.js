@@ -151,11 +151,14 @@ export default class FieldOfDreamsGameManager {
       this.hints += 1;
       const letters = this.currentWord.word.toUpperCase().trim().split('');
       const indexArray = [];
+      let trueLetter = false;
       letters.forEach((letter, index) => {
         if (letter === hintLetter) {
+          trueLetter = true;
           indexArray.push(index);
         }
       });
+      this.view.startLetterEffects(trueLetter);
       if (indexArray.length) {
         this.view.flipLetters(indexArray);
       }
