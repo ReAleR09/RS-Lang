@@ -8,6 +8,7 @@ import IndexView from '../Views/englishPuzzle/indexView';
 import PlayView from '../Views/englishPuzzle/playView';
 import ResultsView from '../Views/englishPuzzle/resultsView';
 import engPuzConst from '../Components/EnglishPuzzle/EnglishPuzzleConstants';
+import WordsApi from '../Classes/Api/WordsApi';
 
 export default class EnglishPuzzleController extends Controller {
   constructor() {
@@ -19,8 +20,15 @@ export default class EnglishPuzzleController extends Controller {
     super(viewClasses);
   }
 
-  indexAction() {
+  async indexAction() {
     this.props.userData = {};
+
+    const game = {};
+
+    const wordsApi = new WordsApi();
+    const repWordsCount = await wordsApi.getRepitionWordsCount(false);
+    game.userWordsPlay = (repWordsCount >= 10);
+    this.props.game = game;
   }
 
   async playAction() {
@@ -48,14 +56,5 @@ export default class EnglishPuzzleController extends Controller {
     this.props.gameManager = gameManager;
   }
 
-  resultsAction() {
-    // if no stats stored, redirect to start page
-    /*  if (!stats) {
-      AppNavigator.go('englispuzzle');
-      return;
-    } */
-    // that's only for one time use
-    // LocalStorageAdapter.remove(SPEAKIT_GAME_STATS);
-    // this.props.stats = stats;
-  }
+  resultsAction() {}
 }

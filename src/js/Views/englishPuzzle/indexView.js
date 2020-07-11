@@ -13,8 +13,6 @@ const initMaterialSelects = () => {
 };
 
 export default class IndexView extends View {
-  // when we are visiting this view, we will modify someParamPassToView
-  // (which is passed from the controller)
   onMount() {
     const playArcadeBtn = this.element.querySelector(`#${ARCADE_BUTTON}`);
     const playMyWordsBtn = this.element.querySelector(`#${TRAIN_WORDS_BUTTON}`);
@@ -47,12 +45,18 @@ export default class IndexView extends View {
     });
   }
 
-  // onUnmount() {
-  // }
-
   // creating markup of the view and returning it
   // eslint-disable-next-line class-methods-use-this
   render() {
+    const { game } = this.props;
+
+    let userWordsPlayFragment = '';
+    if (game.userWordsPlay) {
+      userWordsPlayFragment = `
+      <a id="${TRAIN_WORDS_BUTTON}" class="#fce4ec mar-left pink lighten-3 waves-effect waves-light btn flex-center"><i class="material-icons left">description</i>Train my words</a>
+      `;
+    }
+
     const html = `
     <div class="EP-start__wrapper">
       <div class="EP-start__panel card-panel hoverable">
@@ -107,7 +111,7 @@ export default class IndexView extends View {
       </div>
       <div class="flex-evenly">
           <a id="${ARCADE_BUTTON}" class="#fce4ec pink lighten-3 waves-effect waves-light btn flex-center"><i class="material-icons left">description</i>Arcade mode</a>
-          <a id="${TRAIN_WORDS_BUTTON}" class="#fce4ec mar-left pink lighten-3 waves-effect waves-light btn flex-center"><i class="material-icons left">description</i>Train my words</a>
+          ${userWordsPlayFragment}
       </div>
       </div>
     </div>
