@@ -9,6 +9,7 @@ import { difficulties, title, description } from '../Components/Games/FieldOfDre
 import SettingsModel from '../Classes/UserSettings';
 import { GAMES } from '../../config';
 import FieldOfDreamsGameManager, { GAME_STATS } from '../Components/Games/FieldOfDreams/FieldOfDreamsGameManager';
+import WordsApi from '../Classes/Api/WordsApi';
 
 export default class FieldOfDreamsController extends Controller {
   constructor() {
@@ -20,18 +21,19 @@ export default class FieldOfDreamsController extends Controller {
     super(viewClasses);
   }
 
-  indexAction() {
+  async indexAction() {
     const game = {
       title,
       description,
       difficulties,
     };
 
-    // TODO вычислить может ли пользовать сыграть с пользовательскими словами
-    game.userWordsPlay = true;
+    const wordsApi = new WordsApi();
+    const repWordsCount = await wordsApi.getRepitionWordsCount(false);
+    game.userWordsPlay = (repWordsCount >= 10);
 
     // load saved difficulty and round
-    const { difficulty, round } = SettingsModel.loadGame(GAMES.FIELDOFDREAMS);
+    const { difficulty, round } = SettingsModel.loadGame(GAMES.SPEAKIT);
     game.currentDifficulty = difficulty;
     game.currentRound = round;
     this.props.game = game;
