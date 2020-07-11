@@ -21,6 +21,7 @@ import { DICT_CATEGORIES, DIFFICULTIES } from '../../Classes/Api/constants';
 import LearningWordsGameMode from './LearningWordsGameMode';
 import { PARAM_MODE } from '../../Utils/Constants';
 import Timers from '../Games/FieldOfDreams/Timers';
+import SpacedRepititions from '../../Classes/SpacedRepititions';
 
 export default class LearningWordsModel {
   constructor(mode = MODES.REPITITION) {
@@ -39,6 +40,7 @@ export default class LearningWordsModel {
 
     this.mode = mode;
     this.cards = new LearnindWordsCards();
+    this.intervals = new SpacedRepititions();
   }
 
   changeDifficulty(newDifficulty) {
@@ -175,7 +177,10 @@ export default class LearningWordsModel {
 
   async goNext() {
     if (await this.cards.getNext()) {
-      this.updateWordCard(this.card);
+      const word = this.card;
+      // eslint-disable-next-line no-underscore-dangle
+      word.intervalStatus = await this.intervals.getTrainingStatus(word._id);
+      this.updateWordCard(word);
     } else {
       this.showResult();
     }

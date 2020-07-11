@@ -75,9 +75,9 @@ export default class SpacedRepititions {
       return status;
     }
 
-    const totalSteps = this.getStep(this.settings.maxIntervalDays);
+    const totalSteps = this.getStep({ interval: this.settings.maxIntervalDays });
 
-    const curStep = this.getStep(userWordData);
+    const curStep = this.getStep(userWordData.interval);
 
     status = Math.round((curStep / totalSteps) * 100);
 
