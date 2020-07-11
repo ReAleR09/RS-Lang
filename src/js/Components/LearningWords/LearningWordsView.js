@@ -70,7 +70,7 @@ export default class LearningWordsView {
       disabledElements.push(this.element.querySelector(QUERIES.WORD_ELEMENTS.DESCRIPTION));
     }
 
-    if (!this.settings.showButtonSkip) {
+    if (!this.settings.showButtonAnswer) {
       disabledElements.push(this.element.querySelector(QUERIES.BUTTONS.SKIP));
     }
 
@@ -112,6 +112,24 @@ export default class LearningWordsView {
 
     this.wordStatuses.attach();
     this.wordStatuses.initButtons();
+    this.attachKeys();
+  }
+
+  attachKeys() {
+    const keysCallback = (event) => {
+      if (event.code === 'Enter') {
+        this.onButtonNext();
+      } else if (event.code === 'ArrowRight') {
+        this.onButtonNext();
+      } else if (event.code === 'ArrowLeft') {
+        this.onButtonPrevious();
+      }
+    };
+    document.addEventListener('keydown', keysCallback);
+
+    this.detachKeys = () => {
+      document.removeEventListener('keydown', keysCallback);
+    };
   }
 
   detach() {
@@ -120,6 +138,7 @@ export default class LearningWordsView {
     this.element = null;
     this.material = null;
     this.wordStatuses.detach();
+    this.detachKeys();
   }
 
   assignButtonListeners() {
@@ -240,11 +259,14 @@ export default class LearningWordsView {
 
   drawWordToDOM(word) {
     // TODO clever placeholder: input width = placeholder.width
-    this.wordInput.setAttribute('size', word.word.length);
-    this.wordInput.setAttribute('maxlength', word.word.length);
+    const inputLength = Math.max(word.word.length, word.wordFromExample.length);
+    this.wordInput.setAttribute('size', inputLength);
+    this.wordInput.setAttribute('maxlength', inputLength);
     this.removePlaceHolder();
 
-    this.initPlaceHolder(word.word);
+    const placeholderText = (this.settings.showExample) ? word.wordFromExample : word.word;
+
+    this.initPlaceHolder(placeholderText);
 
     const wordQueries = QUERIES.WORD_ELEMENTS;
 
@@ -273,7 +295,7 @@ export default class LearningWordsView {
     this.wordInput.focus();
     this.element.classList.remove(CLASS_COMPONENT_LOCKED);
     this.componentLock = false;
-    console.log(word.intervalStatus);
+
     this.wordStatuses.setStatusByElement(this.wordStatusProgress, word.intervalStatus);
   }
 
@@ -310,6 +332,6 @@ export default class LearningWordsView {
     this.settings.turnOnSound = false;
     this.settings.showButtonDelete = false;
     this.settings.showButtonComplicated = false;
-    this.settings.showButtonSkip = false;
+    this.settings.showButtonAnswer = false;
   }
 }

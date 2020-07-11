@@ -19,12 +19,13 @@ import { GAMES, MODES } from '../../../config';
 import Dictionary from '../../Classes/Dictionary';
 import { DICT_CATEGORIES, DIFFICULTIES } from '../../Classes/Api/constants';
 import LearningWordsGameMode from './LearningWordsGameMode';
-import { PARAM_MODE } from '../../Utils/Constants';
+import { PARAM_MODE, PARAM_WAS_STARTED } from '../../Utils/Constants';
 import Timers from '../Games/FieldOfDreams/Timers';
 import SpacedRepititions from '../../Classes/SpacedRepititions';
 
 export default class LearningWordsModel {
   constructor(mode = MODES.REPITITION) {
+    this.started = false;
     this.timer = new Timers();
     this.statistics = new Statistics(GAMES.LEARNING, mode);
     this.dictionary = new Dictionary();
@@ -111,6 +112,7 @@ export default class LearningWordsModel {
   }
 
   async acceptInput(value) {
+    this.started = true;
     if (this.cards.currentStatus === WORD_STATUSES.COMPLITED) {
       await this.goNext();
       return true;
@@ -156,8 +158,9 @@ export default class LearningWordsModel {
   checkInput(value) {
     const textResult = value.toLowerCase().trim();
     const original = this.card.word.toLowerCase().trim();
+    const original2 = this.card.wordFromExample.toLowerCase().trim();
 
-    const checkingResult = (textResult === original);
+    const checkingResult = (textResult === original) || (textResult === original2);
 
     if (!checkingResult) {
       this.cards.CurrentErrors += 1;
@@ -217,7 +220,11 @@ export default class LearningWordsModel {
 
   // eslint-disable-next-line class-methods-use-this
   showResult() {
-    const params = { [PARAM_MODE]: this.mode, difficulty: this.difficulty };
+    const params = {
+      [PARAM_MODE]: this.mode,
+      difficulty: this.difficulty,
+      [PARAM_WAS_STARTED]: this.started,
+    };
     if (this.mode === MODES.GAME) {
       this.timer.setNewTimer(() => {
         AppNavigator.go(LEARNING_WORDS_CONTROLLER, TEST_RESULT_ACTION, params);
