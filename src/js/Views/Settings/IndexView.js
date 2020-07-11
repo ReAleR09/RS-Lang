@@ -6,6 +6,9 @@ import { SETTINGS_HTML, SETTINGS_QUERIES as QUERIES } from '../../Components/Set
 import { DICT_CATEGORIES } from '../../Classes/Api/constants';
 
 import Toaster from '../../Classes/Toaster';
+import AppNavigator from '../../lib/AppNavigator';
+import { PARAM_MODE } from '../../Utils/Constants';
+import { MODES } from '../../../config';
 
 export default class IndexView extends View {
   /**
@@ -43,6 +46,12 @@ export default class IndexView extends View {
         this.warningParagraph.classList.remove(QUERIES.WARNING_TEXT);
         this.updateSettings();
       }
+    });
+
+    const buttonCheckDifficultyLevel = this.element.querySelector(QUERIES.BUTTON_CHECK_DIFF);
+    buttonCheckDifficultyLevel.addEventListener('click', (event) => {
+      event.preventDefault();
+      AppNavigator.go('learningWords', 'index', { [PARAM_MODE]: MODES.GAME });
     });
   }
 

@@ -1,0 +1,13 @@
+.Errors__panel {
+  min-height: 200px;
+  max-height: 800px;
+  overflow: hidden;
+}
+.Errors__text {
+  font-family: monospace;
+}
+.errors__img {
+  width: 100%;
+  max-width: 800px;
+  transition: opacity .4s ease-out;
+}

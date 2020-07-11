@@ -57,7 +57,7 @@ export default class UniversalGameStartView extends View {
     }
 
     const html = `
-    <div>
+    <div class="game-start">
       <div class='row'><h2>${game.title}</h2></div>
       <blockquote>
         ${game.description}

@@ -3,6 +3,7 @@
 @import "./Components/GameSprint.scss";
 @import "./Components/GameAudioCall.scss";
 @import "./Components/savannah.scss";
+@import "./Components/dictionary.scss";
 @import "./Components/PageAboutTeam.scss";
 
 // plugins
@@ -17,6 +18,10 @@
 @import "./Components/EnglishPuzzle";
 
 @import "./Components/Preloader";
+@import "./Components/ProgressBar";
+@import "./Components/errors";
+
+@import "./Components/Stats";
 
 body {
   -webkit-touch-callout: none; /* iOS Safari */
@@ -26,8 +31,10 @@ body {
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
+  min-height: 100vh;
 }
 
 body > .container {
   padding-top: 10px;
+  min-height: 140vh;
 }

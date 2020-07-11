@@ -15,6 +15,7 @@ const CLASSES = {
   SHOW_BUTTON_DELETE: 'show-delete-button',
   SHOW_BUTTON_HARD: 'show-hard-button',
   SHOW_RATE: 'show-buttons',
+  BUTTON_CHECK_DIFF: 'check-difficulty-button',
   BUTTON_SAVE: 'settings-btn',
   WARNING_PARAGRAPH: 'warning-paragraph',
   WARNING_TEXT: 'red-text',
@@ -29,8 +30,6 @@ const CLASSES = {
   ACTION_COMPLICATED: 'annoying-action--complicated',
   ACTION_DELETE: 'annoying-action--delete',
 };
-
-// export const CLASS_BUTTON_SAVE = `.${CLASSES.COMPONENT} .${CLASSES.BUTTON_SAVE}`;
 
 export const SETTINGS_QUERIES = {
   TABS: `.${CLASSES.COMPONENT} .${CLASSES.TABS}`,
@@ -47,6 +46,7 @@ export const SETTINGS_QUERIES = {
   SHOW_BUTTON_HARD: `.${CLASSES.COMPONENT} .${CLASSES.SHOW_BUTTON_HARD}`,
   SHOW_RATE: `.${CLASSES.COMPONENT} .${CLASSES.SHOW_RATE}`,
   BUTTON_SAVE: `.${CLASSES.COMPONENT} .${CLASSES.BUTTON_SAVE}`,
+  BUTTON_CHECK_DIFF: `.${CLASSES.COMPONENT} .${CLASSES.BUTTON_CHECK_DIFF}`,
   WARNING_PARAGRAPH: `.${CLASSES.COMPONENT} .${CLASSES.WARNING_PARAGRAPH}`,
   WARNING_TEXT: `${CLASSES.WARNING_TEXT}`,
   FIRST_INTERVAL: `.${CLASSES.COMPONENT} .${CLASSES.FIRST_INTERVAL}`,
@@ -66,6 +66,7 @@ const MAIN_SETTINGS = `
   <label class="range-field">
     <input class="${CLASSES.DIFFICULTY}" type="range" min="0" max="5" value="0">
     <span>Уровень сложности изучаемых слов</span>
+    <a class="${CLASSES.BUTTON_CHECK_DIFF} waves-effect waves-light btn btn-small"><i class="material-icons left">trending_down</i> Проверить уровень знаний <i class="material-icons right">trending_up</i></a>
   </label>
 </p>
 <p>
@@ -199,8 +200,8 @@ export const SETTINGS_HTML = `
     <div class="row">
       <div class="col s12">
         <ul class="${CLASSES.TABS} tabs">
-          <li class="tab col offset-s2 s4"><a class="active" href="#main-settings">Основные</a></li>
-          <li class="tab col s4"><a href="#interval-settings">Интервальные повторения</a></li>
+          <li class="tab col s6"><a class="active" href="#main-settings">Основные</a></li>
+          <li class="tab col s6"><a href="#interval-settings">Интервальные повторения</a></li>
         </ul>
       </div>
       <div id="main-settings" class="col offset-s2 s8 left-align">

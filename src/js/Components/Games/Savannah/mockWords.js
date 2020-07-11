@@ -14,7 +14,13 @@ const difficulty0 = [
     "wordTranslate": "согласна",
     "textMeaningTranslate": "Согласиться - значит иметь то же мнение или убеждение, что и другой человек",
     "textExampleTranslate": "Студенты согласны, что у них слишком много домашней работы",
-    "id": 1
+    "id": 1,
+    "userWord": {
+      "optional": {
+        "lastDate": 12345678,
+        "nextDate": 123456543,
+      }
+    }
   },
   {
     "word": "alcohol",
@@ -28,7 +34,13 @@ const difficulty0 = [
     "wordTranslate": "алкоголь",
     "textMeaningTranslate": "Алкоголь - это тип напитка, который может сделать людей пьяными",
     "textExampleTranslate": "Человек не должен водить машину после того, как он выпил алкоголь",
-    "id": 2
+    "id": 2,
+    "userWord": {
+      "optional": {
+        "lastDate": 12345678,
+        "nextDate": 123456543,
+      }
+    }
   },
   {
     "word": "arrive",
@@ -42,7 +54,13 @@ const difficulty0 = [
     "wordTranslate": "прибыть",
     "textMeaningTranslate": "Приехать значит попасть куда-то",
     "textExampleTranslate": "Они прибыли в школу в 7 часов утра",
-    "id": 3
+    "id": 3,
+    "userWord": {
+      "optional": {
+        "lastDate": 12345678,
+        "nextDate": 123456543,
+      }
+    }
   },
   {
     "word": "August",
@@ -56,7 +74,13 @@ const difficulty0 = [
     "wordTranslate": "август",
     "textMeaningTranslate": "Август - восьмой месяц года",
     "textExampleTranslate": "У тебя день рождения в августе?",
-    "id": 4
+    "id": 4,
+    "userWord": {
+      "optional": {
+        "lastDate": 12345678,
+        "nextDate": 123456543,
+      }
+    }
   },
   {
     "word": "boat",
@@ -70,7 +94,13 @@ const difficulty0 = [
     "wordTranslate": "лодка",
     "textMeaningTranslate": "Лодка - это транспортное средство, которое движется по воде",
     "textExampleTranslate": "На озере есть маленькая лодка",
-    "id": 5
+    "id": 5,
+    "userWord": {
+      "optional": {
+        "lastDate": 12345678,
+        "nextDate": 123456543,
+      }
+    }
   },
   {
     "word": "breakfast",
@@ -84,7 +114,13 @@ const difficulty0 = [
     "wordTranslate": "завтрак",
     "textMeaningTranslate": "Завтрак - это утренняя трапеза",
     "textExampleTranslate": "Я ел яйца на завтрак",
-    "id": 6
+    "id": 6,
+    "userWord": {
+      "optional": {
+        "lastDate": 12345678,
+        "nextDate": 123456543,
+      }
+    }
   },
   {
     "word": "camera",
@@ -98,7 +134,13 @@ const difficulty0 = [
     "wordTranslate": "камера",
     "textMeaningTranslate": "Камера - это часть оборудования, которая делает снимки",
     "textExampleTranslate": "Я принес свою камеру в отпуск",
-    "id": 7
+    "id": 7,
+    "userWord": {
+      "optional": {
+        "lastDate": 12345678,
+        "nextDate": 123456543,
+      }
+    }
   },
   {
     "word": "capital",
@@ -112,7 +154,13 @@ const difficulty0 = [
     "wordTranslate": "столица",
     "textMeaningTranslate": "Столица - это город, в котором базируется правительство страны",
     "textExampleTranslate": "Столица Соединенных Штатов - Вашингтон, округ Колумбия",
-    "id": 8
+    "id": 8,
+    "userWord": {
+      "optional": {
+        "lastDate": 12345678,
+        "nextDate": 123456543,
+      }
+    }
   },
   {
     "word": "catch",
@@ -126,7 +174,13 @@ const difficulty0 = [
     "wordTranslate": "поймать",
     "textMeaningTranslate": "Поймать - значит схватить или получить что-то",
     "textExampleTranslate": "Вы поймали мяч во время игры в бейсбол?",
-    "id": 9
+    "id": 9,
+    "userWord": {
+      "optional": {
+        "lastDate": 12345678,
+        "nextDate": 123456543,
+      }
+    }
   },
   {
     "word": "duck",
@@ -140,7 +194,13 @@ const difficulty0 = [
     "wordTranslate": "утка",
     "textMeaningTranslate": "Утка - маленькая водяная птица",
     "textExampleTranslate": "Люди кормят уток у озера",
-    "id": 10
+    "id": 10,
+    "userWord": {
+      "optional": {
+        "lastDate": 12345678,
+        "nextDate": 123456543,
+      }
+    }
   },
 ];
 

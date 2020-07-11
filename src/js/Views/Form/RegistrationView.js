@@ -2,10 +2,12 @@ import View from '../../lib/View';
 import Form from '../../Classes/Form';
 import Api from '../../Classes/Api/Api';
 import AppNavigator from '../../lib/AppNavigator';
+import Toaster from '../../Classes/Toaster';
 
 const errors = {
   server: 'Server error',
-  signIn: 'Incorrect e-mail or password',
+  styles: 'red darken-1',
+  email: 'this email exists',
 };
 
 const validMail = (email) => {
@@ -16,6 +18,7 @@ const validMail = (email) => {
     const output = 'Email is wrong!';
     document.querySelector('.email').value = '';
     document.querySelector('.email').placeholder = output;
+    Toaster.showToast(output, errors.styles);
   }
   return valid;
 };
@@ -39,6 +42,7 @@ const validPassword = (password) => {
     const output = 'Password is wrong!';
     document.querySelector('.password').value = '';
     document.querySelector('.password').placeholder = output;
+    Toaster.showToast(output, errors.styles);
   }
   return valid;
 };
@@ -56,11 +60,10 @@ const register = async (e) => {
     const api = new Api();
     const userData = await api.register(user);
     if (userData.error) {
-      if (userData.error >= 500) {
-        document.querySelector('.error').innerHTML = errors.server;
-        setTimeout(() => {
-          document.querySelector('.error').innerHTML = '';
-        }, 2000);
+      if (userData.error === 417) {
+        Toaster.showToast(errors.email, errors.styles);
+      } else if (userData.error >= 500) {
+        Toaster.showToast(errors.server, errors.styles);
       }
     } else {
       AppNavigator.go('authorization');

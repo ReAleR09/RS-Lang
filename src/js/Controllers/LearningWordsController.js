@@ -35,12 +35,6 @@ export default class LearningWordsController extends Controller {
    */
   indexAction() {
     const params = AppNavigator.getRequestParams();
-    let difficulty = params.get('difficulty');
-    if (difficulty) {
-      difficulty = Number.parseInt(difficulty, 10);
-    } else {
-      difficulty = 0;
-    }
 
     let mode = MODES.REPITITION;
     if (params.has(PARAM_MODE)) {

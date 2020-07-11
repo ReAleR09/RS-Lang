@@ -11,18 +11,19 @@ import {
   CLASS_LETTER_FLIP,
   CLASS_DRUM_ROTATE,
   CLASS_LETTER_WRAP,
+  CLASS_COMPONENT_LOCKED,
 } from './gameTemplate';
 import SoundPlayer from '../../../Classes/SoundPlayer';
+import {
+  alphabet,
+  instructions,
+  phraseAboutMicrophone,
+  soundEffects,
+  soundsSources,
+} from './constants';
+import Toaster from '../../../Classes/Toaster';
 
 // const START_PIC = '/assets/img/speakit_start_pic.jpg';
-
-const alphabet = 'abcdefghijklmnopqrstuvwxyz';
-
-const soundEffects = {
-  success: 'success',
-  error: 'error',
-  superGame: 'supergame',
-};
 
 export default class FieldOfDreamsView {
   constructor(
@@ -60,20 +61,25 @@ export default class FieldOfDreamsView {
     } else {
       this.soundEffect = soundEffects.error;
     }
-    this.setTimer(() => {
-      this.hideCard();
-      this.setTimer(this.goNext, 1000);
-    }, 1000);
-    // this.soundPlayer.addAudioToQueue();
+    this.playSounds();
   }
 
   onSoundEffectsEnd() {
     if (this.soundEffect === soundEffects.success || this.soundEffect === soundEffects.error) {
-      this.hideAnswer();
-      this.goNext();
+      this.hideCard();
+      this.setTimer(this.goNext(), 1000);
     }
-
     this.soundEffect = null;
+  }
+
+  playSounds() {
+    this.soundPlayer.addAudioToQueue(soundsSources[this.soundEffect]);
+    this.soundPlayer.play();
+  }
+
+  startLetterEffects(result) {
+    this.soundEffect = (result) ? soundEffects.letterTrue : soundEffects.letterFalse;
+    this.playSounds();
   }
 
   initButtons() {
@@ -89,6 +95,7 @@ export default class FieldOfDreamsView {
       this.selectedLetters.push(target);
       if (!this.useHint()) {
         this.startDrum();
+        Toaster.showToast(phraseAboutMicrophone, '', 1500);
         this.startListening();
       }
     });
@@ -131,8 +138,6 @@ export default class FieldOfDreamsView {
     letters.forEach((letter) => letter.classList.add(CLASS_LETTER_FLIP));
   }
 
-  // e.preventDefault();
-  // e.stopPropagation()
   drawAnswer(word) {
     const wordElement = this.element.querySelector(FIELD_OF_DREAMS_QUERIES.answer);
 
@@ -161,11 +166,10 @@ export default class FieldOfDreamsView {
 
     if (lastWord) {
       this.soundEffect = soundEffects.superGame;
-      // this.soundPlayer.addAudioToQueue();
-      // TODO sound effect
     }
     this.showCard();
     this.setTimer(this.startQuestionUtterance, 1000);
+    this.unlockComponent();
   }
 
   startDrum() {
@@ -174,5 +178,17 @@ export default class FieldOfDreamsView {
 
   stopDrum() {
     this.drum.classList.remove(CLASS_DRUM_ROTATE);
+  }
+
+  lockComponent() {
+    this.element.classList.add(CLASS_COMPONENT_LOCKED);
+  }
+
+  unlockComponent() {
+    this.element.classList.remove(CLASS_COMPONENT_LOCKED);
+  }
+
+  static showInstructions() {
+    Toaster.showToast(instructions, '', 2000);
   }
 }

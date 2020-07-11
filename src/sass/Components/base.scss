@@ -4,3 +4,7 @@ body {
   background-attachment: fixed;
   background-size: cover;
 }
+
+@mixin media-mobie-mini {
+  @media (max-width: 460px) { @content;}
+}
