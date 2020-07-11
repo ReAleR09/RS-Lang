@@ -41,8 +41,7 @@ export default class SavannahView {
       const englishWord = this.element.querySelector(`.${CLASS_ENGLISH_CARD}`);
       englishWord.innerHTML = randomWords[0].word;
       const width = englishWord.offsetWidth;
-      console.log(width);
-      englishWord.style.marginLeft = `${-width/2}px`;
+      englishWord.style.marginLeft = `${-width / 2}px`;
 
       let translateWords = this.element.querySelectorAll(`.${CLASS_TRANSLATE_CARD}`);
 
