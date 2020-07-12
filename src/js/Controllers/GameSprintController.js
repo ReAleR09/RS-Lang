@@ -4,12 +4,12 @@ import UniversalGameStartView from '../Views/UniversalGameStartView';
 import {
   difficulties, title, description,
   IN_PROGRESS_SPRINT_GAME, FINISHED_SPRINT_GAME, EVENT_NAME_SPRINT_GAME,
-} from '../Utils/ConstantsGameSprint';
+} from '../Components/Games/Sprint/ConstantsGameSprint';
 import WordsApi from '../Classes/Api/WordsApi';
 import SettingsModel from '../Classes/UserSettings';
 import { GAMES, MODES } from '../../config';
 import AppNavigator from '../lib/AppNavigator';
-import GameSprintWordsApi from './GameSprintWordsApi';
+import GameSprintWordsApi from '../Components/Games/Sprint/GameSprintWordsApi';
 import { showPreloader, hidePreloader } from '../Classes/Preloader';
 import Statistics from '../Classes/Statistics';
 import ResultsView from '../Views/GameSprint/ResultsView';
@@ -83,7 +83,7 @@ export default class GameSprintController extends Controller {
         difficulty < 0 || difficulty > 5
         || round < 1 || round > difficulties[difficulty]
       ) {
-        AppNavigator.go('sprint');
+        AppNavigator.go('game-sprint');
         this.cancelAction();
       }
       // gameManager = new GameSprintControllerSecond(false, difficulty, round);
@@ -99,7 +99,7 @@ export default class GameSprintController extends Controller {
     this.round = round;
 
     const mode = userWordsMode ? MODES.REPITITION : MODES.GAME;
-    this.statistics = new Statistics(GAMES.SPRINT, mode, true);
+    this.statistics = new Statistics(GAMES.SPRINT, mode, false);
 
     this.props.onRightClick = () => {
       this.checkAnswer(this.correctTranslation);
@@ -193,7 +193,7 @@ export default class GameSprintController extends Controller {
   stopGame() {
     this.statistics.sendGameResults();
     this.status = FINISHED_SPRINT_GAME;
-    AppNavigator.go('sprint', 'ResultsView');
+    // AppNavigator.go('sprint', 'results');
   }
 
   nextWord() {

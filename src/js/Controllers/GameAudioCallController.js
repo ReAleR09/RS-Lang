@@ -1,14 +1,24 @@
 import Controller from '../lib/Controller';
 import IndexView from '../Views/GameAudioCall/IndexView';
 import Utils from '../Utils/Utils';
-import { BACKEND_URL, CONF_MEDIA_BASE_PATH } from '../../config';
+import { GAMES, MODES } from '../../config';
 import {
   INIT_GAME,
   UPDATE_DATA,
   GUESSED_WORD,
   NOT_GUESS,
   FINISH,
+  difficulties,
+  title,
+  description,
 } from '../Utils/ConstantsGameAudioCall';
+import UniversalGameStartView from '../Views/UniversalGameStartView';
+import WordsApi from '../Classes/Api/WordsApi';
+import SettingsModel from '../Classes/UserSettings';
+import AppNavigator from '../lib/AppNavigator';
+import { showPreloader, hidePreloader } from '../Classes/Preloader';
+import Statistics from '../Classes/Statistics';
+import GameSprintWordsApi from '../Components/Games/Sprint/GameSprintWordsApi';
 
 /**
  * Controller is a sctructure that describes a set of "actions",
@@ -23,10 +33,10 @@ import {
 export default class GameAudioCallController extends Controller {
   constructor() {
     const viewClasses = {
-      index: IndexView,
+      index: UniversalGameStartView,
+      play: IndexView,
     };
     super(viewClasses);
-    this.wordsUrl = `${BACKEND_URL}words?page=1&group=0`;
     this.audioFail = new Audio('/assets/audio/badumtss.mp3');
     this.audioEndGame = new Audio('/assets/audio/endGame.mp3');
     this.audioEndGameFail = new Audio('/assets/audio/veryBadResult.mp3');
@@ -38,6 +48,61 @@ export default class GameAudioCallController extends Controller {
    * Try to do all data aggregation here then pass it to view
    */
   async indexAction() {
+    const game = {
+      title,
+      description,
+      difficulties,
+    };
+
+    const wordsApi = new WordsApi();
+    const repWordsCount = await wordsApi.getRepitionWordsCount(false);
+    game.userWordsPlay = (repWordsCount >= 10);
+
+    // load saved difficulty and round
+    const { difficulty, round } = SettingsModel.loadGame(GAMES.AUDIOCALL);
+    game.currentDifficulty = difficulty;
+    game.currentRound = round;
+    this.props.game = game;
+  }
+
+  playAction() {
+    const params = AppNavigator.getRequestParams();
+
+    const userWordsMode = params.get('userWords');
+    let gameManager;
+
+    if (userWordsMode) {
+      // gameManager = new GameSprintControllerSecond(true);
+      this.initGame(true);
+    } else {
+      let difficulty = params.get('difficulty');
+      difficulty = Number.parseInt(difficulty, 10);
+
+      let round = params.get('round');
+      round = Number.parseInt(round, 10);
+      // navigate to main game page if user somehow entered the page with invalid params
+      if (
+        difficulty < 0 || difficulty > 5
+        || round < 1 || round > difficulties[difficulty]
+      ) {
+        AppNavigator.go('game-audio-call');
+        this.cancelAction();
+      }
+      // gameManager = new GameSprintControllerSecond(false, difficulty, round);
+      this.initGame(false, difficulty, round);
+    }
+
+    this.props.gameManager = gameManager;
+  }
+
+  async initGame(userWordsMode = false, difficulty = 0, round = 1) {
+    this.userWordsMode = userWordsMode;
+    this.difficulty = difficulty;
+    this.round = round;
+
+    const mode = userWordsMode ? MODES.REPITITION : MODES.GAME;
+    this.statistics = new Statistics(GAMES.AUDIOCALL, mode, false);
+
     await this.getWordsFromDataBase();
     this.props.startGame = () => {
       this.startGame();
@@ -104,22 +169,57 @@ export default class GameAudioCallController extends Controller {
     });
   }
 
+  // async getWordsFromDataBase() {
+  //   try {
+  //     const response = await fetch(this.wordsUrl);
+  //     this.dataWords = await response.json();
+  //     // console.log(this.dataWords);
+  //   } catch (error) {
+  //     throw new Error('Ошибка при получении слов с сервера');
+  //   }
+  // }
+
   async getWordsFromDataBase() {
-    try {
-      const response = await fetch(this.wordsUrl);
-      this.dataWords = await response.json();
-      // console.log(this.dataWords);
-    } catch (error) {
-      throw new Error('Ошибка при получении слов с сервера');
+    showPreloader();
+    // TODO show load animation?
+    let words;
+
+    if (this.userWordsMode) {
+      words = await GameSprintWordsApi.getUserWords();
+    } else {
+      words = await GameSprintWordsApi.getWordsForDifficultyAndRound(
+        this.difficulty,
+        this.round,
+      );
     }
+
+    const wordsState = words.map((wordInfo) => {
+      const wordState = {
+        id: wordInfo.id,
+        guessed: false,
+        word: wordInfo.word.toLowerCase(),
+        audio: wordInfo.audio,
+        image: wordInfo.image,
+        transcription: wordInfo.transcription,
+        wordTranslate: wordInfo.wordTranslate,
+      };
+
+      return wordState;
+    });
+    this.dataWords = wordsState;
+    console.log(this.dataWords);
+    // this.displayWords(wordsState);
+    hidePreloader();
   }
 
   compareWords(event) { // Тут можно помечать угаданные слова
     if (this.wordsToSend[this.countAnswerWords].wordTranslate === event.target.innerText) {
+      this.statistics.updateWordStatistics(this.dataWords[this.countAnswerWords].id, true);
       this.countCorrectTranslationWords += 1;
       this.status = GUESSED_WORD;
       this.updateView();
     } else { // Если не угадал, отметить статус какой, как не угаданное.
+      this.statistics.updateWordStatistics(this.dataWords[this.countAnswerWords].id, false);
       this.status = NOT_GUESS;
       this.updateView();
       this.playAudioFail();
@@ -129,11 +229,12 @@ export default class GameAudioCallController extends Controller {
 
   playAudio() {
     if (this.countAnswerWords === 10) {
+      this.statistics.sendGameResults();
       this.status = FINISH;
       this.updateView();
     } else {
       // console.log('playaudio');
-      this.audio = new Audio(CONF_MEDIA_BASE_PATH + this.wordsToSend[this.countAnswerWords].audio);
+      this.audio = new Audio(this.wordsToSend[this.countAnswerWords].audio);
       this.audio.play();
     }
   }

@@ -1,6 +1,6 @@
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
-import { IN_PROGRESS_SPRINT_GAME, EVENT_NAME_SPRINT_GAME } from '../../Utils/ConstantsGameSprint';
+import { IN_PROGRESS_SPRINT_GAME, EVENT_NAME_SPRINT_GAME } from '../../Components/Games/Sprint/ConstantsGameSprint';
 
 export default class PlayView extends View {
   /**

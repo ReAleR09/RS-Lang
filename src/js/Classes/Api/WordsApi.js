@@ -12,7 +12,7 @@ import Utils from '../../Utils/Utils';
 import ErrorHandling from '../ErrorHandling';
 
 const puzzleMaxLength = 10;
-const puzzlePageSize = 10;
+// const puzzlePageSize = 10;
 
 export default class WordsApi {
   constructor() {

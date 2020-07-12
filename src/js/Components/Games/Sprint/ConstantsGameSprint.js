@@ -10,7 +10,7 @@ export const difficulties = [
   60, 60, 60,
 ];
 
-export const title = 'Sprint: мини-игра';
+export const title = 'Спринт: мини-игра';
 export const description = 'В этой игре нужно подтвердить или опровергнуть, правильно ли переведено слово.';
 
 export const roundSize = 20;
