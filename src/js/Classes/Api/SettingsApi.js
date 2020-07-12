@@ -4,8 +4,8 @@ import { DICT_CATEGORIES } from './constants';
 
 export const DEFAULT_USER_SETTINGS = {
   difficulty: 0,
-  wordsPerDay: 50,
-  newWordsPerDay: 20,
+  wordsPerDay: 30,
+  newWordsPerDay: 10,
   showWordTranslate: true,
   showExample: true,
   showTranscription: true,
@@ -19,10 +19,10 @@ export const DEFAULT_USER_SETTINGS = {
   firstIntervalMinutes: 5,
   baseIntervalDays: 1,
   baseMultiplierPercents: 150,
-  hardMultiplierPercents: 80,
-  simpleMultiplierPercents: 120,
-  maxIntervalDays: 250,
-  annoyinglimit: 5,
+  hardMultiplierPercents: 120,
+  simpleMultiplierPercents: 180,
+  maxIntervalDays: 150,
+  annoyinglimit: 7,
   annoyingAction: DICT_CATEGORIES.COMPLICATED,
 };
 DEFAULT_USER_SETTINGS.saves = {};

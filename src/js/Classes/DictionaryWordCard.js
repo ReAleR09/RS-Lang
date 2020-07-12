@@ -9,9 +9,12 @@ const CLASS_WORD_PICTURE = 'word-data__picture';
 const CLASS_WORD_COUNT = 'word-data__count';
 const CLASS_WORD_STAT_PREV = 'word-data__stat-prev';
 const CLASS_WORD_STAT_NEXT = 'word-data__stat-next';
+const CLASS_WORD_STAT_PROGRESS = 'word-data__stat-progress';
 
 const CLASS_WORD_DELETE_BUTTON = 'word-data__delete-button';
 const CLASS_WORD_RECOVER_BUTTON = 'word-data__recover-button';
+
+const CLASS_BUTTON_TRAN_COMPLICATED = 'button-train-complicated';
 
 class DictionaryWordCard {
   constructor(word, flag) {
@@ -37,7 +40,8 @@ class DictionaryWordCard {
         <div class="${CLASS_WORD_DATA}">
           <div class="${CLASS_WORD_COUNT}"><b>Repeated:</b> ${this.word.userWord.optional.errors + this.word.userWord.optional.success || 0} </div>
           <div class="${CLASS_WORD_STAT_PREV}"><b>Last</b> ${new Date(this.word.userWord.optional.lastDate).toLocaleString()} </div>
-          <div class="${CLASS_WORD_STAT_NEXT}"><b>Next</b> ${new Date(this.word.userWord.optional.nextDate).toLocaleString()} </div>`;
+          <div class="${CLASS_WORD_STAT_NEXT}"><b>Next</b> ${new Date(this.word.userWord.optional.nextDate).toLocaleString()} </div>
+          <div class="${CLASS_WORD_STAT_PROGRESS}">${this.word.wordStatus}</div>`;
     /* eslint no-underscore-dangle: 0 */
     if (this.flag) {
       html += `<div class="${CLASS_WORD_DELETE_BUTTON}" idWord="${this.word._id}"> <i class="fa fa-trash" aria-hidden="true"></i> </div>`;
@@ -63,5 +67,7 @@ export {
   CLASS_DICTIONARY_WORD_SOUND,
   CLASS_WORD_DELETE_BUTTON,
   CLASS_WORD_RECOVER_BUTTON,
+  CLASS_BUTTON_TRAN_COMPLICATED,
+  CLASS_WORD_STAT_PROGRESS,
   DictionaryWordCard,
 };
