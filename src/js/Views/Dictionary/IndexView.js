@@ -5,17 +5,33 @@ import {
   CLASS_WORD_DELETE_BUTTON,
   CLASS_WORD_RECOVER_BUTTON,
   CLASS_BUTTON_TRAN_COMPLICATED,
+  CLASS_WORD_STAT_PROGRESS,
   DictionaryWordCard,
 } from '../../Classes/DictionaryWordCard';
 import initDictionaryTabs from '../../plugins/initMaterial';
 import Dictionary from '../../Classes/Dictionary';
 import AppNavigator from '../../lib/AppNavigator';
 import { MODES } from '../../../config';
+import WordStatuses from '../../Components/LearningWords/WordStatuses';
 
 const dictionary = new Dictionary();
 
 export default class LearningWordsView extends View {
   onMount() {
+    this.wordStatuses = new WordStatuses(this.element);
+    this.wordStatuses.createModalElement();
+    this.wordStatuses.attach();
+
+    const statusWrappers = Array.from(this.element.querySelectorAll(`.${CLASS_WORD_STAT_PROGRESS}`));
+    statusWrappers.forEach((wrapper) => {
+      const status = Number(wrapper.innerText.trim());
+      const parent = wrapper;
+      parent.innerText = '';
+      this.wordStatuses.createStatusElement(parent, '', status);
+    });
+
+    this.wordStatuses.initButtons();
+
     this.instance = initDictionaryTabs();
 
     const recoverButtons = this.element.querySelectorAll(`.${CLASS_WORD_RECOVER_BUTTON}`);
@@ -48,9 +64,10 @@ export default class LearningWordsView extends View {
     });
   }
 
-  // onUnmount() {
-  //   this.instance.destroy();
-  // }
+  onUnmount() {
+    this.wordStatuses.detach();
+    // this.instance.destroy();
+  }
 
   // eslint-disable-next-line class-methods-use-this
   render() {
