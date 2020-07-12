@@ -56,10 +56,10 @@ export default class EnglisPuzzleView {
 
   renameCheckButton() {
     const checkBtn = document.querySelector(`.${engPuzConst.buttons.CHECK}`);
-    if (checkBtn.innerText === 'CHECK') {
-      checkBtn.innerText = 'CONTINUE';
+    if (checkBtn.innerText === 'ПРОВЕРИТЬ') {
+      checkBtn.innerText = 'ПРОДОЛЖИТЬ';
     } else {
-      checkBtn.innerText = 'CHECK';
+      checkBtn.innerText = 'ПРОВЕРИТЬ';
     }
   }
 
@@ -158,10 +158,10 @@ export default class EnglisPuzzleView {
       <div class="engPuz__drop-section--line row-8 flex-center"></div>
       <div class="engPuz__drop-section--line row-9 flex-center"></div>
     </div>
-    <div id="engPuz__drag-section" class="engPuz__drag-section card-panel flex-between"></div>
+    <div id="engPuz__drag-section margin-bottom" class="engPuz__drag-section card-panel flex-between"></div>
       <div class="engPuz__bottom-btn flex-center">
-      <a class="engPuz__bottom-idk #fce4ec pink lighten-3 btn waves-effect">don't know</a>
-      <a class="engPuz__bottom-check #81c784 green lighten-1 btn waves-effect">Check</a>
+      <a class="engPuz__bottom-idk #fce4ec pink lighten-3 btn waves-effect">НЕ ЗНАЮ</a>
+      <a class="engPuz__bottom-check #81c784 green lighten-1 btn waves-effect">ПРОВЕРИТЬ</a>
       </div>
     </div>
     `;
