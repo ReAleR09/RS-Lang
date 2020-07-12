@@ -12,7 +12,7 @@ import AppNavigator from '../../lib/AppNavigator';
 
 const dictionary = new Dictionary();
 
-export default class LearningWordsView extends View {
+export default class IndexView extends View {
   onMount() {
     this.instance = initDictionaryTabs();
 
