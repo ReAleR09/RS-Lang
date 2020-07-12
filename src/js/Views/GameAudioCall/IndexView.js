@@ -7,6 +7,7 @@ import {
   GUESSED_WORD,
   NOT_GUESS,
 } from '../../Utils/ConstantsGameAudioCall';
+import { showPreloader, hidePreloader } from '../../Classes/Preloader';
 
 const numberSlide = ['#one!', '#two!', '#three!', '#four!', '#five!', '#six!', '#seven!', '#eight!', '#nine!', '#ten!'];
 
@@ -21,6 +22,7 @@ export default class IndexView extends View {
    * it references actual DOM root element of this view
    */
   onMount() {
+    showPreloader();
     this.element.querySelector('#start-btn').addEventListener('click', () => {
       this.props.startGame();
     });
@@ -42,6 +44,7 @@ export default class IndexView extends View {
         this.endGame(countCorrectTranslationWords);
       }
     });
+    hidePreloader();
   }
 
   generateHtml(wordsToSend) {
