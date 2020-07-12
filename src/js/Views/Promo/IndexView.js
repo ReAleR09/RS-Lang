@@ -126,7 +126,10 @@ export default class IndexView extends View {
 
       <div class="promo__video">
         <h2>Совершенствуй свои языковые познания</h2>
-        <div class="promo-video"></div>
+        <div class="promo-video">
+        <iframe width="90%" height="315" src="https://www.youtube.com/embed/videoseries?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+        </div>
       </div>
 
     </div>`;

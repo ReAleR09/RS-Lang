@@ -61,6 +61,7 @@
     background-color: #a1c8f5;
     text-align: center;
     padding: 10px;
+    padding-bottom: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -112,4 +113,8 @@
 
 .promo-games {
   background-color: #99f8f0;
+}
+
+.promo-video {
+  width: 100%;
 }
