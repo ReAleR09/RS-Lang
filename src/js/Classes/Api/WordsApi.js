@@ -12,7 +12,6 @@ import Utils from '../../Utils/Utils';
 import ErrorHandling from '../ErrorHandling';
 
 const puzzleMaxLength = 10;
-const puzzlePageSize = 10;
 
 export default class WordsApi {
   constructor() {
@@ -165,6 +164,27 @@ export default class WordsApi {
         const exampleLength = word.textExample.trim().split(' ').length;
         return (exampleLength <= puzzleMaxLength);
       });
+    }
+
+    repeatedWords = Utils.arrayShuffle(repeatedWords);
+
+    if (count < repeatedWords.length) {
+      repeatedWords = repeatedWords.slice(0, count);
+    }
+
+    return repeatedWords;
+  }
+
+  async getComplicatedWords(count) {
+    const filter = JSON.stringify({
+      'userWord.optional.dictCategory': DICT_CATEGORIES.COMPLICATED,
+    });
+
+    let repeatedWords = await this.getAggregatedWords(undefined, undefined, filter);
+
+    if (repeatedWords.error) {
+      ErrorHandling.handleError(repeatedWords.error, API_ERROR);
+      return [];
     }
 
     repeatedWords = Utils.arrayShuffle(repeatedWords);
