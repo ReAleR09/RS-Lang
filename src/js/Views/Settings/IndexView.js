@@ -113,7 +113,6 @@ export default class IndexView extends View {
     this.annoyingLimit.value = this.settings.annoyinglimit;
 
     this.setAnnoyingAction(this.settings.annoyingAction);
-    console.log(this.settings);
   }
 
   setAnnoyingAction(category) {
