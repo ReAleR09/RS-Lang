@@ -1,6 +1,6 @@
 import View from '../../lib/View';
 import { HTML_RESULT, RESULTS_QUERIES } from '../../Components/LearningWords/ResultsTemplate';
-import { CLASS_VISIBLE } from '../../Components/LearningWords/IndexTemplate';
+import { CLASS_DISABLED, CLASS_VISIBLE } from '../../Components/LearningWords/IndexTemplate';
 import Statistics from '../../Classes/Statistics';
 // import LearningWordsView from '../../Components/LearningWords/LearningWordsView';
 
@@ -26,6 +26,7 @@ export default class ResultsView extends View {
 
     const errorsCount = this.element.querySelector(RESULTS_QUERIES.ERRORS_COUNT);
     const bestResult = this.element.querySelector(RESULTS_QUERIES.BEST_RESULT);
+    const suggestion = this.element.querySelector(RESULTS_QUERIES.SUGGESTION);
 
     wordsCount.innerText = dayResults.totalWordsCount;
     newWordsCount.innerText = dayResults.newWordsCount;
@@ -34,6 +35,9 @@ export default class ResultsView extends View {
       bestResult.innerText = dayResults.results.bestResult;
     }
 
+    if (!this.props.wasStarted) {
+      suggestion.classList.remove(CLASS_DISABLED);
+    }
     const componentElement = document.querySelector(RESULTS_QUERIES.COMPONENT);
     componentElement.classList.add(CLASS_VISIBLE);
   }

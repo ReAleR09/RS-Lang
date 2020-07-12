@@ -6,6 +6,14 @@
     margin-bottom: 2rem;
   }
 
+  .header-wrapper {
+    height: 100%;
+  }
+
+  h1 {
+    margin: unset;
+  }
+
   .question p {
     font-size: 2rem;
   }
@@ -66,15 +74,34 @@
     margin-top: 1rem;
   }
   .drum {
+    padding-left: 15%;
+    padding-right: 15%;
     max-width: 400px;
     max-height: 400px;
     img {
       width: 100%;
-      height: 100%;
     }
     img.drum-rotation {
       animation: 3s linear 0s normal none infinite running rotation;
     };
+  }
+
+  &.component-locked {
+    .component-lock {
+      display: block;
+    }
+  }
+
+  .component-lock {
+    display: none;
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 10;
   }
 }
 
@@ -84,5 +111,36 @@
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  #toast-container {
+    width: 90vw !important;
+    min-width: unset !important;
+    top: 25vh !important;
+    right: unset !important;
+    left: 5vw !important;
+    margin: unset !important;
+
+    .toast {
+      width: 100% !important;
+    }
+  }
+
+  .field-of-dreams {
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    .question p {
+      font-size: 1.2rem;
+    }
+  }
+
+  .game-start {
+    h2 {
+      font-size: 1.8rem;
+    }
   }
 }

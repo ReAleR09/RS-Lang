@@ -4,34 +4,42 @@ export default class Form {
   }
 
   render() {
-    let describe = 'Sign UP to START';
-    let question = 'Already have an account?';
-    let offer = 'Log in';
+    let describe = 'Зарегистрируйтесь чтобы НАЧАТЬ';
+    let question = 'Уже есть аккаунт?';
+    let offer = 'Войти';
     let autocompleteOff = 'autocomplete="new-password"';
+    let passwordHint = `<div>
+      Пароль должен содержать минимум 8 символов,
+      минимум одну цифру,
+      минимум одну прописную и одну заглавную букву латинского алфавита,
+      а так же минимум один из спец-симолов +-_@$!%*?&#.,;:[]{}
+    </div>`;
     if (this.type === 'SIGN IN') {
-      describe = 'Sign IN to CONTINUE';
-      question = 'No account?';
-      offer = 'Create one';
+      describe = 'Войдите чтобы ПРОДОЛЖИТЬ';
+      question = 'Нет аккаунта?';
+      offer = 'Зарегистрироваться';
       autocompleteOff = '';
+      passwordHint = '';
     }
     const html = `
     <div class="authorization-registration">
-    <div class="description">
-      <p class="description__title">Learn English WITH <span>RSLANG</span></p>
-      <div class="description__features">
-        <div class="feature feature-one">3600 words</div>
-        <div class="feature feature-two">Interactive games</div>
-        <div class="feature feature-three">Get statistic every Day</div>
-        <div class="feature feature-four">Change a lot of settings</div>
-        <div class="feature feature-five">Design for better memorization</div>
-      </div>
+    <div class="description container">
+      <h6 class="description__title container">Учите Английский язык с <span>RSLANG</span></h6>
+      <ul class="description__features">
+        <li class="feature feature-one"> - 3600 слов</li>
+        <li class="feature feature-two"> - Интерактивные игры</li>
+        <li class="feature feature-three"> - Ежедневная статистика</li>
+        <li class="feature feature-four"> - Гибкие настройки</li>
+        <li class="feature feature-five"> - Спроектировано для оптимального запоминания</li>
+      </ul>
     </div>
 
-    <div class="form-action">
+    <div class="form-action container">
       <p>${describe}</p>
       <form class="form">
-        <input class="email" type="email" title="Email should contains '@' and '.'">
-        <input class="password" type="password" minlength="8" ${autocompleteOff} title="Password should be > 8 characters and contains one digit, one letter(uppercase), one letter(lowercase) and one special char">
+        <input class="email" type="email" title="Емейл должен содержать '@' и '.'">
+        <input class="password" type="password" minlength="8" ${autocompleteOff}>
+        ${passwordHint}
         <button class="waves-effect waves-light btn">${this.type}</button>
       </form>
       <p>${question} <a href="#" id="form-link">${offer}</a></p>

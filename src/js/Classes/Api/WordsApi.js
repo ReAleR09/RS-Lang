@@ -294,7 +294,7 @@ export default class WordsApi {
     };
     if (forPuzzle) {
       requestParams.wordsPerExampleSentenceLTE = puzzleMaxLength;
-      requestParams.wordsPerPage = puzzlePageSize;
+      requestParams.wordsPerPage = MAX_REQUEST_COUNT;
     }
 
     const arrayOfRequests = arrayOfPages

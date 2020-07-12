@@ -40,7 +40,7 @@ export default class ResultsView extends View {
     });
 
     const html = `
-     <div>
+     <div class="savannah__results">
       <div class="${CLASS_GUESSED_WORDS_BLOCK}"> I KNOW ${guessedCount}: ${guessed}</div>
       <div class="${CLASS_NOT_GUESSED_WORDS_BLOCK}"> MISTAKES ${notGuessedCount}: ${notGuessed}</div>
       <div class="${CLASS_FINISH_BUTTON}">Finish</div>

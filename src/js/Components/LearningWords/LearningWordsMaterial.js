@@ -53,25 +53,12 @@ export default class LearningWordsMaterial {
       });
     });
 
-    const wordStatus = this.element.querySelector(QUERIES.BUTTONS.WORDSTATUS);
-
-    wordStatus.addEventListener('click', () => {
-      const modalInstance = Materialize.Modal.getInstance(this.modals.intervalRepeat);
-      modalInstance.open();
-    });
-
     this.assignModalFormButtonListeners();
   }
 
   assignModalFormButtonListeners() {
-    const buttonModalIntervalClose = this.modals.intervalRepeat
-      .querySelector(QUERIES.BUTTONS.MODAL_CLOSE);
     const buttonModalWordRateClose = this.modals.wordRate
       .querySelector(QUERIES.BUTTONS.MODAL_CLOSE);
-
-    buttonModalIntervalClose.addEventListener('click', () => {
-      LearningWordsMaterial.closeModal(this.modals.intervalRepeat);
-    });
 
     buttonModalWordRateClose.addEventListener('click', () => {
       LearningWordsMaterial.closeModal(this.modals.wordRate);

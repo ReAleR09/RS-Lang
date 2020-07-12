@@ -34,9 +34,9 @@ const getUserWords = async () => {
   return mapAndShuffleApiWords(words);
 };
 
-const FieldOfDreamsWordsApi = {
+const EnglishPuzzleWordsApi = {
   getWordsForDifficultyAndRound,
   getUserWords,
 };
 
-export default FieldOfDreamsWordsApi;
+export default EnglishPuzzleWordsApi;

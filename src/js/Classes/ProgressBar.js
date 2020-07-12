@@ -32,6 +32,11 @@ class ProgressBar {
     this.updateProgressBar();
   }
 
+  changeSettings(dayLimits) {
+    this.dayLimits = { ...dayLimits };
+    this.updateProgressBar();
+  }
+
   update(dayResults) {
     this.dayResults = { ...dayResults };
     this.updateProgressBar();

@@ -2,8 +2,7 @@ import Controller from '../lib/Controller';
 import IndexView from '../Views/ErrorComponent/IndexView';
 import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
 import AppNavigator from '../lib/AppNavigator';
-
-const ERROR_DATA_KEY = 'RS7--error';
+import { ERROR_DATA_KEY } from '../../config';
 
 export default class ErrorsController extends Controller {
   constructor() {

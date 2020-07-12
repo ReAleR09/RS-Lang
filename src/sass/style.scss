@@ -19,6 +19,7 @@
 
 @import "./Components/Preloader";
 @import "./Components/ProgressBar";
+@import "./Components/WordStatus.scss";
 @import "./Components/errors";
 
 @import "./Components/Stats";
@@ -32,9 +33,25 @@ body {
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
   min-height: 100vh;
+  transition: background-color 0.5s ease;
 }
 
 body > .container {
-  padding-top: 10px;
-  min-height: 140vh;
+  margin-bottom: 22vh;
+  padding: 14px;
+  background-color: white;
+  opacity: 0.96;
+  margin-top: 12px;
+  -webkit-box-shadow: 0px 6px 20px 0px rgba(0,0,0,0.49);
+  -moz-box-shadow: 0px 6px 20px 0px rgba(0,0,0,0.49);
+  box-shadow: 0px 6px 20px 0px rgba(0,0,0,0.49);
+  
+}
+
+#headerBar {
+  transition: background-color 1s ease;
+}
+
+.brand-logo.center {
+  text-shadow: 0px 0px 11px rgba(150, 150, 150, 1);
 }
