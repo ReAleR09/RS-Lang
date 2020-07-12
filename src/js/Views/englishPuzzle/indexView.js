@@ -18,11 +18,8 @@ const clearContainer = (container) => {
 };
 
 const renderSelectOnStart = (element, difficulty, round) => {
-  console.log(difficulty);
-  console.log(round);
-
-  let fragmentD = '<option value="none" selected>Choose round</option>';
-  let fragmentR = '<option value="none" selected>Choose round</option>';
+  let fragmentD = '<option value="none" selected>Выбрать сложность</option>';
+  let fragmentR = '<option value="none" selected>Выбрать раунд</option>';
   const difficultyContainer = element.querySelectorAll('.engPuz__difficulty select');
   const roundContainer = element.querySelectorAll('.engPuz__round select');
 
@@ -49,7 +46,7 @@ const renderSelectOnStart = (element, difficulty, round) => {
 };
 
 const renderRoundSelectIfDifficultyChange = (element) => {
-  let fragment = '<option value="none" selected>Choose round</option>';
+  let fragment = '<option value="none" selected>Выбрать раунд</option>';
   const difficultyValue = element.querySelector('.engPuz__difficulty select').value;
   const selectContainer = element.querySelectorAll('.engPuz__round select');
 
@@ -111,7 +108,7 @@ export default class IndexView extends View {
     let userWordsPlayFragment = '';
     if (game.userWordsPlay) {
       userWordsPlayFragment = `
-      <a id="${TRAIN_WORDS_BUTTON}" class="#fce4ec mar-left pink lighten-3 waves-effect waves-light btn flex-center"><i class="material-icons left">description</i>Train my words</a>
+      <a id="${TRAIN_WORDS_BUTTON}" class="#fce4ec mar-left pink lighten-3 waves-effect waves-light btn flex-center"><i class="material-icons left">description</i>Тренировать мои слова</a>
       `;
     }
 
@@ -121,24 +118,24 @@ export default class IndexView extends View {
       <div class="row">
       <h2 class="center">English Puzzle</h2>
       <div class="flex-center">
-        <blockquote class="center flex-center">Test your competency in building sentences from randomly scattered words of the sentence.</blockquote>
+        <blockquote class="center flex-center">Цель игры - это собрать предложения из размещённых в случайном порядке английских слов.</blockquote>
       </div>
       <div class="engPuz__selects flex-evenly">
         <div class="engPuz__difficulty input-field">
           <select>
-            <option value="none" selected>Choose difficulty</option>
+            <option value="none" selected>Выбрать сложность</option>
           </select>
         <label>Game difficulty</label>
       </div>
           <div class="engPuz__round input-field ">
             <select>
-              <option value="none" selected>Choose round</option>
+              <option value="none" selected>Выюрать раунд</option>
             </select>
             <label>Game round</label>
         </div>
       </div>
       <div class="flex-evenly">
-          <a id="${ARCADE_BUTTON}" class="#fce4ec pink lighten-3 waves-effect waves-light btn flex-center"><i class="material-icons left">description</i>Arcade mode</a>
+          <a id="${ARCADE_BUTTON}" class="#fce4ec pink lighten-3 waves-effect waves-light btn flex-center"><i class="material-icons left">description</i>Аркадный режим</a>
           ${userWordsPlayFragment}
       </div>
       </div>

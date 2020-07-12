@@ -251,7 +251,7 @@ export default class EnglishPuzzleManager {
 
   async idkClickHandler(e) {
     if (e.target.classList.contains('engPuz__bottom-idk')) {
-      if (e.target.innerText === 'RESULTS') {
+      if (e.target.innerText === 'РЕЗУЛЬТАТ') {
         this.sendStatisticToServer();
         if (this.isUserWordsMode) {
           AppNavigator.go('englishpuzzle', 'results', { userWordsPlay: 1 });
@@ -368,7 +368,7 @@ export default class EnglishPuzzleManager {
   async checkButtonHandler(e) {
     const checkBtn = this.view.element.querySelector(`.${engPuzConst.buttons.CHECK}`);
     if (e.target.classList.contains(engPuzConst.buttons.CHECK)) {
-      if (checkBtn.innerText === 'CONTINUE') {
+      if (checkBtn.innerText === 'ПРОДОЛЖИТЬ') {
         /* if (this.isGameFinished) {
           AppNavigator.replace('englishpuzzle', 'play', {
             difficulty: this.difficulty,
@@ -394,7 +394,7 @@ export default class EnglishPuzzleManager {
           this.view.renderImageInfo(this.imageInfo);
           // disabling continue button so far we don't have logic to go to next page/difficult
           this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.CHECK}`));
-          this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`).innerText = 'RESULTS';
+          this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`).innerText = 'РЕЗУЛЬТАТ';
           return;
         }
 

@@ -87,8 +87,8 @@ export default class ResultsView extends View {
     </div>
     <div class="engPuz__bottom-btn flex-center">
     <div class="flex-evenly">
-    <a id="${ID_BUTTON_PLAYAGAIN}" class="#fce4ec pink lighten-3 waves-effect waves-light btn engPuz__play-again-button flex-center"><i class="engPuz__play-again-button material-icons left">rotate_90_degrees_ccw</i>Play again</a>
-    <a id="${ID_BUTTON_CONTINUE}" class="engPuz__continue-button mar-left #fce4ec blue lighten-2 waves-effect waves-light btn flex-center"><i class="engPuz__continue-button material-icons left">rotate_90_degrees_ccw</i>CONTINUE</a>
+    <a id="${ID_BUTTON_PLAYAGAIN}" class="#fce4ec pink lighten-3 waves-effect waves-light btn engPuz__play-again-button flex-center"><i class="engPuz__play-again-button material-icons left">rotate_90_degrees_ccw</i>Играть снова</a>
+    <a id="${ID_BUTTON_CONTINUE}" class="engPuz__continue-button mar-left #fce4ec blue lighten-2 waves-effect waves-light btn flex-center"><i class="engPuz__continue-button material-icons left">rotate_90_degrees_ccw</i>Продолжить</a>
         </div>
       </div>
     </div>
