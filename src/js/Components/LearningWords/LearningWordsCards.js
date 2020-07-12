@@ -25,6 +25,7 @@ export default class LearnindWordsCards {
 
     this.newWords = [];
     this.repeatWords = [];
+    this.complicatedWords = [];
     this.wordsApi = new WordsApi();
   }
 
@@ -48,6 +49,7 @@ export default class LearnindWordsCards {
     this.cards = [];
     this.newWords = [];
     this.repeatWords = [];
+    this.complicatedWords = [];
     this.currentCardIndex = -1;
   }
 
@@ -115,8 +117,18 @@ export default class LearnindWordsCards {
     this.repeatWords = this.filterByLimits(words);
   }
 
+  async getComplicatedWords() {
+    let words = await this.wordsApi.getComplicatedWords();
+    words = words.map((word) => {
+      const newWord = word;
+      newWord.wordStatus = WORD_STATUSES.OLD;
+      return newWord;
+    });
+    this.complicatedWords = this.filterByLimits(words);
+  }
+
   filterByLimits(words) {
-    if (this.mode === MODES.GAME) {
+    if (this.mode !== MODES.REPITITION) {
       return this.transformWordsToCards(words);
     }
 
@@ -139,17 +151,45 @@ export default class LearnindWordsCards {
     return this.transformWordsToCards(filteredCards);
   }
 
+  async fillCardsNoLimits() {
+    if (this.mode === MODES.COMPLICATED) {
+      if (!this.complicatedWords.length) {
+        await this.getComplicatedWords();
+      }
+      if (this.complicatedWords.length) {
+        this.cards = this.cards.concat(this.complicatedWords);
+        if (this.cards.length > this.complicatedWords.length) {
+          this.cards = [];
+          this.currentCardIndex = 0;
+        }
+        this.complicatedWords = [];
+      }
+    }
+    if (this.mode === MODES.GAME) {
+      if (!this.newWords.length) {
+        await this.getNewWords();
+      }
+      if (this.newWords.length) {
+        this.cards = this.cards.concat(this.newWords);
+        this.newWords = [];
+      }
+    }
+    return this.isCardReady;
+  }
+
   async fillCards() {
-    if (!this.repeatWords.length && this.mode === MODES.REPITITION) {
+    if (this.mode !== MODES.REPITITION) return this.fillCardsNoLimits();
+
+    if (!this.repeatWords.length) {
       await this.getRepeatWords();
-      if (this.repeatWords.length) {
-        const restCount = Math.min(this.restCardsCount, this.repeatWords.length);
-        this.repeatWords = this.repeatWords.slice(0, restCount);
-      }
-      if (this.repeatWords.length) {
-        this.cards = this.cards.concat(this.repeatWords);
-        this.repeatWords = [];
-      }
+    }
+    if (this.repeatWords.length) {
+      const restCount = Math.min(this.restCardsCount, this.repeatWords.length);
+      this.repeatWords = this.repeatWords.slice(0, restCount);
+    }
+    if (this.repeatWords.length) {
+      this.cards = this.cards.concat(this.repeatWords);
+      this.repeatWords = [];
     }
 
     if (this.isEnded) {
@@ -252,7 +292,7 @@ export default class LearnindWordsCards {
   }
 
   get currentErrors() {
-    return this.currentCard.errors;
+    return this.cards[this.currentCardIndex].errors;
   }
 
   set currentErrors(errors) {
