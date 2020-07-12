@@ -66,6 +66,7 @@ const register = async (e) => {
         Toaster.showToast(errors.server, errors.styles);
       }
     } else {
+      Toaster.showToast('Аккаунт создан!');
       AppNavigator.go('authorization');
     }
   }
