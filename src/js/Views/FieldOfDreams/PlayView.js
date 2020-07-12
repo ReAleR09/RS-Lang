@@ -1,9 +1,12 @@
 import View from '../../lib/View';
+import { showPreloader, hidePreloader } from '../../Classes/Preloader';
 
 export default class PlayView extends View {
   onMount() {
+    showPreloader();
     this.props.gameManager.attach(this.element);
     this.props.gameManager.init();
+    hidePreloader();
   }
 
   onUnmount() {

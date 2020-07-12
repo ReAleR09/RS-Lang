@@ -21,7 +21,6 @@ export default class SavannahController extends Controller {
     learningWords = learningWords.map((aggregatedWord) => {
       const newWord = { ...aggregatedWord };
       newWord.wordStatus = intervals.getTrainingStatusByUserWord(aggregatedWord.userWord.optional);
-      console.log(newWord.wordStatus);
       return newWord;
     });
     LocalStorageAdapter.set('learningWords', learningWords);

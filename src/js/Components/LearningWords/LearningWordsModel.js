@@ -155,12 +155,12 @@ export default class LearningWordsModel {
       if (showWordRate) {
         showWordRate = (this.cards.currentStatus === WORD_STATUSES.NEW);
       }
-      this.updateSessionResults(this.cards.currentErrors === 0);
-      await this.updateStatistics(this.cards.currentErrors === 0);
+      const wasErrors = (this.cards.currentErrors === 0);
+      this.updateSessionResults(wasErrors);
+      await this.updateStatistics(wasErrors);
       this.cards.currentStatus = WORD_STATUSES.COMPLITED;
       this.showFilledCard(showWordRate);
     } else if (this.cards.currentErrors) {
-      this.cards.sendCardToTrainingEnd();
       this.cards.currentErrors += 1;
     }
     return result;
@@ -192,7 +192,7 @@ export default class LearningWordsModel {
     const checkingResult = (textResult === original) || (textResult === original2);
 
     if (!checkingResult) {
-      this.cards.CurrentErrors += 1;
+      this.cards.currentErrors += 1;
     }
     return (checkingResult);
   }

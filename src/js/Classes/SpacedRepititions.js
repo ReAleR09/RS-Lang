@@ -102,7 +102,6 @@ export default class SpacedRepititions {
     });
 
     const curStep = this.getStep(userWordData);
-    console.log(`${curStep} / ${totalSteps}`);
 
     status = Math.round((curStep / totalSteps) * 100);
 
