@@ -98,12 +98,12 @@ export default class SpeakitView {
       <div class="row">
         <div class="input-field col s12 m6 push-m3">
           <i class="material-icons prefix">micro</i>
-          <input id="${ID_RECOGNIZED_TEXT}">
+          <input readonly id="${ID_RECOGNIZED_TEXT}">
         </div>
       </div>
       <div class="row">
-        <div id="${ID_BEGIN_BUTTON}" class="pulse waves-effect waves-light btn col s2 offset-s5">START GAME</div>
-        <div id="${ID_FINISH_BUTTON}" class="waves-effect waves-light btn col s2 offset-s5 ${CLASS_BUTTON_HIDDEN}">FINISH GAME</div>
+        <div id="${ID_BEGIN_BUTTON}" class="pulse waves-effect waves-light btn col s4 offset-s4">Начать игру</div>
+        <div id="${ID_FINISH_BUTTON}" class="waves-effect waves-light btn col s4 offset-s4 ${CLASS_BUTTON_HIDDEN}">Закончить игру</div>
       </div>
       <div id="${ID_WORDS_PANEL}" class="row"></div>
     </div>`;

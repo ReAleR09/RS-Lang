@@ -38,26 +38,26 @@ export const SIDENAV = [
   {
     title: 'Изучаем слова',
     path: ['/'],
-    icon: 'accessibility',
+    icon: 'network_check',
   },
   {
     title: 'Игры',
-    icon: 'accessibility',
+    icon: 'sports_esports',
     nested: [
       {
         title: 'Спринт',
         path: ['game-sprint'],
-        icon: 'accessibility',
+        icon: 'speed',
       },
       {
         title: 'SpeakIt',
         path: ['speakit'],
-        icon: 'accessibility',
+        icon: 'support_agent',
       },
       {
         title: 'Аудиовызов',
         path: ['game-audio-call'],
-        icon: 'accessibility',
+        icon: 'phone_callback',
       },
       {
         title: 'Английский Паззл',

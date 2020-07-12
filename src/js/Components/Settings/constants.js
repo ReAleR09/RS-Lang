@@ -233,7 +233,7 @@ export const SETTINGS_HTML = `
 <section class="${CLASSES.COMPONENT}">
 
   <form action="#" class="center-align">
-    <h2>Настройки приложения</h2>
+    <h3>Настройки приложения</h3>
     <div class="row">
       <div class="col s12">
         <ul class="${CLASSES.TABS} tabs">
