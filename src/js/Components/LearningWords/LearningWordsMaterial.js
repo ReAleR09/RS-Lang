@@ -83,6 +83,10 @@ export default class LearningWordsMaterial {
     });
   }
 
+  closeModalRate() {
+    LearningWordsMaterial.closeModal(this.modals.wordRate);
+  }
+
   static showModal(modalElement) {
     const modalInstance = Materialize.Modal.getInstance(modalElement);
     modalInstance.open();
