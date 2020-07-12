@@ -11,3 +11,13 @@ export {
   NOT_GUESS,
   FINISH,
 };
+
+export const difficulties = [
+  60, 60, 60,
+  60, 60, 60,
+];
+
+export const title = 'Аудио Вызов: мини-игра';
+export const description = 'В этой игре нужно нажать на правильный перевод, услышанного слова.';
+
+export const roundSize = 20;
