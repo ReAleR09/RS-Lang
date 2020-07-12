@@ -1,6 +1,7 @@
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
 // import SoundPlayer from '../../Classes/SoundPlayer';
+import { showPreloader, hidePreloader } from '../../Classes/Preloader';
 
 const ID_BUTTON_PLAYAGAIN = 'field-of-dreams__play-again-button';
 const ID_BUTTON_NEXT = 'field-of-dreams__next-round-button';
@@ -36,6 +37,7 @@ export default class ResultsView extends View {
   }
 
   onMount() {
+    showPreloader();
     const playAgainButton = this.element.querySelector(`#${ID_BUTTON_PLAYAGAIN}`);
     playAgainButton.addEventListener('click', () => {
       AppNavigator.replace('fieldOfDreams');
@@ -49,6 +51,7 @@ export default class ResultsView extends View {
         AppNavigator.go('fieldOfDreams', 'play', { difficulty, round });
       });
     }
+    hidePreloader();
   }
 
   render() {

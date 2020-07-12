@@ -66,6 +66,8 @@ export default class Statistics {
     } else {
       this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].results = { ...this.results };
     }
+    this.results.success = 0;
+    this.results.errors = 0;
   }
 
   async updateWordStatistics(wordId, result = true, isNewWord) {
@@ -239,6 +241,7 @@ export default class Statistics {
         totalWordsCount: this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].totalWordsCount,
         newWordsCount: this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].newWordsCount,
       };
+      limits = this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow];
     } catch (error) {
       limits = {
         totalWordsCount: 0,

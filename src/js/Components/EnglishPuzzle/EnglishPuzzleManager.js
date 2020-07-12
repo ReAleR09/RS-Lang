@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable max-len */
 /* eslint-disable no-new */
@@ -8,14 +9,12 @@ import engPuzConst from './EnglishPuzzleConstants';
 import AppNavigator from '../../lib/AppNavigator';
 import LocalStorageAdapter from '../../Utils/LocalStorageAdapter';
 import Utils from '../../Utils/Utils';
-import Api from '../../Classes/Api/Api';
 import getImageInfo from './EnglishPuzzleImageInfo';
 import SettingsModel from '../../Classes/UserSettings';
 import Statistics from '../../Classes/Statistics';
-import { GAMES, MODES } from '../../../config';
-import EnglishPuzzleWordsApi from './EnglishPuzzleWordsApi';
-
-// import { CONF_MEDIA_BASE_PATH } from '../../../config';
+import { GAMES, MODES, CONF_MEDIA_BASE_PATH } from '../../../config';
+import WordsApi from '../../Classes/Api/WordsApi';
+import { showPreloader, hidePreloader } from '../../Classes/Preloader';
 
 export const EP_GAME_STATS = 'EP_GAME_STATS';
 
@@ -36,10 +35,11 @@ export default class EnglishPuzzleManager {
     this.puzzleBumperArr = [[], [], [], [], [], [], [], [], [], []];
     this.defaultImage = 'https://tlmnnk.github.io/images/rslang/birthOfVenus.jpg';
     this.sentences = [];
-    this.api = new Api();
     this.view = new EnglishPuzzleView();
+
     const mode = isUserWordsMode ? MODES.REPITITION : MODES.GAME;
-    this.statistics = new Statistics(GAMES.SPEAKIT, mode, true);
+    this.statistics = new Statistics(GAMES.PUZZLE, mode, false);
+    this.wordsApi = new WordsApi();
   }
 
   attach(element) {
@@ -47,11 +47,29 @@ export default class EnglishPuzzleManager {
   }
 
   async getSentencesForGame() {
-    const words = await EnglishPuzzleWordsApi.getWordsForDifficultyAndRound(
-      this.difficulty,
-      this.round,
-    );
-    this.words = words;
+    if (this.isUserWordsMode) {
+      const words = await this.wordsApi.getRepeatedWords(
+        10,
+        undefined,
+        true,
+      );
+      this.words = words;
+    } else {
+      let words = await this.wordsApi.getWordsForGame(
+        this.difficulty,
+        10,
+        this.round,
+        true,
+      );
+      if (!words.length) {
+        words = await this.wordsApi.getWordsForGame(
+          this.difficulty,
+          10,
+          this.round,
+        );
+      }
+      this.words = words;
+    }
     this.words.forEach((word) => {
       this.sentences.push(word.textExample);
     });
@@ -66,7 +84,21 @@ export default class EnglishPuzzleManager {
     this.puzzleArr = [[], [], [], [], [], [], [], [], [], []];
   }
 
+  getRandomParametrasForImgIfUserWordsMode() {
+    this.difficulty = Utils.getRandomIntInRange(
+      engPuzConst.difficulties[0],
+      engPuzConst.difficulties.length - 1,
+    );
+    this.round = Utils.getRandomIntInRange(
+      1,
+      engPuzConst.pagesPerDifficulties[this.difficulty],
+    );
+  }
+
   getImageForGame() {
+    if (this.isUserWordsMode) {
+      this.getRandomParametrasForImgIfUserWordsMode();
+    }
     const imageInfoArray = getImageInfo(this.difficulty);
     if (imageInfoArray[this.round]) {
       this.imageInfo = imageInfoArray[this.round];
@@ -79,21 +111,15 @@ export default class EnglishPuzzleManager {
   }
 
   async init() {
+    showPreloader();
     await this.getSavedGameSettings();
     this.applyGameSettingsOnStart();
-    if (this.isUserWordsMode) {
-      const userWordsData = await EnglishPuzzleWordsApi.getUserWords();
-      console.log(userWordsData);
-      this.playUserWords();
-    } else {
-      // start game with difficulty and round
-      this.getImageForGame();
-      await this.getSentencesForGame();
 
-      await this.getPuzzleElements();
-      this.puzzleLineRender(this.puzzleLineIndex);
-      this.eventListenersInit();
-    }
+    this.getImageForGame();
+    await this.getSentencesForGame();
+    await this.getPuzzleElements();
+    this.puzzleLineRender(this.puzzleLineIndex);
+    this.eventListenersInit();
   }
 
   async getSavedGameSettings() {
@@ -139,10 +165,6 @@ export default class EnglishPuzzleManager {
     });
   }
 
-  playUserWords() {
-    console.log('User words mode');
-  }
-
   toggleTranlationHandler(e) {
     if (e.target.classList.contains('engPuz__tooltips-translation')) {
       this.isTranslation = !this.isTranslation;
@@ -154,7 +176,8 @@ export default class EnglishPuzzleManager {
 
   audioBtnHandler(e) {
     if (e.target.classList.contains('engPuz__audio')) {
-      new Audio(this.words[this.puzzleLineIndex].audioExample).play();
+      const url = CONF_MEDIA_BASE_PATH + this.words[this.puzzleLineIndex].audioExample;
+      new Audio(url).play();
     }
   }
 
@@ -203,7 +226,8 @@ export default class EnglishPuzzleManager {
   resultAudioHandler(e) {
     if (e.target.classList.contains('engPuz__tooltips-autoPlay--results')) {
       const { word } = e.target.dataset;
-      new Audio(this.words[word].audioExample).play();
+      const url = CONF_MEDIA_BASE_PATH + this.words[word].audioExample;
+      new Audio(url).play();
     }
   }
 
@@ -225,10 +249,15 @@ export default class EnglishPuzzleManager {
     }
   }
 
-  idkClickHandler(e) {
+  async idkClickHandler(e) {
     if (e.target.classList.contains('engPuz__bottom-idk')) {
-      if (e.target.innerText === 'RESULTS') {
-        AppNavigator.go('englishpuzzle', 'results');
+      if (e.target.innerText === 'РЕЗУЛЬТАТ') {
+        this.sendStatisticToServer();
+        if (this.isUserWordsMode) {
+          AppNavigator.go('englishpuzzle', 'results', { userWordsPlay: 1 });
+        } else {
+          AppNavigator.go('englishpuzzle', 'results');
+        }
         return;
       }
       if (e.target.innerText === 'PLAY AGAIN') {
@@ -241,7 +270,7 @@ export default class EnglishPuzzleManager {
 
       this.updateCurrentStat(false);
       this.view.toggleShowBackgroundBtnNoPointer();
-      this.isUserWordsMode ? this.statistics.updateWordStatistics(this.words[this.puzzleLineIndex].id, false) : null;
+
       this.view.clearContainer(dropContainer);
       this.appendCorrectLineToDropOnIdkPress();
       this.view.clearContainer(dragContainer);
@@ -309,9 +338,14 @@ export default class EnglishPuzzleManager {
 
   async saveGameForNextRound() {
     if (!this.isUserWordsMode) {
-      this.round < engPuzConst.pagesPerDifficulties[this.difficulty] ? this.round += 1 : this.round = 1;
-      this.difficulty < engPuzConst.pagesPerDifficulties.length - 1 ? this.difficulty += 1 : this.difficulty = 0;
+      if (this.round < engPuzConst.pagesPerDifficulties[this.difficulty]) {
+        this.round += 1;
+      } else {
+        this.round = 1;
+        this.difficulty < engPuzConst.pagesPerDifficulties.length - 1 ? this.difficulty += 1 : this.difficulty = 0;
+      }
     }
+
     await SettingsModel.saveGame(
       GAMES.PUZZLE,
       {
@@ -321,22 +355,27 @@ export default class EnglishPuzzleManager {
     );
   }
 
+  sendStatisticToServer() {
+    Object.values(this.answers).forEach((word, i) => {
+      this.statistics.updateWordStatistics(this.isUserWordsMode
+        ? this.words[i]._id
+        : this.words[i].id,
+      word.isCorrect);
+    });
+    this.statistics.sendGameResults();
+  }
+
   async checkButtonHandler(e) {
     const checkBtn = this.view.element.querySelector(`.${engPuzConst.buttons.CHECK}`);
     if (e.target.classList.contains(engPuzConst.buttons.CHECK)) {
-      if (checkBtn.innerText === 'CONTINUE') {
-        if (this.isGameFinished) {
-          this.resetGameParametres();
-          this.view.clearContainer(this.view.element.querySelector(`.${engPuzConst.content.DRAGSECTION}`));
-          this.view.clearContainer(this.view.dropContainer);
-          this.view.renderDropLines();
-          await this.saveGameForNextRound();
-          this.getImageForGame();
-          await this.getSentencesForGame();
-          await this.getPuzzleElements();
-          this.puzzleLineRender(this.puzzleLineIndex);
+      if (checkBtn.innerText === 'ПРОДОЛЖИТЬ') {
+        /* if (this.isGameFinished) {
+          AppNavigator.replace('englishpuzzle', 'play', {
+            difficulty: this.difficulty,
+            round: this.difficulty,
+          });
           return;
-        }
+        } */
         this.view.element.querySelector('a.engPuz__tooltips-picture').classList.contains('disabled') ? this.view.toggleShowBackgroundBtnNoPointer()
           : null;
         this.view.removeCanvasHighlight(this.puzzleLineIndex);
@@ -345,16 +384,17 @@ export default class EnglishPuzzleManager {
 
         // 10 means last puzzle line
         if (this.puzzleLineIndex === 10) {
-          // save game to local storagw
           LocalStorageAdapter.set(engPuzConst.localstorage.RESULTS, this.answers);
           this.isGameFinished = true;
+          await this.saveGameForNextRound();
+
           this.view.drawCompletePuzzle();
           this.view.hideTooltipsBtns();
           this.view.removeDragContainer();
           this.view.renderImageInfo(this.imageInfo);
           // disabling continue button so far we don't have logic to go to next page/difficult
           this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.CHECK}`));
-          this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`).innerText = 'RESULTS';
+          this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`).innerText = 'РЕЗУЛЬТАТ';
           return;
         }
 
@@ -368,9 +408,12 @@ export default class EnglishPuzzleManager {
         this.view.removeCanvasHighlight(this.puzzleLineIndex);
         this.view.addCanvasHighlight(this.puzzleLineIndex);
         this.updateCurrentStat(this.checkLineAnswers());
+        if (this.isGameFinished) {
+          checkBtn.classList.add('disabled');
+          return;
+        }
 
         if (this.checkLineAnswers()) {
-          this.isUserWordsMode ? this.statistics.updateWordStatistics(this.words[this.puzzleLineIndex].id, true) : null;
           this.view.toggleShowBackgroundBtnNoPointer();
           this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`));
           this.view.renameCheckButton();
@@ -409,7 +452,6 @@ export default class EnglishPuzzleManager {
   }
 
   puzzleLineRender() {
-    // todo shuffle sentences array this.puzzle[lineIndex] before appending
     const dragZone = document.querySelector(`.${engPuzConst.content.DRAGSECTION}`);
     this.pushNewLinePuzzleToPuzzleArr();
 
@@ -431,6 +473,7 @@ export default class EnglishPuzzleManager {
     dragZone.append(div);
     this.view.renderTranslation(this.words, this.puzzleLineIndex);
     this.autoPlaySentenceHandler();
+    hidePreloader();
     // eslint-disable-next-line no-new
     this.dnd = new EnglisPuzzleDragDrop();
   }

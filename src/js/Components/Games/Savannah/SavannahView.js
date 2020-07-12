@@ -166,7 +166,7 @@ export default class SavannahView {
         <div class="${CLASS_TRANSLATE_CARD}"></div>
         <div class="${CLASS_TRANSLATE_CARD}"></div>
       </div>
-      <div class="savannah__hint">Use keys 1, 2, 3, and 4 to give a quick answer</div>
+      <div class="savannah__hint">Используй клавиши 1,2,3,4 чтобы давать ответ быстрее</div>
       </div>`;
 
     return html;
