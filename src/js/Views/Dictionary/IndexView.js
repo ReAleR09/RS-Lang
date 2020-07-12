@@ -17,7 +17,7 @@ import WordStatuses from '../../Components/LearningWords/WordStatuses';
 
 const dictionary = new Dictionary();
 
-export default class LearningWordsView extends View {
+export default class IndexView extends View {
   onMount() {
     this.wordStatuses = new WordStatuses(this.element);
     this.wordStatuses.createModalElement();
