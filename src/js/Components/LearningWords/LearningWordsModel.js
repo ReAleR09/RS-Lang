@@ -9,21 +9,31 @@ import {
   LEARNING_WORDS_CONTROLLER,
   RESULTS_ACTION,
   TEST_RESULT_ACTION,
+  gameRoundsCount,
+  gameLevelCount,
+  minBestResult,
+  maxWorstResult,
 } from './constants';
 import Statistics from '../../Classes/Statistics';
 import { GAMES, MODES } from '../../../config';
 import Dictionary from '../../Classes/Dictionary';
 import { DICT_CATEGORIES, DIFFICULTIES } from '../../Classes/Api/constants';
 import LearningWordsGameMode from './LearningWordsGameMode';
-import { PARAM_MODE } from '../../Utils/Constants';
+import { PARAM_MODE, PARAM_WAS_STARTED } from '../../Utils/Constants';
+import Timers from '../Games/FieldOfDreams/Timers';
+import SpacedRepititions from '../../Classes/SpacedRepititions';
 
 export default class LearningWordsModel {
   constructor(mode = MODES.REPITITION) {
+    this.started = false;
+    this.timer = new Timers();
     this.statistics = new Statistics(GAMES.LEARNING, mode);
     this.dictionary = new Dictionary();
-    this.settings = SettingsModel;
+    this.settingsObject = SettingsModel;
+    this.settings = this.settingsObject.settings;
+    this.dayNorms = this.settingsObject.wordLimitsPerDay;
     this.difficulty = this.settings.difficulty;
-    this.wordsState = [];
+
     this.view = new LearningWordsView(this);
     this.player = new LearningWordsSoundPlayer(this);
 
@@ -31,6 +41,7 @@ export default class LearningWordsModel {
 
     this.mode = mode;
     this.cards = new LearnindWordsCards();
+    this.intervals = new SpacedRepititions();
   }
 
   changeDifficulty(newDifficulty) {
@@ -44,11 +55,12 @@ export default class LearningWordsModel {
 
   async attach(element) {
     await this.statistics.get();
-    await this.settings.loadSettings();
+
     const limits = await this.statistics.getLimits();
     this.cards.init(
       this.difficulty,
-      this.settings.wordLimitsPerDay,
+      this.settings,
+      this.dayNorms,
       limits,
       this.mode,
     );
@@ -56,25 +68,21 @@ export default class LearningWordsModel {
   }
 
   detach() {
+    this.timer.deleteTimers();
     this.view.detach();
     this.view = null;
   }
 
   async init() {
+    this.view.init(this.settings);
+
     if (this.mode === MODES.GAME) {
       this.view.turnOnGameMode();
-      this.game.startGame();
+      this.game.startGame(gameLevelCount, gameRoundsCount, minBestResult, maxWorstResult);
       this.changeDifficulty(this.game.level);
     }
 
-    this.view.init(this.settings.settings);
-
-    await this.cards.fillCards();
-    if (this.cards.isCardReady) {
-      this.updateWordCard(this.card);
-    } else {
-      this.showResult();
-    }
+    await this.goNext();
   }
 
   updateWordCard(word) {
@@ -104,12 +112,13 @@ export default class LearningWordsModel {
   }
 
   async acceptInput(value) {
+    this.started = true;
     if (this.cards.currentStatus === WORD_STATUSES.COMPLITED) {
       await this.goNext();
       return true;
     }
 
-    if (!value.trim().length) {
+    if (!value.trim().length && this.mode !== MODES.GAME) {
       return false;
     }
 
@@ -118,7 +127,7 @@ export default class LearningWordsModel {
     if (this.mode === MODES.GAME) {
       this.game.inputResult(result);
       if (this.game.isEnded) {
-        this.settings.setDifficulty(this.game.level);
+        await this.settingsObject.setDifficultyLevel(this.game.level);
         this.showResult();
       } else {
         if (this.game.level !== this.difficulty) {
@@ -147,14 +156,16 @@ export default class LearningWordsModel {
   }
 
   checkInput(value) {
-    const textResult = value.trim();
+    const textResult = value.toLowerCase().trim();
+    const original = this.card.word.toLowerCase().trim();
+    const original2 = this.card.wordFromExample.toLowerCase().trim();
 
-    const checkingResult = (textResult === this.card.word.trim());
+    const checkingResult = (textResult === original) || (textResult === original2);
 
     if (!checkingResult) {
       this.cards.CurrentErrors += 1;
     }
-    return (textResult === this.card.word);
+    return (checkingResult);
   }
 
   showFilledCard(showWordRate = false) {
@@ -169,7 +180,10 @@ export default class LearningWordsModel {
 
   async goNext() {
     if (await this.cards.getNext()) {
-      this.updateWordCard(this.card);
+      const word = this.card;
+      // eslint-disable-next-line no-underscore-dangle
+      word.intervalStatus = await this.intervals.getTrainingStatus(word._id);
+      this.updateWordCard(word);
     } else {
       this.showResult();
     }
@@ -206,11 +220,19 @@ export default class LearningWordsModel {
 
   // eslint-disable-next-line class-methods-use-this
   showResult() {
-    const params = { [PARAM_MODE]: this.mode, difficulty: this.difficulty };
+    const params = {
+      [PARAM_MODE]: this.mode,
+      difficulty: this.difficulty,
+      [PARAM_WAS_STARTED]: this.started,
+    };
     if (this.mode === MODES.GAME) {
-      AppNavigator.go(LEARNING_WORDS_CONTROLLER, TEST_RESULT_ACTION, params);
+      this.timer.setNewTimer(() => {
+        AppNavigator.go(LEARNING_WORDS_CONTROLLER, TEST_RESULT_ACTION, params);
+      }, 0);
     } else {
-      AppNavigator.go(LEARNING_WORDS_CONTROLLER, RESULTS_ACTION, params);
+      this.timer.setNewTimer(() => {
+        AppNavigator.go(LEARNING_WORDS_CONTROLLER, RESULTS_ACTION, params);
+      }, 0);
     }
   }
 }

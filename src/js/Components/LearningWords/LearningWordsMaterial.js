@@ -14,7 +14,7 @@ export default class LearningWordsMaterial {
 
   init() {
     let elems = this.element.querySelectorAll('.tooltipped');
-    Materialize.Tooltip.init(elems);
+    this.tooltips = Materialize.Tooltip.init(elems);
 
     elems = this.element.querySelectorAll('.fixed-action-btn');
     Materialize.FloatingActionButton.init(elems, {
@@ -30,6 +30,10 @@ export default class LearningWordsMaterial {
     Materialize.Modal.init(elems);
 
     this.assignButtonListeners();
+  }
+
+  detach() {
+    this.tooltips.forEach((tooltip) => tooltip.destroy());
   }
 
   assignButtonListeners() {
@@ -49,25 +53,12 @@ export default class LearningWordsMaterial {
       });
     });
 
-    const wordStatus = this.element.querySelector(QUERIES.BUTTONS.WORDSTATUS);
-
-    wordStatus.addEventListener('click', () => {
-      const modalInstance = Materialize.Modal.getInstance(this.modals.intervalRepeat);
-      modalInstance.open();
-    });
-
     this.assignModalFormButtonListeners();
   }
 
   assignModalFormButtonListeners() {
-    const buttonModalIntervalClose = this.modals.intervalRepeat
-      .querySelector(QUERIES.BUTTONS.MODAL_CLOSE);
     const buttonModalWordRateClose = this.modals.wordRate
       .querySelector(QUERIES.BUTTONS.MODAL_CLOSE);
-
-    buttonModalIntervalClose.addEventListener('click', () => {
-      LearningWordsMaterial.closeModal(this.modals.intervalRepeat);
-    });
 
     buttonModalWordRateClose.addEventListener('click', () => {
       LearningWordsMaterial.closeModal(this.modals.wordRate);

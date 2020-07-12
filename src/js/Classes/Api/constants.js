@@ -22,3 +22,6 @@ export const DICT_CATEGORIES = {
 
 export const MILLIS_PER_MINUTE = 1000 * 60;
 export const MILLIS_PER_DAY = MILLIS_PER_MINUTE * 60 * 24;
+
+export const API_ERROR = 'Ошибка связи с Сервером . . .';
+export const API_SEND_ERROR = 'Ошибка отправки данных на сервер . . .';

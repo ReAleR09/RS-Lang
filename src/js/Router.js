@@ -1,5 +1,6 @@
 import DOMUtils from './Utils/DOMUtils';
 import PublisherSubscriber from './Classes/PublisherSubscriber';
+import ErrorHandling from './Classes/ErrorHandling';
 import { CONF_ROOT_PATH } from '../config';
 import ControllerCancelException from './lib/ControllerCancelException';
 import { EVENT_NAVIGATION } from './Utils/Constants';
@@ -48,6 +49,10 @@ export default class Router {
     }
 
     const ControllerClass = this.routes[controllerAlias];
+    if (!ControllerClass) {
+      ErrorHandling.handle404(`Страница по адресу '/${window.location.pathname.slice(1)}' не найдена`);
+      return;
+    }
     const controllerInstance = new ControllerClass();
 
     let viewInstance;

@@ -71,7 +71,7 @@ export default class ResultsView extends View {
     let nextRoundButton = '';
     if (this.props.nextRound) {
       nextRoundButton = `
-        <div class='row'><div class="waves-effect waves-light btn col s12" id="${ID_BUTTON_NEXT}">Next round</div></div>
+        <div class='row'><div class="waves-effect waves-light btn col s12" id="${ID_BUTTON_NEXT}">Следующий раунд</div></div>
       `;
     }
 
@@ -89,7 +89,7 @@ export default class ResultsView extends View {
         </div>
         ${this.generateWordsCards()}
         ${this.generateWordsCards(false)}
-        <div class='row'><div class="waves-effect waves-light btn col s12" id="${ID_BUTTON_PLAYAGAIN}">Play again</div></div>
+        <div class='row'><div class="waves-effect waves-light btn col s12" id="${ID_BUTTON_PLAYAGAIN}">На стартовый экран</div></div>
         ${nextRoundButton}
       </div>
     `;

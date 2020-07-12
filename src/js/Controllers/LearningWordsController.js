@@ -5,7 +5,7 @@ import ResultsView from '../Views/LearningWords/ResultsView';
 import LearningWordsModel from '../Components/LearningWords/LearningWordsModel';
 import { MODES } from '../../config';
 // import Statistics from '../Classes/Statistics';
-import { PARAM_MODE } from '../Utils/Constants';
+import { PARAM_MODE, PARAM_WAS_STARTED } from '../Utils/Constants';
 import TestResultView from '../Views/LearningWords/TestResultView';
 
 /**
@@ -35,12 +35,6 @@ export default class LearningWordsController extends Controller {
    */
   indexAction() {
     const params = AppNavigator.getRequestParams();
-    let difficulty = params.get('difficulty');
-    if (difficulty) {
-      difficulty = Number.parseInt(difficulty, 10);
-    } else {
-      difficulty = 0;
-    }
 
     let mode = MODES.REPITITION;
     if (params.has(PARAM_MODE)) {
@@ -52,11 +46,15 @@ export default class LearningWordsController extends Controller {
 
   resultsAction() {
     const params = AppNavigator.getRequestParams();
-
+    let wasStarted = false;
     let mode = MODES.REPITITION;
     if (params.has(PARAM_MODE)) {
       mode = params.get(PARAM_MODE);
     }
+    if (params.has(PARAM_WAS_STARTED)) {
+      wasStarted = (params.get(PARAM_WAS_STARTED) === 'true');
+    }
+    this.props.wasStarted = wasStarted;
     this.props.statistics = mode; // new Statistics(GAMES.LEARNING, mode);
   }
 

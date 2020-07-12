@@ -4,6 +4,9 @@ import {
   WORD_STATUSES,
   chunkCount,
   difficultyMax,
+  MeaningWordStartTag,
+  MeaningWordEndTag,
+  WORD_REPLACEMENT,
 } from './constants';
 import WordsApi from '../../Classes/Api/WordsApi';
 import { MODES } from '../../../config';
@@ -25,12 +28,15 @@ export default class LearnindWordsCards {
     this.wordsApi = new WordsApi();
   }
 
-  init(difficulty, limits, statistics, mode) {
-    if (difficulty) {
-      this.difficulty = difficulty;
+  init(difficulty, settings, dayNorms, statistics, mode) {
+    if (settings) {
+      this.settings = settings;
     }
-    if (limits) {
-      this.limits = limits;
+    if (dayNorms) {
+      this.limits = dayNorms;
+    }
+    if (difficulty) {
+      this.difficultyLevel = difficulty;
     }
     if (statistics) {
       this.counts = statistics;
@@ -42,7 +48,7 @@ export default class LearnindWordsCards {
     this.cards = [];
     this.newWords = [];
     this.repeatWords = [];
-    this.currentCardIndex = 0;
+    this.currentCardIndex = -1;
   }
 
   set difficulty(value) {
@@ -111,7 +117,7 @@ export default class LearnindWordsCards {
 
   filterByLimits(words) {
     if (this.mode === MODES.GAME) {
-      return LearnindWordsCards.transformWordsToCards(words);
+      return this.transformWordsToCards(words);
     }
 
     const filteredCards = [];
@@ -130,7 +136,7 @@ export default class LearnindWordsCards {
         totalCount += 1;
       }
     });
-    return LearnindWordsCards.transformWordsToCards(filteredCards);
+    return this.transformWordsToCards(filteredCards);
   }
 
   async fillCards() {
@@ -171,7 +177,8 @@ export default class LearnindWordsCards {
     return this.currentCardIndex < this.length;
   }
 
-  static transformWordsToCards(words, defaultStatus) {
+  // eslint-disable-next-line class-methods-use-this
+  transformWordsToCards(words, defaultStatus) {
     let cards = words.slice();
     cards = cards.map((word) => {
       const newWord = {};
@@ -179,6 +186,22 @@ export default class LearnindWordsCards {
 
       const firstIndexOfWord = word.textExample.indexOf(wordStartTag);
       const lastIndexOfWord = word.textExample.indexOf(wordEndTag) + wordEndTag.length;
+
+      const wordStart = firstIndexOfWord + wordStartTag.length;
+      const wordEnd = word.textExample.indexOf(wordEndTag);
+      newWord.wordFromExample = word.textExample.slice(wordStart, wordEnd);
+
+      newWord.word = newWord.word.trim();
+      newWord.exampleStart = word.textExample.slice(0, firstIndexOfWord);
+      newWord.exampleEnd = word.textExample.slice(lastIndexOfWord);
+
+      const firstIndexOfWordMeaning = word.textMeaning.indexOf(MeaningWordStartTag);
+      const lastIndexOfWordMeaning = word.textMeaning.indexOf(MeaningWordEndTag)
+        + MeaningWordEndTag.length;
+
+      const wordHtml = word.textMeaning.slice(firstIndexOfWordMeaning, lastIndexOfWordMeaning);
+      newWord.textMeaning = word.textMeaning.replace(wordHtml, wordHtml + WORD_REPLACEMENT);
+
       newWord.exampleStart = word.textExample.slice(0, firstIndexOfWord);
       newWord.exampleEnd = word.textExample.slice(lastIndexOfWord);
 

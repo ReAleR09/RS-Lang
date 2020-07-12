@@ -5,13 +5,16 @@ export const CLASS_ERROR = 'error';
 
 const ID_WORD = 'word';
 
+export const COMPONENT_LOCK_CLASS = 'component-lock';
+
 export const TOOLTIP_ATTRIBUTE = 'data-tooltip';
 
 export const CLASS_COMPONENT = 'learn-words';
+export const CLASS_COMPONENT_LOCKED = 'component-locked';
+export const CLASS_CARD_LOCKED = 'card-locked';
 
 const CLASS_CARD_SETTINGS = 'card-settings';
 
-const CLASS_MODAL_INTERVAL_REPEAT = 'modal-interval-repeat';
 const CLASS_MODAL_WORD_RATE = 'modal-word-rate';
 
 const INTERVAL_RATING = 'interval-rate';
@@ -82,7 +85,6 @@ INDEX_QUERIES.WORD_ELEMENTS = {
 };
 
 INDEX_QUERIES.MODALS = {
-  INTERVAL_REPEAT: `.${CLASS_COMPONENT} .${CLASS_MODAL_INTERVAL_REPEAT}`,
   WORD_RATE: `.${CLASS_COMPONENT} .${CLASS_MODAL_WORD_RATE}`,
 };
 
@@ -97,7 +99,6 @@ INDEX_QUERIES.BUTTONS = {
   DELETE: `.${CLASS_COMPONENT} .${CLASSES.CARD.BUTTON_SIMPLE}`,
   COMPLICATED: `.${CLASS_COMPONENT} .${CLASSES.CARD.BUTTON_COMPLICATED}`,
   MODAL_CLOSE: `.${CLASSES.MODALS.CLOSE}`,
-  INTERVAL_REPEAT_CLOSE: `${INDEX_QUERIES.MODALS.INTERVAL_REPEAT} .${CLASSES.MODALS.CLOSE}`,
   WORD_RATE_CLOSE: `${INDEX_QUERIES.MODALS.WORD_RATE} .${CLASSES.MODALS.CLOSE}`,
   AGAIN: `${INDEX_QUERIES.MODALS.WORD_RATE} .${CLASSES.MODALS.WORD_RATE.BUTTON_AGAIN}`,
   HARD: `${INDEX_QUERIES.MODALS.WORD_RATE} .${CLASSES.MODALS.WORD_RATE.BUTTON_HARD}`,
@@ -107,7 +108,7 @@ INDEX_QUERIES.BUTTONS = {
 
 const HTML_CARD_HEADER = `
   <div class="card-head">
-    <a class="${CLASSES.CARD.WORDSTATUS} tooltipped" data-position="right" data-tooltip="Статус изучения слова">X X X O O</a>
+    <div class="${CLASSES.CARD.WORDSTATUS} tooltipped" data-position="right" data-tooltip="Статус изучения слова"></div>
     <h5 class="${CLASSES.CARD.TITLE}">Карточка изучения слов</h5>
     <div class="${CLASS_CARD_SETTINGS} fixed-action-btn click-to-toggle">
       <a class="btn-floating btn-large click-to-toggle z-depth-3">
@@ -167,25 +168,6 @@ const HTML_CARD = `
     ${HTML_CARD_FOOTER}
   </div>`;
 
-const HTML_MODAL_INTERVAL_REPEAT = `
-  <div id="modal1" class="${CLASS_MODAL_INTERVAL_REPEAT} modal">
-    <div class="modal-content">
-      <h4 class="modal-title">Методика интервального повторения</h4>
-      <p class="${CLASSES.MODALS.INTERVAL_REPEAT.DESCRIPTION}">Методика интервального повторения предусматривает повторение слов с периодичностью,
-        расчитываемой с учетом сложности слова, правильного или ошибочного ответа при повторении.
-        Слова имеют 5 категорий:
-      </p>
-      <p class="${CLASSES.MODALS.INTERVAL_REPEAT.RATE1}">x o o o o Новое слово</p>
-      <p class="${CLASSES.MODALS.INTERVAL_REPEAT.RATE2}">x x o o o Это слово начинаем запоминать</p>
-      <p class="${CLASSES.MODALS.INTERVAL_REPEAT.RATE3}">x x x o o В процессе запоминания</p>
-      <p class="${CLASSES.MODALS.INTERVAL_REPEAT.RATE4}">x x x x o Слово вертится на языке</p>
-      <p class="${CLASSES.MODALS.INTERVAL_REPEAT.RATE5}">x x x x x Прекрасная память!</p>
-    </div>
-    <div class="modal-footer">
-      <a class="${CLASSES.MODALS.CLOSE} modal-close waves-effect waves-green btn-flat">Закрыть</a>
-    </div>
-  </div>`;
-
 const HTML_MODAL_WORD_RATE = `
 <div id="modal2" class="${CLASS_MODAL_WORD_RATE} modal">
   <div class="modal-content center-align">
@@ -224,7 +206,7 @@ export const HTML_COMPONENT = `
           </a>
         </div>
       </div>
-      ${HTML_MODAL_INTERVAL_REPEAT}
-      ${HTML_MODAL_WORD_RATE}
     </div>
+    ${HTML_MODAL_WORD_RATE}
+    <div class="${COMPONENT_LOCK_CLASS}"></div>
   </section>`;

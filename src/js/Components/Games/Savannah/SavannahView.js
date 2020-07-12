@@ -1,7 +1,7 @@
 import AppNavigator from '../../../lib/AppNavigator';
 
-const GUESSED_SOUND = '/audio/savannah-right.mp3';
-const NOT_GUESSED_SOUND = '/audio/savannah-wrong.mp3';
+const GUESSED_SOUND = '/assets/audio/savannah-right.mp3';
+const NOT_GUESSED_SOUND = '/assets/audio/savannah-wrong.mp3';
 
 const CLASS_LIVES = 'savannah__lives';
 const CLASS_LIFE = 'savannah-life';
@@ -10,17 +10,18 @@ const CLASS_TRANSLATE_CARDS = 'savannah__translate-words';
 const CLASS_TRANSLATE_CARD = 'savannah-translate-word';
 const ID_ENGLISH_CARD = 'savanna__falling-word';
 
-const START_LEFT_COORDINATE = '45%';
+const START_LEFT_COORDINATE = '50%';
 const INTERVAL = 40;
 
 export default class SavannahView {
-  constructor(changeState) {
+  constructor(changeState, sendStatisticToServer) {
     this.changeState = changeState;
+    this.sendStatisticToServer = sendStatisticToServer;
     this.play = this.play.bind(this);
     this.mistakes = 0;
     this.keyHandler = this.keyHandler.bind(this);
 
-    this.top = -50;
+    this.top = -100;
     this.trueAudio = new Audio(GUESSED_SOUND);
     this.falseAudio = new Audio(NOT_GUESSED_SOUND);
   }
@@ -39,6 +40,8 @@ export default class SavannahView {
       const randomWords = this.words[0];
       const englishWord = this.element.querySelector(`.${CLASS_ENGLISH_CARD}`);
       englishWord.innerHTML = randomWords[0].word;
+      const width = englishWord.offsetWidth;
+      englishWord.style.marginLeft = `${-width / 2}px`;
 
       let translateWords = this.element.querySelectorAll(`.${CLASS_TRANSLATE_CARD}`);
 
@@ -56,6 +59,7 @@ export default class SavannahView {
     } else {
       clearInterval(this.interval);
       window.removeEventListener('keyup', this.keyHandler);
+      this.sendStatisticToServer();
       AppNavigator.replace('savannah', 'results');
     }
   }
@@ -120,7 +124,7 @@ export default class SavannahView {
   }
 
   getNextWord() {
-    this.top = -50;
+    this.top = -100;
     setTimeout(() => {
       this.words.shift();
       this.init();

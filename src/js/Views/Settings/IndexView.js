@@ -6,6 +6,10 @@ import { SETTINGS_HTML, SETTINGS_QUERIES as QUERIES } from '../../Components/Set
 import { DICT_CATEGORIES } from '../../Classes/Api/constants';
 
 import Toaster from '../../Classes/Toaster';
+import AppNavigator from '../../lib/AppNavigator';
+import { PARAM_MODE } from '../../Utils/Constants';
+import { MODES } from '../../../config';
+import ProgressBarInstance from '../../Classes/ProgressBar';
 
 export default class IndexView extends View {
   /**
@@ -43,6 +47,12 @@ export default class IndexView extends View {
         this.warningParagraph.classList.remove(QUERIES.WARNING_TEXT);
         this.updateSettings();
       }
+    });
+
+    const buttonCheckDifficultyLevel = this.element.querySelector(QUERIES.BUTTON_CHECK_DIFF);
+    buttonCheckDifficultyLevel.addEventListener('click', (event) => {
+      event.preventDefault();
+      AppNavigator.go('learningWords', 'index', { [PARAM_MODE]: MODES.GAME });
     });
   }
 
@@ -103,6 +113,7 @@ export default class IndexView extends View {
     this.annoyingLimit.value = this.settings.annoyinglimit;
 
     this.setAnnoyingAction(this.settings.annoyingAction);
+    console.log(this.settings);
   }
 
   setAnnoyingAction(category) {
@@ -141,6 +152,9 @@ export default class IndexView extends View {
     };
 
     this.props.model.settings = newSettings;
+
+    ProgressBarInstance.changeSettings(this.props.model.wordLimitsPerDay);
+
     if (this.ajaxSettingsTimeout) {
       clearTimeout(this.ajaxSettingsTimeout);
     }

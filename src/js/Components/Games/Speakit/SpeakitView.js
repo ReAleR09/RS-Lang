@@ -81,33 +81,31 @@ export default class SpeakitView {
   getGameLayout(roundSize) {
     const html = `<div>
     <div class="row">
-        <div class="col s4 offset-s4">
+        <div class="col s12 m4 offset-m4">
           Guessed
           <span id="${ID_GUESSD_COUNT}">0</span>
           out of <span>${roundSize}</span>
         </div>
       </div>
       <div class="row">
-        <img id="${ID_PICTURE}" class="col s4 offset-s4" src="${START_PIC}"/>
+        <img id="${ID_PICTURE}" class="col s12 m4 offset-m4" src="${START_PIC}"/>
       </div>
       <div class="row">
-        <div class="col s4 offset-s4">
+        <div class="col col s12 m4 offset-m4">
           <div readonly id="${ID_TRANSLATION}" class="speakit__translation-input"></div>
         </div>
       </div>
       <div class="row">
-        <div class="input-field col s6 push-s3">
+        <div class="input-field col s12 m6 push-m3">
           <i class="material-icons prefix">micro</i>
           <input id="${ID_RECOGNIZED_TEXT}">
         </div>
       </div>
-
-      <div id="${ID_WORDS_PANEL}" class="row"></div>
-
       <div class="row">
         <div id="${ID_BEGIN_BUTTON}" class="pulse waves-effect waves-light btn col s2 offset-s5">START GAME</div>
         <div id="${ID_FINISH_BUTTON}" class="waves-effect waves-light btn col s2 offset-s5 ${CLASS_BUTTON_HIDDEN}">FINISH GAME</div>
       </div>
+      <div id="${ID_WORDS_PANEL}" class="row"></div>
     </div>`;
 
     return html;
@@ -125,7 +123,7 @@ export default class SpeakitView {
 
   drawWordsToDOM(words) {
     const wordsHtml = words.reduce((html, wordInfo) => {
-      const wordHTML = `<div class="${CLASS_WORDCARD} col s2 card" data-wordid="${wordInfo.id}">
+      const wordHTML = `<div class="${CLASS_WORDCARD} col s12 m6 l3 xl2 card" data-wordid="${wordInfo.id}">
         <i class="${CLASS_WORDCARD_SOUND} material-icons prefix" data-wordid="${wordInfo.id}" data-wordsound="1">micro</i>
         <div class="">${wordInfo.word}</div>
         <div class="">${wordInfo.transcription}</div>

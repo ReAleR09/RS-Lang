@@ -2,45 +2,25 @@ import Router from './js/Router';
 import Sidebar from './js/Classes/Sidebar';
 import AppNavigator from './js/lib/AppNavigator';
 import SettingsModel from './js/Classes/UserSettings';
-
-import SavannahController from './js/Controllers/SavannahController';
-import LearningWordsController from './js/Controllers/LearningWordsController';
-import GameSprintController from './js/Controllers/GameSprintController';
-import SpeakitController from './js/Controllers/SpeakitController';
-import RegistrationController from './js/Controllers/RegistrationController';
-import AuthorizationController from './js/Controllers/AuthorizationController';
-import EnglishPuzzleController from './js/Controllers/englishPuzzleController';
-import SettingsController from './js/Controllers/SettingsController';
-import FieldOfDreamsController from './js/Controllers/FieldOfDreamsController';
-import PageAboutTeamController from './js/Controllers/PageAboutTeamController';
-import GameAudioCallController from './js/Controllers/GameAudioCallController';
+import ROUTES_CONFIG from './routesConfig';
 
 import './js/plugins';
 import { SIDENAV } from './config';
 
+import '@fortawesome/fontawesome-free/js/fontawesome';
+import '@fortawesome/fontawesome-free/js/regular';
+import '@fortawesome/fontawesome-free/js/solid';
+import '@fortawesome/fontawesome-free/js/brands';
+
+// function appInit() {
 import { showPreloader, hidePreloader } from './js/Classes/Preloader';
+import initProgressBar from './js/Utils/ProgressBarUtils';
+import ErrorHandling from './js/Classes/ErrorHandling';
+import ColorChanger from './js/Classes/ColorChanger';
 
 async function appInit() {
   showPreloader();
-  /**
-   * On root '/', we will automatically serve indexAction of ExampleController
-   * Also, we will serve on /example/* with ExampleController actions
-   * THIS TO BE REPLACED IN THE PROCESS OF CREATING NEW CONTROLLERS
-   */
-  const routes = {
-    '/': LearningWordsController,
-    registration: RegistrationController,
-    authorization: AuthorizationController,
-    savannah: SavannahController,
-    settings: SettingsController,
-    learningWords: LearningWordsController,
-    fieldOfDreams: FieldOfDreamsController,
-    'game-sprint': GameSprintController,
-    speakit: SpeakitController,
-    'game-audio-call': GameAudioCallController,
-    englishpuzzle: EnglishPuzzleController,
-    'about-team': PageAboutTeamController,
-  };
+  window.addEventListener('unhandledrejection', ErrorHandling.handleUnhandledError);
 
   /**
    * this is a root element, where we render to.
@@ -51,12 +31,18 @@ async function appInit() {
   /**
    * This is the router, which acts upon navigations
    */
-  const router = new Router(appContainter, routes);
+  const router = new Router(appContainter, ROUTES_CONFIG);
+  /**
+   * This bad boy will change colors of the header bar and recatangles in the <body> bg
+   */
+  const colorChanger = new ColorChanger(
+    document.querySelector('#headerBar'),
+    document.body,
+  );
+  colorChanger.init();
 
   const sideBarLeft = new Sidebar(SIDENAV);
-  const sideBarFloating = new Sidebar();
   sideBarLeft.attach('sidenav-left');
-  sideBarFloating.attach('sidenav-floatng');
 
   const authRevived = await SettingsModel.reviveAuth();
 
@@ -64,6 +50,7 @@ async function appInit() {
     SettingsModel.logout();
     AppNavigator.go('authorization');
   } else {
+    await initProgressBar();
     await router.route(true);
   }
   hidePreloader();

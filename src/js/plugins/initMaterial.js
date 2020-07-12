@@ -19,3 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initSideNavs();
   initFixedNavBtn();
 });
+
+const initDictionaryTabs = () => {
+  const el = document.querySelector('.tabs');
+  return Materialize.Tabs.init(el);
+};
+
+export default initDictionaryTabs;

@@ -1,7 +1,12 @@
 .settings {
+  .check-difficulty-button {
+    width: 100%;
+  }
+
   .tabs-content {
     height: 650px !important;
   }
+
   input[type="range"] {
     width: 50% !important;
   }
