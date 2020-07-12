@@ -7,10 +7,6 @@ export default class IndexView extends View {
     this.element.querySelector('.promo__start-button').addEventListener('click', () => {
       AppNavigator.go('registration');
     });
-
-    this.element.querySelector('.promo__login-button').addEventListener('click', () => {
-      AppNavigator.go('authorization');
-    });
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -25,7 +21,7 @@ export default class IndexView extends View {
       <div class="promo__start">
         <h1>Максимально увеличьте свой словарный запас с RSLANG</h1>
         <div class="promo__start-button">Начать</div>
-        <div class="promo__login-button">Войти</div>
+        <!--<div class="promo__login-button">Войти</div>-->
       </div>
       <div class="promo__description">
         <h2>RSLANG представляет собой оптимальный интеллектуальный способ изучения слов английского языка.</h2>
@@ -127,7 +123,7 @@ export default class IndexView extends View {
       <div class="promo__video">
         <h2>Совершенствуй свои языковые познания</h2>
         <div class="promo-video">
-        <iframe width="90%" height="315" src="https://www.youtube.com/embed/videoseries?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe width="90%" height="415" src="https://www.youtube.com/embed/GgV1w0RaVU4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
         </div>
       </div>
