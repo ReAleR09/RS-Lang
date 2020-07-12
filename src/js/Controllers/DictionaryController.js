@@ -2,9 +2,10 @@ import Controller from '../lib/Controller';
 import IndexView from '../Views/Dictionary/IndexView';
 import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
 import Dictionary from '../Classes/Dictionary';
+import { showPreloader, hidePreloader } from '../Classes/Preloader';
 import SpacedRepititions from '../Classes/SpacedRepititions';
 
-export default class SavannahController extends Controller {
+export default class DictionaryController extends Controller {
   constructor() {
     const viewClasses = {
       index: IndexView,
@@ -14,6 +15,7 @@ export default class SavannahController extends Controller {
 
   // eslint-disable-next-line class-methods-use-this
   async indexAction() {
+    showPreloader();
     const dictionary = new Dictionary();
     const intervals = new SpacedRepititions();
 
@@ -40,5 +42,6 @@ export default class SavannahController extends Controller {
       return newWord;
     });
     LocalStorageAdapter.set('deletedWords', deletedWords);
+    hidePreloader();
   }
 }
