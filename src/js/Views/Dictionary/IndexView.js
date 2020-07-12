@@ -12,8 +12,9 @@ import initDictionaryTabs from '../../plugins/initMaterial';
 import Dictionary from '../../Classes/Dictionary';
 import AppNavigator from '../../lib/AppNavigator';
 import { showPreloader, hidePreloader } from '../../Classes/Preloader';
-import { MODES } from '../../../config';
+import { MODES, CONF_MEDIA_BASE_PATH } from '../../../config';
 import WordStatuses from '../../Components/LearningWords/WordStatuses';
+// import  from '../../../config';
 
 const dictionary = new Dictionary();
 
@@ -48,7 +49,7 @@ export default class LearningWordsView extends View {
     const wordSounds = this.element.querySelectorAll(`.${CLASS_DICTIONARY_WORD_SOUND}`);
     wordSounds.forEach((item) => {
       item.addEventListener('click', () => {
-        const audio = new Audio(`https://raw.githubusercontent.com/yafimchik/rslang-data/master/${item.getAttribute('sound')}`);
+        const audio = new Audio(`${CONF_MEDIA_BASE_PATH}${item.getAttribute('sound')}`);
         audio.play();
       });
     });
@@ -88,9 +89,9 @@ export default class LearningWordsView extends View {
       <div class="row">
         <div class="col s12">
           <ul class="tabs">
-            <li class="tab col s3"><a class="active" href="#learning-words">Learning</a></li>
-            <li class="tab col s3"><a href="#difficult-words">Difficult</a></li>
-            <li class="tab col s3"><a href="#deleted-words">Deleted</a></li>
+            <li class="tab col s3"><a class="active" href="#learning-words">Изучаемые</a></li>
+            <li class="tab col s3"><a href="#difficult-words">Сложные</a></li>
+            <li class="tab col s3"><a href="#deleted-words">Удалённые</a></li>
           </ul>
         </div>
         <div id="learning-words" class="col s12">
