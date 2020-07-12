@@ -14,7 +14,6 @@ import AppNavigator from '../../lib/AppNavigator';
 import { showPreloader, hidePreloader } from '../../Classes/Preloader';
 import { MODES, CONF_MEDIA_BASE_PATH } from '../../../config';
 import WordStatuses from '../../Components/LearningWords/WordStatuses';
-// import  from '../../../config';
 
 const dictionary = new Dictionary();
 
