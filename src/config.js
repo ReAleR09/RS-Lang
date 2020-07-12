@@ -67,7 +67,7 @@ export const SIDENAV = [
       {
         title: 'Саванна',
         path: ['savannah'],
-        icon: 'extension',
+        icon: 'pets',
       },
       {
         title: 'Field of Dreams [mini-game]',

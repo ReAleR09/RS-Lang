@@ -220,6 +220,7 @@ export default class EnglishPuzzleManager {
         await parent.appendChild(toReplace[0]);
         // canvas.parentNode.append()
       });
+      // this.view.addCanvasHighlight(this.puzzleLineIndex);
     }
   }
 
@@ -260,7 +261,7 @@ export default class EnglishPuzzleManager {
         }
         return;
       }
-      if (e.target.innerText === 'PLAY AGAIN') {
+      if (e.target.innerText === 'ИГРАТЬ СНОВА') {
         AppNavigator.go('englishpuzzle');
         return;
       }
@@ -369,13 +370,6 @@ export default class EnglishPuzzleManager {
     const checkBtn = this.view.element.querySelector(`.${engPuzConst.buttons.CHECK}`);
     if (e.target.classList.contains(engPuzConst.buttons.CHECK)) {
       if (checkBtn.innerText === 'ПРОДОЛЖИТЬ') {
-        /* if (this.isGameFinished) {
-          AppNavigator.replace('englishpuzzle', 'play', {
-            difficulty: this.difficulty,
-            round: this.difficulty,
-          });
-          return;
-        } */
         this.view.element.querySelector('a.engPuz__tooltips-picture').classList.contains('disabled') ? this.view.toggleShowBackgroundBtnNoPointer()
           : null;
         this.view.removeCanvasHighlight(this.puzzleLineIndex);
@@ -404,26 +398,24 @@ export default class EnglishPuzzleManager {
         this.dnd.createInstance(document.querySelector(`.${engPuzConst.content.DROPSECTION} .row-${this.puzzleLineIndex}`));
         return;
       }
-      if (checkBtn.innerText === 'CHECK') {
-        this.view.removeCanvasHighlight(this.puzzleLineIndex);
-        this.view.addCanvasHighlight(this.puzzleLineIndex);
-        this.updateCurrentStat(this.checkLineAnswers());
+      if (checkBtn.innerText === 'ПРОВЕРИТЬ') {
         if (this.isGameFinished) {
           checkBtn.classList.add('disabled');
           return;
         }
-
+        this.view.removeCanvasHighlight(this.puzzleLineIndex);
+        this.view.addCanvasHighlight(this.puzzleLineIndex);
+        this.updateCurrentStat(this.checkLineAnswers());
         if (this.checkLineAnswers()) {
           this.view.toggleShowBackgroundBtnNoPointer();
           this.view.toggleDisableButton(this.view.element.querySelector(`.${engPuzConst.buttons.DONTKNOW}`));
           this.view.renameCheckButton();
           !this.isBackgroundShow ? await this.applyBackgroundToPuzzleLine() : null;
-          this.view.addCanvasHighlight(this.puzzleLineIndex);
+          setTimeout(() => {
+            this.view.addCanvasHighlight(this.puzzleLineIndex);
+          }, 0);
           this.view.removePuzzleLinePointerEvents(this.puzzleLineIndex);
-          // update statisticks with correct answer
         }
-        // this.isLastCanvasInDragSection();
-        // TODO Update user stat
       }
     }
   }
@@ -439,8 +431,8 @@ export default class EnglishPuzzleManager {
 
   autoPlaySentenceHandler() {
     if (this.isAutoPlay && this.puzzleLineIndex) {
-      const audio = new Audio(this.words[this.puzzleLineIndex].audioExample);
-      audio.play();
+      const url = CONF_MEDIA_BASE_PATH + this.words[this.puzzleLineIndex].audioExample;
+      new Audio(url).play();
     }
   }
 

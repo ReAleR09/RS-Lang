@@ -42,7 +42,7 @@ export default class LearningWordsModel {
     this.game = new LearningWordsGameMode();
 
     this.mode = mode;
-    this.cards = new LearnindWordsCards();
+    this.cards = new LearnindWordsCards(gameRoundsCount, this.game.setLimit.bind(this.game));
     this.intervals = new SpacedRepititions();
     this.sessionResult = {
       errors: 0,

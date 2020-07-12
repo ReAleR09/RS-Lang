@@ -99,7 +99,7 @@ export default class EnglisPuzzleView {
   }
 
   addCanvasHighlight(puzzleLineIndex) {
-    const canvasDropToCheck = document.querySelectorAll(`.${engPuzConst.content.DROPSECTION} .canvas-row-${puzzleLineIndex + 1}`);
+    const canvasDropToCheck = this.element.querySelectorAll(`.${engPuzConst.content.DROPSECTION} .canvas-row-${puzzleLineIndex + 1}`);
     [...canvasDropToCheck].forEach((canvas, i) => {
       // eslint-disable-next-line no-unused-expressions
       canvas.dataset.item === `${puzzleLineIndex + 1}-${i + 1}`

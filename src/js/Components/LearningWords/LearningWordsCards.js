@@ -12,7 +12,7 @@ import WordsApi from '../../Classes/Api/WordsApi';
 import { MODES } from '../../../config';
 
 export default class LearnindWordsCards {
-  constructor() {
+  constructor(gameRoundCount = 10, gameLimit) {
     this.difficultyLevel = 0;
 
     this.limits = {};
@@ -27,6 +27,8 @@ export default class LearnindWordsCards {
     this.repeatWords = [];
     this.complicatedWords = [];
     this.wordsApi = new WordsApi();
+    this.gameRoundLimit = gameRoundCount;
+    this.setGameLimit = gameLimit;
   }
 
   init(difficulty, settings, dayNorms, statistics, mode) {
@@ -172,6 +174,9 @@ export default class LearnindWordsCards {
       if (this.newWords.length) {
         this.cards = this.cards.concat(this.newWords);
         this.newWords = [];
+        if (this.cards.length < this.gameRoundLimit) {
+          this.setGameLimit = this.difficultyLevel + 1;
+        }
       }
     }
     return this.isCardReady;
