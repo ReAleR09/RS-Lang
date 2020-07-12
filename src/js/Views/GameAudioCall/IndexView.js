@@ -89,6 +89,10 @@ export default class IndexView extends View {
     this.element.querySelector('.audio-call__mark-word').previousElementSibling.innerHTML = '&#10004;';
     this.element.querySelector('.audio-call__mark-word').previousElementSibling.classList.add('audio-call__guess-color');
     this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
+      el.classList.add('audio-call_hidden-words');
+    });
+    this.element.querySelector('.audio-call__mark-word').classList.remove('audio-call_hidden-words');
+    this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
       el.classList.remove('audio-call__mark-word');
     });
   }
@@ -100,7 +104,7 @@ export default class IndexView extends View {
     this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
       el.classList.remove('audio-call__mark-word');
     });
-    this.nextSlide();
+    // this.nextSlide();
   }
 
   nextSlide() {
@@ -134,6 +138,9 @@ export default class IndexView extends View {
       this.hideSendBtn();
       this.hideOriginWord();
       this.props.sayWord();
+      this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
+        el.classList.remove('audio-call_hidden-words');
+      });
     });
 
     this.element.querySelectorAll('.carousel-item').forEach((el) => {
@@ -160,9 +167,11 @@ export default class IndexView extends View {
     this.eslint = true;
     const html = `
       <div class="carousel carousel-slider center">
-        <div id="start-node" class="audio-call__start-container">
-          <h3 class="audio-call__heading-start-message">Готов? Жми <b>"старт"</b> для начала игры!</h3>
-          <a id="start-btn" class="waves-effect waves-light btn-large audio-call__btn-start">Старт!</a>
+        <div class="audio-call_stop-click">
+          <div id="start-node" class="audio-call__start-container">
+            <h3 class="audio-call__heading-start-message">Готов? Жми <b>"старт"</b> для начала игры!</h3>
+            <a id="start-btn" class="waves-effect waves-light btn-large audio-call__btn-start">Старт!</a>
+          </div>
         </div>
       </div>`;
     return html;
