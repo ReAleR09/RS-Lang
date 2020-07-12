@@ -25,6 +25,7 @@ export const GAMES_TITLES = {
 export const MODES = {
   GAME: 'game',
   REPITITION: 'repitition',
+  COMPLICATED: 'complicated',
 };
 
 export const CONF_ROOT_PATH = '';

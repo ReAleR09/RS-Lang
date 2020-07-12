@@ -7,6 +7,8 @@ import { MODES } from '../../config';
 // import Statistics from '../Classes/Statistics';
 import { PARAM_MODE, PARAM_WAS_STARTED } from '../Utils/Constants';
 import TestResultView from '../Views/LearningWords/TestResultView';
+import LocalStorageAdapter from '../Utils/LocalStorageAdapter';
+import { PARAM_STATS_LEARNING } from '../Components/LearningWords/constants';
 
 /**
  * Controller is a sctructure that describes a set of "actions",
@@ -54,8 +56,10 @@ export default class LearningWordsController extends Controller {
     if (params.has(PARAM_WAS_STARTED)) {
       wasStarted = (params.get(PARAM_WAS_STARTED) === 'true');
     }
+    this.props.stats = LocalStorageAdapter.get(PARAM_STATS_LEARNING);
+
     this.props.wasStarted = wasStarted;
-    this.props.statistics = mode; // new Statistics(GAMES.LEARNING, mode);
+    this.props.mode = mode; // new Statistics(GAMES.LEARNING, mode);
   }
 
   testResultAction() {
