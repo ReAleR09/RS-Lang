@@ -71,8 +71,7 @@ export default class SpacedRepititions {
     const userWordData = await this.wordsApi.getWordDataById(wordId);
 
     if (userWordData.error) {
-      ErrorHandling.handleNonCriticalError(userWordData.error, API_ERROR);
-      return status;
+      return 0;
     }
 
     const totalSteps = this.getStep({ interval: this.settings.maxIntervalDays });
