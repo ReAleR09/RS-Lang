@@ -6,12 +6,15 @@ export default class LearningWordsGameMode {
     this.maxWorstResult = 0;
     this.roundMaxCount = 0;
     this.gameMaxCount = 0;
+    this.gameInit();
+    this.difficultyLimit = 0;
+  }
 
+  gameInit() {
     this.gameCount = 0;
     this.roundCount = 0;
     this.roundBestResult = 0;
     this.roundWorstResult = 0;
-
     this.difficultyLevel = 0;
     this.retry = false;
     this.ended = false;
@@ -22,6 +25,14 @@ export default class LearningWordsGameMode {
     this.maxWorstResult = maxWorstResult;
     this.roundMaxCount = roundMaxCount;
     this.gameMaxCount = gameMaxCount;
+  }
+
+  setLimit(value) {
+    if (value < 0 || value > difficultyMax) return;
+    this.nextRound();
+    this.difficultyLimit = value;
+    this.level = this.difficultyLimit;
+    this.gameInit();
   }
 
   get game() {
@@ -40,7 +51,7 @@ export default class LearningWordsGameMode {
   }
 
   set level(value) {
-    if (value < 0 || value > difficultyMax) return;
+    if (value < this.difficultyLimit || value > difficultyMax) return;
     if (value === difficultyMax) {
       this.ended = true;
     }
