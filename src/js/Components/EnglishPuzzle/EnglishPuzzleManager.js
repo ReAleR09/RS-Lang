@@ -404,7 +404,7 @@ export default class EnglishPuzzleManager {
         this.dnd.createInstance(document.querySelector(`.${engPuzConst.content.DROPSECTION} .row-${this.puzzleLineIndex}`));
         return;
       }
-      if (checkBtn.innerText === 'CHECK') {
+      if (checkBtn.innerText === 'ПРОВЕРИТЬ') {
         this.view.removeCanvasHighlight(this.puzzleLineIndex);
         this.view.addCanvasHighlight(this.puzzleLineIndex);
         this.updateCurrentStat(this.checkLineAnswers());
