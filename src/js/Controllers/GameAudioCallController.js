@@ -207,7 +207,7 @@ export default class GameAudioCallController extends Controller {
       return wordState;
     });
     this.dataWords = wordsState;
-    console.log(this.dataWords);
+    // console.log(this.dataWords);
     // this.displayWords(wordsState);
     hidePreloader();
   }
