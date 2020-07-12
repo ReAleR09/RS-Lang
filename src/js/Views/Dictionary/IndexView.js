@@ -67,7 +67,6 @@ export default class LearningWordsView extends View {
         AppNavigator.go('dictionary');
       });
     });
-
   }
 
   onUnmount() {
