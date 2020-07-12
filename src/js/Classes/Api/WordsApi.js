@@ -7,16 +7,19 @@ import {
   MAX_PAGE_INDEX,
   API_ERROR,
   API_SEND_ERROR,
+  MILLIS_PER_DAY,
 } from './constants';
 import Utils from '../../Utils/Utils';
 import ErrorHandling from '../ErrorHandling';
+import SettingsModel from '../UserSettings';
 
 const puzzleMaxLength = 10;
-const puzzlePageSize = 10;
 
 export default class WordsApi {
   constructor() {
     this.api = new Api();
+    this.settingsObject = SettingsModel;
+    this.settings = this.settingsObject.settings;
   }
 
   static createArrayOfIndexes(count, maxIndex) {
@@ -151,6 +154,7 @@ export default class WordsApi {
     const filter = JSON.stringify({
       'userWord.optional.dictCategory': { $ne: DICT_CATEGORIES.DELETE },
       'userWord.optional.nextDate': { $lt: dateNow },
+      'userWord.optional.interval': { $lt: (this.settings.maxIntervalDays * MILLIS_PER_DAY) },
     });
 
     let repeatedWords = await this.getAggregatedWords(undefined, undefined, filter);
@@ -165,6 +169,27 @@ export default class WordsApi {
         const exampleLength = word.textExample.trim().split(' ').length;
         return (exampleLength <= puzzleMaxLength);
       });
+    }
+
+    repeatedWords = Utils.arrayShuffle(repeatedWords);
+
+    if (count < repeatedWords.length) {
+      repeatedWords = repeatedWords.slice(0, count);
+    }
+
+    return repeatedWords;
+  }
+
+  async getComplicatedWords(count) {
+    const filter = JSON.stringify({
+      'userWord.optional.dictCategory': DICT_CATEGORIES.COMPLICATED,
+    });
+
+    let repeatedWords = await this.getAggregatedWords(undefined, undefined, filter);
+
+    if (repeatedWords.error) {
+      ErrorHandling.handleError(repeatedWords.error, API_ERROR);
+      return [];
     }
 
     repeatedWords = Utils.arrayShuffle(repeatedWords);
@@ -294,7 +319,7 @@ export default class WordsApi {
     };
     if (forPuzzle) {
       requestParams.wordsPerExampleSentenceLTE = puzzleMaxLength;
-      requestParams.wordsPerPage = puzzlePageSize;
+      requestParams.wordsPerPage = MAX_REQUEST_COUNT;
     }
 
     const arrayOfRequests = arrayOfPages

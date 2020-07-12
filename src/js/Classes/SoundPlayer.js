@@ -1,8 +1,10 @@
+const volumeDefault = 0.1;
 export default class SoundPlayer {
   constructor(emptyPlayQueueCallback) {
     this.emptyPlayQueueCallback = emptyPlayQueueCallback;
     this.sounds = [];
     this.queue = [];
+    this.volume = volumeDefault;
   }
 
   clearPlayQueue() {
@@ -11,11 +13,14 @@ export default class SoundPlayer {
   }
 
   addAudioToQueue(audioFileLink) {
-    this.sounds.push(new Audio(audioFileLink));
+    const audio = new Audio(audioFileLink);
+    audio.volume = this.volume;
+    this.sounds.push(audio);
   }
 
   play() {
     this.queue = this.sounds.slice();
+    this.sounds = [];
     this.playThrough();
   }
 

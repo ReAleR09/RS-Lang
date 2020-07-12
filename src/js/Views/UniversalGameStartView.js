@@ -2,6 +2,7 @@ import Materialize from 'materialize-css';
 import View from '../lib/View';
 import AppNavigator from '../lib/AppNavigator';
 import Router from '../Router';
+import { showPreloader, hidePreloader } from '../Classes/Preloader';
 
 const ID_START_BUTTON = 'start-button';
 const ID_START_BUTTON_USER = 'start-button-user';
@@ -42,9 +43,11 @@ export default class UniversalGameStartView extends View {
     }
 
     this.initSliders();
+    hidePreloader();
   }
 
   render() {
+    showPreloader();
     const { game } = this.props;
 
     let userWordsPlay = '';
@@ -57,7 +60,7 @@ export default class UniversalGameStartView extends View {
     }
 
     const html = `
-    <div>
+    <div class="game-start">
       <div class='row'><h2>${game.title}</h2></div>
       <blockquote>
         ${game.description}

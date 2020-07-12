@@ -7,21 +7,14 @@ import {
 } from './Api/constants';
 import Dictionary from './Dictionary';
 import ErrorHandling from './ErrorHandling';
-
-const SETTINGS = {
-  firstIntervalMinutes: 5,
-  baseIntervalDays: 1,
-  baseMultiplierPercents: 150,
-  hardMultiplierPercents: 80,
-  simpleMultiplierPercents: 120,
-  maxIntervalDays: 250,
-};
+import SettingsModel from './UserSettings';
 
 export default class SpacedRepititions {
   constructor() {
     this.wordsApi = new WordsApi();
     this.dictionary = new Dictionary();
-    this.settings = SETTINGS;
+    this.settingsObject = SettingsModel;
+    this.settings = SettingsModel.settings;
   }
 
   getMultiplier(difficulty) {
@@ -52,7 +45,7 @@ export default class SpacedRepititions {
 
   getStep(userWordData) {
     let steps = 1;
-    let stepInterval = this.settings.baseIntervalDays;
+    let stepInterval = this.settings.baseIntervalDays * MILLIS_PER_DAY;
     while (stepInterval < userWordData.interval) {
       steps += 1;
       stepInterval *= this.getMultiplier(userWordData.difficulty);
@@ -71,11 +64,42 @@ export default class SpacedRepititions {
     const userWordData = await this.wordsApi.getWordDataById(wordId);
 
     if (userWordData.error) {
-      ErrorHandling.handleNonCriticalError(userWordData.error, API_ERROR);
-      return status;
+      return 0;
+    }
+    if (!userWordData.difficulty) {
+      userWordData.difficulty = DIFFICULTIES.NORMAL;
+    }
+    if (!userWordData.interval) {
+      userWordData.interval = 0;
     }
 
-    const totalSteps = this.getStep(this.settings.maxIntervalDays);
+    const totalSteps = this.getStep({
+      interval: this.settings.maxIntervalDays * MILLIS_PER_DAY,
+      difficulty: userWordData.difficulty,
+    });
+
+    const curStep = this.getStep(userWordData);
+
+    status = Math.round((curStep / totalSteps) * 100);
+
+    return status;
+  }
+
+  getTrainingStatusByUserWord(wordData) {
+    let status = 0;
+    const userWordData = { ...wordData };
+
+    if (!userWordData.difficulty) {
+      userWordData.difficulty = DIFFICULTIES.NORMAL;
+    }
+    if (!userWordData.interval) {
+      userWordData.interval = 0;
+    }
+
+    const totalSteps = this.getStep({
+      interval: this.settings.maxIntervalDays * MILLIS_PER_DAY,
+      difficulty: userWordData.difficulty,
+    });
 
     const curStep = this.getStep(userWordData);
 

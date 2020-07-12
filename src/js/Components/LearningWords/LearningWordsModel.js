@@ -13,17 +13,21 @@ import {
   gameLevelCount,
   minBestResult,
   maxWorstResult,
+  PARAM_STATS_LEARNING,
 } from './constants';
 import Statistics from '../../Classes/Statistics';
 import { GAMES, MODES } from '../../../config';
 import Dictionary from '../../Classes/Dictionary';
 import { DICT_CATEGORIES, DIFFICULTIES } from '../../Classes/Api/constants';
 import LearningWordsGameMode from './LearningWordsGameMode';
-import { PARAM_MODE } from '../../Utils/Constants';
+import { PARAM_MODE, PARAM_WAS_STARTED } from '../../Utils/Constants';
 import Timers from '../Games/FieldOfDreams/Timers';
+import SpacedRepititions from '../../Classes/SpacedRepititions';
+import LocalStorageAdapter from '../../Utils/LocalStorageAdapter';
 
 export default class LearningWordsModel {
   constructor(mode = MODES.REPITITION) {
+    this.started = false;
     this.timer = new Timers();
     this.statistics = new Statistics(GAMES.LEARNING, mode);
     this.dictionary = new Dictionary();
@@ -39,6 +43,15 @@ export default class LearningWordsModel {
 
     this.mode = mode;
     this.cards = new LearnindWordsCards();
+    this.intervals = new SpacedRepititions();
+    this.sessionResult = {
+      errors: 0,
+      successes: 0,
+      bestResult: 0,
+      currentBest: 0,
+      worstResult: 0,
+      currentWorst: 0,
+    };
   }
 
   changeDifficulty(newDifficulty) {
@@ -109,6 +122,7 @@ export default class LearningWordsModel {
   }
 
   async acceptInput(value) {
+    this.started = true;
     if (this.cards.currentStatus === WORD_STATUSES.COMPLITED) {
       await this.goNext();
       return true;
@@ -141,24 +155,44 @@ export default class LearningWordsModel {
       if (showWordRate) {
         showWordRate = (this.cards.currentStatus === WORD_STATUSES.NEW);
       }
-      await this.updateStatistics(this.cards.currentErrors === 0);
+      const wasErrors = (this.cards.currentErrors === 0);
+      this.updateSessionResults(wasErrors);
+      await this.updateStatistics(wasErrors);
       this.cards.currentStatus = WORD_STATUSES.COMPLITED;
       this.showFilledCard(showWordRate);
     } else if (this.cards.currentErrors) {
-      this.cards.sendCardToTrainingEnd();
       this.cards.currentErrors += 1;
     }
     return result;
   }
 
+  updateSessionResults(result) {
+    if (result) {
+      this.sessionResult.successes += 1;
+      this.sessionResult.currentBest += 1;
+      this.sessionResult.currentWorst = 0;
+      if (this.sessionResult.currentBest > this.sessionResult.bestResult) {
+        this.sessionResult.bestResult = this.sessionResult.currentBest;
+      }
+    } else {
+      this.sessionResult.errors += 1;
+      this.sessionResult.currentBest = 0;
+      this.sessionResult.currentWorst += 1;
+      if (this.sessionResult.currentWorst > this.sessionResult.worstResult) {
+        this.sessionResult.worstResult = this.sessionResult.currentWorst;
+      }
+    }
+  }
+
   checkInput(value) {
     const textResult = value.toLowerCase().trim();
     const original = this.card.word.toLowerCase().trim();
+    const original2 = this.card.wordFromExample.toLowerCase().trim();
 
-    const checkingResult = (textResult === original);
+    const checkingResult = (textResult === original) || (textResult === original2);
 
     if (!checkingResult) {
-      this.cards.CurrentErrors += 1;
+      this.cards.currentErrors += 1;
     }
     return (checkingResult);
   }
@@ -175,7 +209,10 @@ export default class LearningWordsModel {
 
   async goNext() {
     if (await this.cards.getNext()) {
-      this.updateWordCard(this.card);
+      const word = this.card;
+      // eslint-disable-next-line no-underscore-dangle
+      word.intervalStatus = await this.intervals.getTrainingStatus(word._id);
+      this.updateWordCard(word);
     } else {
       this.showResult();
     }
@@ -211,8 +248,21 @@ export default class LearningWordsModel {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  showResult() {
-    const params = { [PARAM_MODE]: this.mode, difficulty: this.difficulty };
+  async showResult() {
+    const limits = SettingsModel.wordLimitsPerDay;
+    const dayResults = await this.statistics.getLimits();
+    const sessionResults = this.sessionResult;
+    const stats = {
+      limits,
+      dayResults,
+      sessionResults,
+    };
+    LocalStorageAdapter.set(PARAM_STATS_LEARNING, stats);
+    const params = {
+      [PARAM_MODE]: this.mode,
+      difficulty: this.difficulty,
+      [PARAM_WAS_STARTED]: this.started,
+    };
     if (this.mode === MODES.GAME) {
       this.timer.setNewTimer(() => {
         AppNavigator.go(LEARNING_WORDS_CONTROLLER, TEST_RESULT_ACTION, params);
