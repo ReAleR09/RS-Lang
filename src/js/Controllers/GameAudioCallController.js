@@ -101,7 +101,7 @@ export default class GameAudioCallController extends Controller {
     this.round = round;
 
     const mode = userWordsMode ? MODES.REPITITION : MODES.GAME;
-    this.statistics = new Statistics(GAMES.AUDIOCALL, mode, false);
+    this.statistics = new Statistics(GAMES.AUDIOCALL, mode, true);
 
     await this.getWordsFromDataBase();
     this.props.startGame = () => {
@@ -207,23 +207,28 @@ export default class GameAudioCallController extends Controller {
       return wordState;
     });
     this.dataWords = wordsState;
-    console.log(this.dataWords);
+
     // this.displayWords(wordsState);
     hidePreloader();
   }
 
   compareWords(event) { // Тут можно помечать угаданные слова
-    if (this.wordsToSend[this.countAnswerWords].wordTranslate === event.target.innerText) {
-      this.statistics.updateWordStatistics(this.dataWords[this.countAnswerWords].id, true);
+    const word = this.view.element.querySelector('#origin-word').innerHTML.toLowerCase().trim();
+    const answer = event.target.innerText.trim();
+    const originIndex = this.dataWords.findIndex((card) => card.word === word);
+    if (this.dataWords[originIndex].status) {
+      return;
+    }
+    const result = (this.dataWords[originIndex].wordTranslate === answer);
+    this.statistics.updateWordStatistics(this.dataWords[originIndex].id, result);
+    if (result) {
       this.countCorrectTranslationWords += 1;
       this.status = GUESSED_WORD;
-      this.updateView();
-    } else { // Если не угадал, отметить статус какой, как не угаданное.
-      this.statistics.updateWordStatistics(this.dataWords[this.countAnswerWords].id, false);
+    } else {
       this.status = NOT_GUESS;
-      this.updateView();
       this.playAudioFail();
     }
+    this.updateView();
     this.countAnswerWords += 1;
   }
 
@@ -233,8 +238,9 @@ export default class GameAudioCallController extends Controller {
       this.status = FINISH;
       this.updateView();
     } else {
-      // console.log('playaudio');
-      this.audio = new Audio(this.wordsToSend[this.countAnswerWords].audio);
+      const word = this.view.element.querySelector('.active #origin-word').innerHTML.toLowerCase().trim();
+      const originIndex = this.dataWords.findIndex((card) => card.word === word);
+      this.audio = new Audio(this.wordsToSend[originIndex].audio);
       this.audio.play();
     }
   }

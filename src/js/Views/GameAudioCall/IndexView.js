@@ -6,6 +6,7 @@ import {
   UPDATE_DATA,
   GUESSED_WORD,
   NOT_GUESS,
+  CLASS_COMPONENT_LOCKED,
 } from '../../Utils/ConstantsGameAudioCall';
 import { showPreloader, hidePreloader } from '../../Classes/Preloader';
 
@@ -110,8 +111,10 @@ export default class IndexView extends View {
     setTimeout(() => {
       this.hideOriginWord();
       this.instance.next();
-      this.props.sayWord();
-    }, 1800);
+      setTimeout(() => {
+        this.props.sayWord();
+      }, 1000);
+    }, 500);
   }
 
   createEventSubscribe() {
@@ -121,6 +124,7 @@ export default class IndexView extends View {
 
     this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
       el.addEventListener('click', (event) => {
+        this.element.classList.add(CLASS_COMPONENT_LOCKED);
         event.target.classList.add('audio-call__mark-word');
         this.props.answerWord(event);
       });
@@ -136,7 +140,9 @@ export default class IndexView extends View {
       this.instance.next();
       this.hideSendBtn();
       this.hideOriginWord();
-      this.props.sayWord();
+      setTimeout(() => {
+        this.props.sayWord();
+      }, 1000);
     });
 
     this.element.querySelectorAll('.carousel-item').forEach((el) => {
