@@ -1,7 +1,6 @@
 import M from 'materialize-css';
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
-import { CONF_MEDIA_BASE_PATH } from '../../../config';
 import {
   INIT_GAME,
   UPDATE_DATA,
@@ -59,7 +58,7 @@ export default class IndexView extends View {
       });
       sliderHtml += `
         <div class="carousel-item blue white-text" href="${numberSlide[i]}">
-          <img class="audio-call__img-word" src="${CONF_MEDIA_BASE_PATH}${el.image}">
+          <img class="audio-call__img-word" src="${el.image}">
           <a id="repeat-word-btn" class="btn-floating btn-large waves-effect waves-light red">
             <i class="material-icons">volume_up</i>
           </a>

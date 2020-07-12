@@ -2,6 +2,8 @@ const githubAccount = 'yafimchik';
 
 export const WORD_REPLACEMENT = '<span>...</span>';
 
+export const PARAM_STATS_LEARNING = 'statsLearningWords';
+
 export const chunkCount = 10;
 export const difficultyMax = 5;
 

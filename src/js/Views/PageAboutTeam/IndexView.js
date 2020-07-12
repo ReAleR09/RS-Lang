@@ -4,7 +4,7 @@ import View from '../../lib/View';
 
 const whatDidEvgenyMentor = 'Gave advice';
 const whatDidBogdan = 'Drove his hands';
-const whatDidMasha = 'Game savannah, user authorization page';
+const whatDidMasha = 'Game savannah, user authorization page, dictionary, promo page';
 const whatDidKirill = 'Pressed the button';
 const whatDidEvgeny = 'Back End API, Learning Word Components, Testing mode of knowledge of English, Mini-games Field of Miracles';
 const whatDidVlad = 'Game EnglishPuzzle!!!';

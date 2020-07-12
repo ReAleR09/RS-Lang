@@ -1,18 +1,18 @@
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
-// import SoundPlayer from '../../Classes/SoundPlayer';
-import { showPreloader, hidePreloader } from '../../Classes/Preloader';
+import SpeakitSoundPlayer from '../../Components/Games/Speakit/SpeakitSoundPlayer';
 
-const ID_BUTTON_PLAYAGAIN = 'field-of-dreams__play-again-button';
-const ID_BUTTON_NEXT = 'field-of-dreams__next-round-button';
+const ID_BUTTON_PLAYAGAIN = 'speakit__play-again-button';
+const ID_BUTTON_NEXT = 'speakit__next-round-button';
 
-const CLASS_RESULTS_WORDCARD = 'field-of-dreams__word-card-result';
+const CLASS_RESULTS_WORDCARD = 'speakit__word-card-result';
 
 export default class ResultsView extends View {
   generateWordsCards(guessed = true) {
     const words = guessed ? this.props.stats.guessed : this.props.stats.notGuessed;
     const wordsHtml = words.reduce((html, wordInfo) => {
       const wordHTML = `<div class="${CLASS_RESULTS_WORDCARD} col s4 card">
+        <i class="${CLASS_RESULTS_WORDCARD}_sound-icon material-icons prefix" data-wordid="${wordInfo.id}" data-wordsound="1">micro</i>
         <div class="">${wordInfo.word}</div>
         <div class="">${wordInfo.transcription}</div>
         <div class="">${wordInfo.wordTranslate}</div>
@@ -37,10 +37,24 @@ export default class ResultsView extends View {
   }
 
   onMount() {
-    showPreloader();
     const playAgainButton = this.element.querySelector(`#${ID_BUTTON_PLAYAGAIN}`);
     playAgainButton.addEventListener('click', () => {
-      AppNavigator.replace('fieldOfDreams');
+      AppNavigator.replace('speakit');
+    });
+
+    const soundPlayer = new SpeakitSoundPlayer();
+
+    const sounds = this.props.stats.guessed
+      .concat(this.props.stats.notGuessed);
+    soundPlayer.initWordsSounds(sounds);
+
+    this.element.addEventListener('click', (e) => {
+      if (!e.target.dataset.wordsound) {
+        return;
+      }
+
+      const wordId = e.target.dataset.wordid;
+      soundPlayer.playWordSound(wordId);
     });
 
     if (this.props.nextRound) {
@@ -48,10 +62,9 @@ export default class ResultsView extends View {
       const difficulty = this.props.nextDifficulty;
       const round = this.props.nextRound;
       nextButton.addEventListener('click', () => {
-        AppNavigator.go('fieldOfDreams', 'play', { difficulty, round });
+        AppNavigator.go('speakit', 'play', { difficulty, round });
       });
     }
-    hidePreloader();
   }
 
   render() {

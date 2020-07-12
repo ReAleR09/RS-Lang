@@ -1,5 +1,42 @@
 const componentName = 'settings';
 
+export const inputCheck = {
+  firstInterval: {
+    value: 60,
+    alert: 'Первый интервал должен быть меньше 60 минут',
+  },
+  baseInterval: {
+    value: 7,
+    alert: 'Базовый интервал Должен быть меньше недели',
+  },
+  zeroCheck: {
+    value: 0,
+    alert: 'Нулевые значения не допустимы',
+  },
+  baseMulti: {
+    value: 100,
+    alert: 'Базовый множитель Должен быть больше 100%',
+  },
+  hardMulti: {
+    value: 100,
+    alert: 'Множитель сложных слов Должен быть больше 100%',
+  },
+  simpleMulti: {
+    value: 100,
+    alert: 'Множитель легих слов Должен быть больше 100%',
+  },
+  hardVSbase: {
+    alert: 'Множитель сложных слов должен быть меньше или равен базовому',
+  },
+  simpleVSbase: {
+    alert: 'Множитель легих слов должен быть больше или равен базовому',
+  },
+  maxInterval: {
+    value: 100,
+    alert: 'Максимальный интервал должен быть не меньше 100 дней',
+  },
+};
+
 const CLASSES = {
   COMPONENT: componentName,
   TABS: 'tabs-settings',
@@ -196,7 +233,7 @@ export const SETTINGS_HTML = `
 <section class="${CLASSES.COMPONENT}">
 
   <form action="#" class="center-align">
-    <h2>Настройки приложения</h2>
+    <h3>Настройки приложения</h3>
     <div class="row">
       <div class="col s12">
         <ul class="${CLASSES.TABS} tabs">

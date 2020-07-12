@@ -111,20 +111,20 @@ const HTML_CARD_HEADER = `
     <div class="${CLASSES.CARD.WORDSTATUS} tooltipped" data-position="right" data-tooltip="Статус изучения слова"></div>
     <h5 class="${CLASSES.CARD.TITLE}">Карточка изучения слов</h5>
     <div class="${CLASS_CARD_SETTINGS} fixed-action-btn click-to-toggle">
-      <a class="btn-floating btn-large click-to-toggle z-depth-3">
-        <i class="large material-icons">settings</i>
+      <a class="btn-floating btn-small click-to-toggle z-depth-3">
+        <i class="material-icons">settings</i>
       </a>
       <ul>
-        <li><a class="${CLASSES.CARD.SETTINGS.BUTTON_VOLUME} btn-floating blue darken-2 tooltipped" data-position="bottom" data-tooltip="Отключить произношение"><i class="material-icons">volume_up</i></a></li>
-        <li><a class="${CLASSES.CARD.SETTINGS.BUTTON_TRANSLATE} btn-floating green darken-3 tooltipped" data-position="bottom" data-tooltip="Скрыть переводы"><i class="material-icons">translate</i></a></li>
-        <li><a class="${CLASSES.CARD.SETTINGS.BUTTON_SKIP} btn-floating red darken-3 tooltipped" data-position="bottom" data-tooltip="Показать Ответ"><i class="material-icons">visibility</i></a></li>
+        <li><a class="${CLASSES.CARD.SETTINGS.BUTTON_VOLUME} btn-floating blue darken-2 tooltipped btn-small" data-position="bottom" data-tooltip="Отключить произношение"><i class="material-icons">volume_up</i></a></li>
+        <li><a class="${CLASSES.CARD.SETTINGS.BUTTON_TRANSLATE} btn-floating green darken-3 tooltipped btn-small" data-position="bottom" data-tooltip="Скрыть переводы"><i class="material-icons">translate</i></a></li>
+        <li><a class="${CLASSES.CARD.SETTINGS.BUTTON_SKIP} btn-floating red darken-3 tooltipped btn-small" data-position="bottom" data-tooltip="Показать Ответ"><i class="material-icons">visibility</i></a></li>
       </ul>
     </div>
   </div>`;
 
 const HTML_CARD_BODY = `
   <div class="card-body row">
-    <div class="${CLASSES.CARD.IMG_WRAPPER} col l4 s4 offset-s4 valign-wrapper">
+    <div class="${CLASSES.CARD.IMG_WRAPPER} col l4 s8 offset-s2 valign-wrapper">
       <img alt="word description picture" class="responsive-img img-rounded">
     </div>
     <div class="col l8 s12">

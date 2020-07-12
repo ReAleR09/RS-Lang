@@ -21,6 +21,7 @@ const go = (controller = null, action = null, params = {}, replace = false) => {
     !LocalStorageAdapter.get(FIELD_TOKEN)
     && controller !== 'authorization'
     && controller !== 'registration'
+    && controller !== 'promo'
   ) {
     return;
   }

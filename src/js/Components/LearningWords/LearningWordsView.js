@@ -124,6 +124,7 @@ export default class LearningWordsView {
       } else if (event.code === 'ArrowLeft') {
         this.onButtonPrevious();
       }
+      this.material.closeModalRate();
     };
     document.addEventListener('keydown', keysCallback);
 

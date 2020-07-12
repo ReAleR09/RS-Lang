@@ -1,8 +1,8 @@
 import View from '../../lib/View';
 import AppNavigator from '../../lib/AppNavigator';
-import { IN_PROGRESS_SPRINT_GAME, EVENT_NAME_SPRINT_GAME } from '../../Utils/ConstantsGameSprint';
+import { IN_PROGRESS_SPRINT_GAME, EVENT_NAME_SPRINT_GAME } from '../../Components/Games/Sprint/ConstantsGameSprint';
 
-export default class IndexView extends View {
+export default class PlayView extends View {
   /**
    * This method will be automatically called oncewhen navigation to the page occured,
    * but before html is added to browser's DOM.

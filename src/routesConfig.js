@@ -12,6 +12,7 @@ import PageAboutTeamController from './js/Controllers/PageAboutTeamController';
 import GameAudioCallController from './js/Controllers/GameAudioCallController';
 import StatisticsController from './js/Controllers/StatisticsController';
 import ErrorsController from './js/Controllers/ErrorsController';
+import PromoController from './js/Controllers/PromoController';
 
 export default {
   '/': LearningWordsController,
@@ -29,6 +30,7 @@ export default {
   'about-team': PageAboutTeamController,
   statistics: StatisticsController,
   error: ErrorsController,
+  promo: PromoController,
 };
 
 export const routeColorsConfig = {

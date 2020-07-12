@@ -25,6 +25,7 @@ export const GAMES_TITLES = {
 export const MODES = {
   GAME: 'game',
   REPITITION: 'repitition',
+  COMPLICATED: 'complicated',
 };
 
 export const CONF_ROOT_PATH = '';
@@ -37,26 +38,26 @@ export const SIDENAV = [
   {
     title: 'Изучаем слова',
     path: ['/'],
-    icon: 'accessibility',
+    icon: 'network_check',
   },
   {
     title: 'Игры',
-    icon: 'accessibility',
+    icon: 'sports_esports',
     nested: [
       {
         title: 'Спринт',
         path: ['game-sprint'],
-        icon: 'accessibility',
+        icon: 'speed',
       },
       {
         title: 'SpeakIt',
         path: ['speakit'],
-        icon: 'accessibility',
+        icon: 'support_agent',
       },
       {
         title: 'Аудиовызов',
         path: ['game-audio-call'],
-        icon: 'accessibility',
+        icon: 'phone_callback',
       },
       {
         title: 'Английский Паззл',
@@ -66,7 +67,7 @@ export const SIDENAV = [
       {
         title: 'Саванна',
         path: ['savannah'],
-        icon: 'extension',
+        icon: 'pets',
       },
       {
         title: 'Field of Dreams [mini-game]',

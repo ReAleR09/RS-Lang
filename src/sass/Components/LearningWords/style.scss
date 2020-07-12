@@ -159,12 +159,17 @@
     }
 
     .word-card {
+      h5 {
+        display: none;
+      }
+
       .puzzle {
         * {
           font-size: 1rem;
         }
 
         #word {
+          height: unset;
           font-size: 1rem;
         }
       }
