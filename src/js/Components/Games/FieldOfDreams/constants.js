@@ -6,8 +6,8 @@ export const difficulties = [
   60, 60, 60,
 ];
 
-export const title = 'Field of Dreams: mini-game';
-export const description = 'In this game You have to pronounce words using a microphone!';
+export const title = 'Поле Чудес. Мини-игра';
+export const description = 'Здесь нужно угадывать буквы и называть слово с первого раза';
 
 export const roundSize = 10;
 

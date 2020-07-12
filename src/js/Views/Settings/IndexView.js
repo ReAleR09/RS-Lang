@@ -2,13 +2,14 @@ import Materialize from 'materialize-css';
 import '../../../sass/Components/Settings.scss';
 import View from '../../lib/View';
 // import AppNavigator from '../../lib/AppNavigator';
-import { SETTINGS_HTML, SETTINGS_QUERIES as QUERIES } from '../../Components/Settings/constants';
+import { inputCheck, SETTINGS_HTML, SETTINGS_QUERIES as QUERIES } from '../../Components/Settings/constants';
 import { DICT_CATEGORIES } from '../../Classes/Api/constants';
 
 import Toaster from '../../Classes/Toaster';
 import AppNavigator from '../../lib/AppNavigator';
 import { PARAM_MODE } from '../../Utils/Constants';
 import { MODES } from '../../../config';
+import ProgressBarInstance from '../../Classes/ProgressBar';
 
 export default class IndexView extends View {
   /**
@@ -149,7 +150,48 @@ export default class IndexView extends View {
       annoyingAction: this.annoyingAction.value,
     };
 
+    const alerts = [];
+
+    const zeroCheck = newSettings.firstIntervalMinutes
+      * newSettings.baseIntervalDays * newSettings.annoyinglimit;
+
+    if (newSettings.firstIntervalMinutes > inputCheck.firstInterval.value) {
+      alerts.push(inputCheck.firstInterval.alert);
+    }
+    if (newSettings.baseIntervalDays > inputCheck.baseInterval.value) {
+      alerts.push(inputCheck.baseInterval.alert);
+    }
+    if (zeroCheck === inputCheck.zeroCheck.value) {
+      alerts.push(inputCheck.zeroCheck.alert);
+    }
+    if (newSettings.baseMultiplierPercents <= inputCheck.baseMulti.value) {
+      alerts.push(inputCheck.baseMulti.alert);
+    }
+    if (newSettings.hardMultiplierPercents <= inputCheck.hardMulti.value) {
+      alerts.push(inputCheck.hardMulti.alert);
+    }
+    if (newSettings.simpleMultiplierPercents <= inputCheck.simpleMulti.value) {
+      alerts.push(inputCheck.simpleMulti.alert);
+    }
+    if (newSettings.hardMultiplierPercents > newSettings.baseMultiplierPercents) {
+      alerts.push(inputCheck.hardVSbase.alert);
+    }
+    if (newSettings.simpleMultiplierPercents < newSettings.baseMultiplierPercents) {
+      alerts.push(inputCheck.simpleVSbase.alert);
+    }
+    if (newSettings.maxIntervalDays < inputCheck.maxInterval.value) {
+      alerts.push(inputCheck.maxInterval.alert);
+    }
+
+    if (alerts.length) {
+      alerts.forEach((alert) => Toaster.showToast(alert));
+      return;
+    }
+
     this.props.model.settings = newSettings;
+
+    ProgressBarInstance.changeSettings(this.props.model.wordLimitsPerDay);
+
     if (this.ajaxSettingsTimeout) {
       clearTimeout(this.ajaxSettingsTimeout);
     }

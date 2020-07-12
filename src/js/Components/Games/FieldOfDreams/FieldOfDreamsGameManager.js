@@ -14,7 +14,7 @@ const FINISH_GAME_DELAY_MS = 1000;
 
 export default class FieldOfDreamsGameManager {
   constructor(userWordsMode = false, difficulty = 0, round = 1) {
-    this.userWords = userWordsMode;
+    this.userWordsMode = userWordsMode;
 
     this.voiceControl = new VoiceApi(this.acceptAnswer.bind(this));
     this.difficulty = difficulty;
@@ -30,7 +30,8 @@ export default class FieldOfDreamsGameManager {
       this.startQuestionUtterance.bind(this),
     );
     const mode = userWordsMode ? MODES.REPITITION : MODES.GAME;
-    this.statistics = new Statistics(GAMES.FIELDOFDREAMS, mode, true);
+    this.mode = mode;
+    this.statistics = new Statistics(GAMES.FIELDOFDREAMS, mode, false);
   }
 
   attach(element) {
@@ -92,7 +93,8 @@ export default class FieldOfDreamsGameManager {
       .then((words) => {
         const wordsState = words.map((wordInfo) => {
           const wordState = {
-            id: wordInfo.id,
+            // eslint-disable-next-line no-underscore-dangle
+            id: wordInfo._id,
             guessed: false,
             word: wordInfo.word.toLowerCase(),
             audio: wordInfo.audio,
@@ -130,7 +132,11 @@ export default class FieldOfDreamsGameManager {
 
     this.view.openAnswer(result);
 
-    this.statistics.updateWordStatistics(this.currentWord.id, result);
+    let isNewWord;
+    if (this.mode === MODES.REPITITION) {
+      isNewWord = false;
+    }
+    this.statistics.updateWordStatistics(this.currentWord.id, result, isNewWord);
   }
 
   goNextWord() {
