@@ -13,6 +13,8 @@ const CLASS_WORD_STAT_NEXT = 'word-data__stat-next';
 const CLASS_WORD_DELETE_BUTTON = 'word-data__delete-button';
 const CLASS_WORD_RECOVER_BUTTON = 'word-data__recover-button';
 
+const CLASS_BUTTON_TRAN_COMPLICATED = 'button-train-complicated';
+
 class DictionaryWordCard {
   constructor(word, flag) {
     this.word = { ...word };
@@ -63,5 +65,6 @@ export {
   CLASS_DICTIONARY_WORD_SOUND,
   CLASS_WORD_DELETE_BUTTON,
   CLASS_WORD_RECOVER_BUTTON,
+  CLASS_BUTTON_TRAN_COMPLICATED,
   DictionaryWordCard,
 };

@@ -4,11 +4,13 @@ import {
   CLASS_DICTIONARY_WORD_SOUND,
   CLASS_WORD_DELETE_BUTTON,
   CLASS_WORD_RECOVER_BUTTON,
+  CLASS_BUTTON_TRAN_COMPLICATED,
   DictionaryWordCard,
 } from '../../Classes/DictionaryWordCard';
 import initDictionaryTabs from '../../plugins/initMaterial';
 import Dictionary from '../../Classes/Dictionary';
 import AppNavigator from '../../lib/AppNavigator';
+import { MODES } from '../../../config';
 
 const dictionary = new Dictionary();
 
@@ -32,6 +34,11 @@ export default class LearningWordsView extends View {
       });
     });
 
+    const buttonTrainComplicated = this.element.querySelector(`.${CLASS_BUTTON_TRAN_COMPLICATED}`);
+    buttonTrainComplicated.addEventListener('click', () => {
+      AppNavigator.go('learningWords', null, { mode: MODES.COMPLICATED });
+    });
+
     const deleteButtons = this.element.querySelectorAll(`.${CLASS_WORD_DELETE_BUTTON}`);
     deleteButtons.forEach((item) => {
       item.addEventListener('click', async () => {
@@ -53,6 +60,7 @@ export default class LearningWordsView extends View {
 
     let html = `
     <div class="dictionary">
+    <a class="button-train-complicated waves-effect waves-light btn">! Тренировка со сложными словами из словаря !</a>
       <div class="row">
         <div class="col s12">
           <ul class="tabs">
