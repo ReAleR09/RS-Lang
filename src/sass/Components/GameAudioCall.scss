@@ -2,6 +2,9 @@
   margin-top: 20px;
   border: 2px solid red;
 }
+.audio-call_stop-click {
+  height: 100%;
+}
 .audio-call__img-word {
   display: inherit;
   width: 120px !important;
@@ -74,4 +77,7 @@
 }
 .audio-call__btn-start {
   margin-top: 50px;
+}
+.audio-call_hidden-words {
+  visibility: hidden;
 }
