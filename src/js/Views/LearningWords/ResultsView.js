@@ -2,6 +2,7 @@ import View from '../../lib/View';
 import { HTML_RESULT, RESULTS_QUERIES } from '../../Components/LearningWords/ResultsTemplate';
 import { CLASS_DISABLED, CLASS_VISIBLE } from '../../Components/LearningWords/IndexTemplate';
 import { MODES } from '../../../config';
+import { showPreloader, hidePreloader } from '../../Classes/Preloader';
 // import LearningWordsView from '../../Components/LearningWords/LearningWordsView';
 
 export default class ResultsView extends View {
@@ -51,6 +52,7 @@ export default class ResultsView extends View {
     }
     const componentElement = document.querySelector(RESULTS_QUERIES.COMPONENT);
     componentElement.classList.add(CLASS_VISIBLE);
+    hidePreloader();
   }
 
   /**
@@ -70,6 +72,7 @@ export default class ResultsView extends View {
 
   // eslint-disable-next-line class-methods-use-this
   render() {
+    showPreloader();
     const html = HTML_RESULT;
     return html;
   }
