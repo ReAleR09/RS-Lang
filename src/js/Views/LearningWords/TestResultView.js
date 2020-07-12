@@ -1,6 +1,7 @@
 import View from '../../lib/View';
 import { CLASS_VISIBLE } from '../../Components/LearningWords/IndexTemplate';
 import { TEST_RESULT_HTML, QUERY_DIFFICULTY } from '../../Components/LearningWords/TestResultTemplate';
+import { showPreloader, hidePreloader } from '../../Classes/Preloader';
 // import LearningWordsView from '../../Components/LearningWords/LearningWordsView';
 
 export default class TestResultView extends View {
@@ -22,6 +23,7 @@ export default class TestResultView extends View {
     const difficulty = this.element.querySelector(QUERY_DIFFICULTY);
 
     difficulty.innerText = this.props.difficulty;
+    hidePreloader();
   }
 
   /**
@@ -41,6 +43,7 @@ export default class TestResultView extends View {
 
   // eslint-disable-next-line class-methods-use-this
   render() {
+    showPreloader();
     const html = TEST_RESULT_HTML;
     return html;
   }
