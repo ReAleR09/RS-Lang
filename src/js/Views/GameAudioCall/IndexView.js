@@ -143,6 +143,12 @@ export default class IndexView extends View {
         event.stopPropagation();
       });
     });
+
+    this.element.querySelectorAll('.carousel-item').forEach((el) => {
+      el.addEventListener('touchmove', (event) => {
+        event.stopPropagation();
+      });
+    });
   }
 
   /**
@@ -162,11 +168,9 @@ export default class IndexView extends View {
     this.eslint = true;
     const html = `
       <div class="carousel carousel-slider center">
-        <div class="audio-call_stop-click">
-          <div id="start-node" class="audio-call__start-container">
-            <h3 class="audio-call__heading-start-message">Готов? Жми <b>"старт"</b> для начала игры!</h3>
-            <a id="start-btn" class="waves-effect waves-light btn-large audio-call__btn-start">Старт!</a>
-          </div>
+        <div id="start-node" class="audio-call__start-container">
+          <h3 class="audio-call__heading-start-message">Готов? Жми <b>"старт"</b> для начала игры!</h3>
+          <a id="start-btn" class="waves-effect waves-light btn-large audio-call__btn-start">Старт!</a>
         </div>
       </div>`;
     return html;
