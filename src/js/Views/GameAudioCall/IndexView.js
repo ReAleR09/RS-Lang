@@ -74,7 +74,6 @@ export default class IndexView extends View {
         <a id="answer-word-btn" class="btn waves-effect white grey-text darken-text-2 audio-call__hidden-btn">Ответить
           <i class="material-icons right">send</i>
         </a>
-        <a id="check-answer-btn" class="btn waves-effect white grey-text darken-text-2">Не знаю</a>
       </div>`;
     this.element.querySelector('#start-node').remove();
     this.element.insertAdjacentHTML('beforeend', sliderHtml);
@@ -89,6 +88,10 @@ export default class IndexView extends View {
     this.element.querySelector('.audio-call__mark-word').previousElementSibling.innerHTML = '&#10004;';
     this.element.querySelector('.audio-call__mark-word').previousElementSibling.classList.add('audio-call__guess-color');
     this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
+      el.classList.add('audio-call_hidden-words');
+    });
+    this.element.querySelector('.audio-call__mark-word').classList.remove('audio-call_hidden-words');
+    this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
       el.classList.remove('audio-call__mark-word');
     });
   }
@@ -100,7 +103,7 @@ export default class IndexView extends View {
     this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
       el.classList.remove('audio-call__mark-word');
     });
-    this.nextSlide();
+    // this.nextSlide();
   }
 
   nextSlide() {
@@ -112,10 +115,6 @@ export default class IndexView extends View {
   }
 
   createEventSubscribe() {
-    this.element.querySelector('#check-answer-btn').addEventListener('click', () => {
-      M.toast({ html: 'Лошара!!! =)', classes: 'audio-call__toast-dont-know', displayLength: 300 });
-    });
-
     this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
       el.addEventListener('click', (event) => {
         event.target.classList.add('audio-call__mark-word');
@@ -134,10 +133,19 @@ export default class IndexView extends View {
       this.hideSendBtn();
       this.hideOriginWord();
       this.props.sayWord();
+      this.element.querySelectorAll('.audio-call__shuffle-word').forEach((el) => {
+        el.classList.remove('audio-call_hidden-words');
+      });
     });
 
     this.element.querySelectorAll('.carousel-item').forEach((el) => {
       el.addEventListener('mousedown', (event) => {
+        event.stopPropagation();
+      });
+    });
+
+    this.element.querySelectorAll('.carousel-item').forEach((el) => {
+      el.addEventListener('touchmove', (event) => {
         event.stopPropagation();
       });
     });
@@ -191,13 +199,13 @@ export default class IndexView extends View {
   }
 
   visibilitySendBtn() {
-    this.element.querySelector('#check-answer-btn').classList.add('audio-call__hidden-btn');
+    // this.element.querySelector('#check-answer-btn').classList.add('audio-call__hidden-btn');
     this.element.querySelector('#answer-word-btn').classList.remove('audio-call__hidden-btn');
   }
 
   hideSendBtn() {
     this.element.querySelector('#answer-word-btn').classList.add('audio-call__hidden-btn');
-    this.element.querySelector('#check-answer-btn').classList.remove('audio-call__hidden-btn');
+    // this.element.querySelector('#check-answer-btn').classList.remove('audio-call__hidden-btn');
   }
 
   visibilityOriginWord() {

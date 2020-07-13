@@ -140,7 +140,7 @@ export default class GameSprintController extends Controller {
       return wordState;
     });
     this.wordsState = wordsState;
-    console.log(this.wordsState);
+    // console.log(this.wordsState);
     // this.displayWords(wordsState);
     hidePreloader();
   }

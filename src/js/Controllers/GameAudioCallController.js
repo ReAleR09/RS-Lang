@@ -207,7 +207,7 @@ export default class GameAudioCallController extends Controller {
       return wordState;
     });
     this.dataWords = wordsState;
-    console.log(this.dataWords);
+    // console.log(this.dataWords);
     // this.displayWords(wordsState);
     hidePreloader();
   }
@@ -218,13 +218,13 @@ export default class GameAudioCallController extends Controller {
       this.countCorrectTranslationWords += 1;
       this.status = GUESSED_WORD;
       this.updateView();
+      this.countAnswerWords += 1;
     } else { // Если не угадал, отметить статус какой, как не угаданное.
       this.statistics.updateWordStatistics(this.dataWords[this.countAnswerWords].id, false);
       this.status = NOT_GUESS;
       this.updateView();
       this.playAudioFail();
     }
-    this.countAnswerWords += 1;
   }
 
   playAudio() {
