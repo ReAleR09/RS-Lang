@@ -127,13 +127,13 @@ export default class IndexView extends View {
           <select>
             <option value="none" selected>Выбрать сложность</option>
           </select>
-        <label>Game difficulty</label>
+        <label>Сложность</label>
       </div>
           <div class="engPuz__round input-field ">
             <select>
               <option value="none" selected>Выюрать раунд</option>
             </select>
-            <label>Game round</label>
+            <label>Раунд</label>
         </div>
       </div>
       <div class="flex-evenly">
