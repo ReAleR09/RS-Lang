@@ -17,6 +17,8 @@
   }
 
   &__start-button {
+    margin: 0 auto;
+    width: 300px;
     font-size: 17px;
     padding: 10px;
     background-color: #ffffff;
@@ -121,4 +123,9 @@
 
 .promo-video {
   width: 100%;
+}
+.promo__repolink {
+  &:hover {
+    text-decoration: underline;
+  }
 }

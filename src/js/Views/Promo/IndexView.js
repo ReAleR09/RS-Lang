@@ -20,7 +20,7 @@ export default class IndexView extends View {
     <div class="promo">
       <div class="promo__start">
         <h1>Максимально увеличьте свой словарный запас с RSLANG</h1>
-        <div class="promo__start-button">Начать</div>
+        <div class="promo__start-button waves-effect waves-light btn #ce93d8 purple pulse">Начать</div>
         <!--<div class="promo__login-button">Войти</div>-->
       </div>
       <div class="promo__description">
@@ -124,8 +124,8 @@ export default class IndexView extends View {
         <h2>Совершенствуй свои языковые познания</h2>
         <div class="promo-video">
         <iframe width="90%" height="415" src="https://www.youtube.com/embed/GgV1w0RaVU4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-
         </div>
+        <h3 class="center"><i class="material-icons">book</i><a class="promo__repolink" target="_blank" href="https://github.com/ReAleR09/RS-Lang">Project GitHub Repo</a></h3>
       </div>
 
     </div>`;
