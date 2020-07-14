@@ -10,10 +10,11 @@
   width: 120px !important;
   height: 120px;
   border-radius: 50%;
-  margin: 20px auto;
+  margin: 15px auto;
 }
 .audio-call__wrapper-shuffle-words {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   margin: 15px;
 }
