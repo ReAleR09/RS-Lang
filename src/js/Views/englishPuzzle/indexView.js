@@ -26,7 +26,7 @@ const renderSelectOnStart = (element, difficulty, round) => {
   for (let i = 0; i <= engPuzConst.difficulties.length - 1; i += 1) {
     fragmentD += `<option value="${i}">${i}</option>`;
   }
-  for (let i = 1; i <= round; i += 1) {
+  for (let i = 1; i <= engPuzConst.pagesPerDifficulties[difficulty]; i += 1) {
     fragmentR += `<option value="${i}">${i}</option>`;
   }
 
@@ -95,9 +95,11 @@ export default class IndexView extends View {
       // if selects unset download difficulty and level from backand
     });
 
-    playMyWordsBtn.addEventListener('click', () => {
-      AppNavigator.go('englishpuzzle', 'play', { isUserWords: 1 });
-    });
+    if (playMyWordsBtn) {
+      playMyWordsBtn.addEventListener('click', () => {
+        AppNavigator.go('englishpuzzle', 'play', { isUserWords: 1 });
+      });
+    }
   }
 
   // creating markup of the view and returning it
@@ -125,13 +127,13 @@ export default class IndexView extends View {
           <select>
             <option value="none" selected>Выбрать сложность</option>
           </select>
-        <label>Game difficulty</label>
+        <label>Сложность</label>
       </div>
           <div class="engPuz__round input-field ">
             <select>
               <option value="none" selected>Выюрать раунд</option>
             </select>
-            <label>Game round</label>
+            <label>Раунд</label>
         </div>
       </div>
       <div class="flex-evenly">
