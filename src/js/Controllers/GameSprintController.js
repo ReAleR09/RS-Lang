@@ -12,7 +12,6 @@ import AppNavigator from '../lib/AppNavigator';
 import GameSprintWordsApi from '../Components/Games/Sprint/GameSprintWordsApi';
 import { showPreloader, hidePreloader } from '../Classes/Preloader';
 import Statistics from '../Classes/Statistics';
-import ResultsView from '../Views/GameSprint/ResultsView';
 // import GameSprintControllerSecond from './GameSprintContollerSecond';
 
 /**
@@ -30,7 +29,6 @@ export default class GameSprintController extends Controller {
     const viewClasses = {
       index: UniversalGameStartView,
       play: PlayView,
-      results: ResultsView,
     };
     super(viewClasses);
 

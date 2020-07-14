@@ -191,10 +191,14 @@ export default class IndexView extends View {
         <h2 class="audio-call__heading-the-end">The End.</h2>
         <h4>Угаданно <b>${countRightWord}</b> из <b>10</b> слов</h4>
         <a id="btn-reload-game" class="btn-floating btn-large waves-effect waves-light green audio-call__btn-reload"><i class="material-icons">refresh</i></a>
+        <a id="btn-exit-game" class="btn-floating btn-large waves-effect waves-light blue audio-call__btn-reload"><i class="material-icons">exit_to_app</i></a>
       </div>`;
     this.props.audioEndGame();
     this.element.querySelector('#btn-reload-game').addEventListener('click', () => {
       AppNavigator.go('game-audio-call');
+    });
+    this.element.querySelector('#btn-exit-game').addEventListener('click', () => {
+      AppNavigator.go('/');
     });
   }
 

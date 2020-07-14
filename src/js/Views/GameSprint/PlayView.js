@@ -52,8 +52,7 @@ export default class PlayView extends View {
           AppNavigator.go('game-sprint');
         });
         this.element.querySelector('#exit-game').addEventListener('click', () => {
-          this.element.innerHTML += '<h3>Куда выходить, пока х.з.)';
-          // Сюда чего-нибудь вставить, что бы куда-нибудь выйти). Куда выходять, я пока х.з.)
+          AppNavigator.go('/');
         });
       }
     });

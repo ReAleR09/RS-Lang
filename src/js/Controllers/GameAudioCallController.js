@@ -125,6 +125,7 @@ export default class GameAudioCallController extends Controller {
     this.countCorrectTranslationWords = 0;
     this.wordsToSend = [];
     this.countAnswerWords = 0;
+    this.mistakeInWord = 0;
     this.prepareWords();
     this.updateView();
     this.playAudio();
@@ -213,15 +214,23 @@ export default class GameAudioCallController extends Controller {
   }
 
   compareWords(event) { // Тут можно помечать угаданные слова
-    if (this.wordsToSend[this.countAnswerWords].wordTranslate === event.target.innerText) {
+    if (this.wordsToSend[this.countAnswerWords].wordTranslate === event.target.innerText
+      && this.mistakeInWord === 0) {
       this.statistics.updateWordStatistics(this.dataWords[this.countAnswerWords].id, true);
       this.countCorrectTranslationWords += 1;
       this.status = GUESSED_WORD;
       this.updateView();
       this.countAnswerWords += 1;
+    } else if (this.wordsToSend[this.countAnswerWords].wordTranslate === event.target.innerText
+      && this.mistakeInWord > 0) {
+      this.status = GUESSED_WORD;
+      this.updateView();
+      this.countAnswerWords += 1;
+      this.mistakeInWord = 0;
     } else { // Если не угадал, отметить статус какой, как не угаданное.
       this.statistics.updateWordStatistics(this.dataWords[this.countAnswerWords].id, false);
       this.status = NOT_GUESS;
+      this.mistakeInWord += 1;
       this.updateView();
       this.playAudioFail();
     }
@@ -240,6 +249,8 @@ export default class GameAudioCallController extends Controller {
   }
 
   playAudioFail() {
+    this.audioFail.pause();
+    this.audioFail.currentTime = 0.0;
     this.audioFail.play();
   }
 
