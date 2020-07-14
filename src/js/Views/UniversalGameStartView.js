@@ -54,7 +54,7 @@ export default class UniversalGameStartView extends View {
     if (game.userWordsPlay) {
       userWordsPlay = `
         <div class='row'>
-          <div class="waves-effect waves-light btn col s12" id="${ID_START_BUTTON_USER}">Start game with learned words</div>
+          <div class="waves-effect waves-light btn col s12" id="${ID_START_BUTTON_USER}">Играть с изучаемыми словами</div>
         </div>
       `;
     }
@@ -67,7 +67,7 @@ export default class UniversalGameStartView extends View {
       </blockquote>
       <div class='row'>
         <p class="range-field col s12">
-          Difficulty:
+          Сложность:
         </p>
         <p class="range-field col s12">
           <input
@@ -81,7 +81,7 @@ export default class UniversalGameStartView extends View {
           />
         </p>
         <p class="range-field col s12">
-          Round:
+          Раунд:
         </p>
         <p class="range-field col s12">
           <input
@@ -93,7 +93,7 @@ export default class UniversalGameStartView extends View {
             value="${game.currentRound}"
           />
         </p>
-        <div class="waves-effect waves-light btn col s12" id="${ID_START_BUTTON}">Start game</div>
+        <div class="waves-effect waves-light btn col s12" id="${ID_START_BUTTON}">Играть</div>
       </div>
       ${userWordsPlay}
     </div>`;
