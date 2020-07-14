@@ -70,7 +70,7 @@ export const SIDENAV = [
         icon: 'pets',
       },
       {
-        title: 'Field of Dreams [mini-game]',
+        title: 'Поле чудес',
         path: ['fieldOfDreams'],
         icon: 'slow_motion_video',
       },
