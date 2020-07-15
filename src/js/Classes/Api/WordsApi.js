@@ -123,6 +123,9 @@ export default class WordsApi {
       resultCount = Math.min(count, totalCount);
     }
 
+    resultCount = Math.min(resultCount, arrayOfResults.length);
+    if (resultCount === 0) return [];
+
     const arrayOfIndexes = WordsApi.createArrayOfIndexes(resultCount, (totalCount - 1));
 
     const randomWords = arrayOfIndexes.map((index) => arrayOfResults[index]);
@@ -155,7 +158,7 @@ export default class WordsApi {
       'userWord.optional.interval': { $lt: (SettingsModel.settings.maxIntervalDays * MILLIS_PER_DAY) },
     });
 
-    let repeatedWords = await this.getAggregatedWords(count, undefined, filter);
+    let repeatedWords = await this.getAggregatedWords(undefined, undefined, filter);
 
     if (repeatedWords.error) {
       ErrorHandling.handleError(repeatedWords.error, API_ERROR);
@@ -199,27 +202,34 @@ export default class WordsApi {
     return repeatedWords;
   }
 
-  async changeWordDataById(wordId, userWordData = {
-    difficulty: DIFFICULTIES.NORMAL, // Сложность в рамках оценки сложности слова
-    dictCategory: DICT_CATEGORIES.MAIN, // Словарь Сложные, Удаленные, Основные
-    errors: 0, // количество ошибок по карточке
-    interval: 0, // текущий расчета даты
-    success: 0, // количество успехов
-    bestResult: 0, // лучший результат
-    curSuccessConsistency: 0, // текущая серия
-    lastDate: 0, // последняя дата
-    nextDate: 0, // дата повторения
-  }) {
+  static getDefaultUserWordData() {
+    return {
+      difficulty: DIFFICULTIES.NORMAL, // Сложность в рамках оценки сложности слова
+      dictCategory: DICT_CATEGORIES.MAIN, // Словарь Сложные, Удаленные, Основные
+      errors: 0, // количество ошибок по карточке
+      interval: 0, // текущий расчета даты
+      success: 0, // количество успехов
+      bestResult: 0, // лучший результат
+      curSuccessConsistency: 0, // текущая серия
+      lastDate: 0, // последняя дата
+      nextDate: 0, // дата повторения
+    };
+  }
+
+  async changeWordDataById(wordId, userWordData) {
+    let data = userWordData;
+    if (!userWordData) {
+      data = WordsApi.getDefaultUserWordData();
+    }
     const userWordStructure = {
       difficulty: '0',
-      optional: userWordData,
+      optional: data,
     };
 
-    let result = await this.api.getUserWordById(wordId);
+    let result = await this.api.putUserWordById(wordId, userWordStructure);
+
     if (result.error) {
       result = await this.api.postUserWordById(wordId, userWordStructure);
-    } else {
-      result = await this.api.putUserWordById(wordId, userWordStructure);
     }
 
     if (result.error) {

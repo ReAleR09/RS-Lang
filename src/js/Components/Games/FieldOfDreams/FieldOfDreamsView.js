@@ -84,7 +84,9 @@ export default class FieldOfDreamsView {
 
   initButtons() {
     this.skipButton = this.element.querySelector(FIELD_OF_DREAMS_QUERIES.skipButton);
+    this.speechButton = this.element.querySelector(FIELD_OF_DREAMS_QUERIES.speechButton);
     this.alphabet = this.element.querySelector(FIELD_OF_DREAMS_QUERIES.alphabet);
+
     this.alphabet.addEventListener('click', (e) => {
       const { target } = e;
       if (target.classList.contains(CLASS_LETTER_WRAP)) return;
@@ -102,6 +104,8 @@ export default class FieldOfDreamsView {
     this.skipButton.addEventListener('click', () => {
       this.acceptAnswer();
     });
+
+    this.speechButton.addEventListener('click', this.startQuestionUtterance);
   }
 
   static createAlphabetButtons() {
@@ -168,7 +172,9 @@ export default class FieldOfDreamsView {
       this.soundEffect = soundEffects.superGame;
     }
     this.showCard();
-    this.setTimer(this.startQuestionUtterance, 1000);
+    this.setTimer(() => {
+      this.speechButton.click();
+    }, 1000);
     this.unlockComponent();
   }
 
