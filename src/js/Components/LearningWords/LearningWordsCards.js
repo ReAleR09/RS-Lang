@@ -111,7 +111,7 @@ export default class LearnindWordsCards {
 
   async getRepeatWords() {
     let words = await this.wordsApi.getRepeatedWords(chunkCount);
-    console.log(words);
+
     if (!(words instanceof Array) || !words.length) this.repeatWords = [];
     words = words.map((word) => {
       const newWord = word;
