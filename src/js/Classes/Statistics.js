@@ -162,7 +162,7 @@ export default class Statistics {
       const requestStatArrays = [];
       const requestRepitArrays = [];
       bestResults.forEach(({ word, bestResult }) => {
-        requestStatArrays.push(this.updateRepititionsStatistics(word));
+        requestStatArrays.push(this.updateRepititionsStatistics(word, false));
         requestRepitArrays.push(this.spacedRepititions.putTrainingData(word, bestResult));
       });
 
