@@ -128,7 +128,14 @@ export default class WordsApi {
 
     const arrayOfIndexes = WordsApi.createArrayOfIndexes(resultCount, (totalCount - 1));
 
-    const randomWords = arrayOfIndexes.map((index) => arrayOfResults[index]);
+    let randomWords = arrayOfIndexes.map((index) => arrayOfResults[index]);
+
+    randomWords = randomWords.map((word) => {
+      const newWord = { ...word };
+      // eslint-disable-next-line no-underscore-dangle
+      newWord.id = word._id;
+      return newWord;
+    });
 
     return randomWords;
   }
