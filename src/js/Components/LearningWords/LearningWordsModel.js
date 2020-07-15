@@ -79,6 +79,7 @@ export default class LearningWordsModel {
 
   detach() {
     this.timer.deleteTimers();
+    this.statistics = null;
     this.view.detach();
     this.view = null;
   }

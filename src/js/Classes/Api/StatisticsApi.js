@@ -22,7 +22,10 @@ export default class StatisticsApi {
 
     statisticsStructure.optional[TEAM_KEY] = TEAM_VALUE;
 
-    const result = await this.api.putUserStatistics(statisticsStructure);
+    let result = await this.api.putUserStatistics(statisticsStructure);
+    if (!result.error) {
+      result = await StatisticsApi.unpackStatistics(result.optional);
+    }
     return result;
   }
 
