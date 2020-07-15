@@ -132,6 +132,7 @@ export default class WordsApi {
 
     randomWords = randomWords.map((word) => {
       const newWord = { ...word };
+      if (!word) return newWord;
       // eslint-disable-next-line no-underscore-dangle
       newWord.id = word._id;
       return newWord;
@@ -377,6 +378,15 @@ export default class WordsApi {
     // get only roundSize (or less?)
     arrayOfResults = arrayOfResults.slice(0, gameRoundSize);
 
+    if (arrayOfResults.length) {
+      arrayOfResults = arrayOfResults.map((word) => {
+        const newWord = { ...word };
+        if (!word) return newWord;
+        // eslint-disable-next-line no-underscore-dangle
+        newWord._id = word.id;
+        return newWord;
+      });
+    }
     // aaaaand finally we return this nice stuff
     return arrayOfResults;
   }
