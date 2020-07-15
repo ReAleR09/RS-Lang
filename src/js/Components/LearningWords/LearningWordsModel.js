@@ -158,6 +158,7 @@ export default class LearningWordsModel {
       const wasErrors = (this.cards.currentErrors === 0);
       this.updateSessionResults(wasErrors);
       await this.updateStatistics(wasErrors);
+
       this.cards.currentStatus = WORD_STATUSES.COMPLITED;
       this.showFilledCard(showWordRate);
     } else if (this.cards.currentErrors) {

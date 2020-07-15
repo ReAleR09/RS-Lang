@@ -117,6 +117,7 @@ export default class LearningWordsView {
 
   attachKeys() {
     const keysCallback = (event) => {
+      if (this.isComponentLock) return;
       if (event.code === 'Enter') {
         this.onButtonNext();
       } else if (event.code === 'ArrowRight') {
@@ -334,5 +335,9 @@ export default class LearningWordsView {
     this.settings.showButtonDelete = false;
     this.settings.showButtonComplicated = false;
     this.settings.showButtonAnswer = false;
+  }
+
+  get isComponentLock() {
+    return this.element.classList.contains(CLASS_COMPONENT_LOCKED);
   }
 }

@@ -13,11 +13,13 @@ export default class Dictionary {
     this.wordsApi = new WordsApi();
   }
 
-  async createAndGetUserWordDataById(wordId) {
-    if (!this.wordsApi.checkUserWordInBase(wordId)) {
-      await this.wordsApi.changeWordDataById(wordId);
+  async getUserWordDataById(wordId) {
+    let userWordData = await this.wordsApi.getWordDataById(wordId);
+
+    if (userWordData.error) {
+      userWordData = WordsApi.getDefaultUserWordData();
     }
-    const userWordData = await this.wordsApi.getWordDataById(wordId);
+
     if (userWordData.error) {
       ErrorHandling.handleError(userWordData.error, API_SEND_ERROR);
     }
@@ -25,7 +27,7 @@ export default class Dictionary {
   }
 
   async putOnCategory(wordId, category = DICT_CATEGORIES.MAIN) {
-    const userWordData = await this.createAndGetUserWordDataById(wordId);
+    const userWordData = await this.getUserWordDataById(wordId);
     if (userWordData.error) {
       return userWordData;
     }
@@ -35,7 +37,7 @@ export default class Dictionary {
   }
 
   async setUserDifficulty(wordId, userDifficulty = DIFFICULTIES.NORMAL) {
-    const userWordData = await this.createAndGetUserWordDataById(wordId);
+    const userWordData = await this.getUserWordDataById(wordId);
     if (userWordData.error) {
       return userWordData;
     }

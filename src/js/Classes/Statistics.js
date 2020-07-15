@@ -26,6 +26,8 @@ export default class Statistics {
   }
 
   async updateRepititionsStatistics(wordId, isNewWordStatus) {
+    console.log('rep stat');
+    console.log(this.statistics);
     if (this.game !== GAMES.LEARNING) return;
     if (!this.isLoaded) {
       await this.get();
@@ -68,6 +70,7 @@ export default class Statistics {
     }
     this.results.success = 0;
     this.results.errors = 0;
+    console.log(this.statistics);
   }
 
   async updateWordStatistics(wordId, result = true, isNewWord) {
@@ -235,7 +238,6 @@ export default class Statistics {
     const dateNow = Utils.getDateNoTime().getTime();
 
     let limits = {};
-
     try {
       limits = {
         totalWordsCount: this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].totalWordsCount,

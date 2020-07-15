@@ -97,7 +97,7 @@ export default class LearnindWordsCards {
 
   async getNewWords() {
     let words = await this.wordsApi.getRandomNewWords(chunkCount, this.difficulty);
-
+    if (!(words instanceof Array) || !words.length) this.newWords = [];
     if (!words.length && this.mode === MODES.REPITITION) {
       this.difficulty += 1;
     }
@@ -111,6 +111,8 @@ export default class LearnindWordsCards {
 
   async getRepeatWords() {
     let words = await this.wordsApi.getRepeatedWords(chunkCount);
+    console.log(words);
+    if (!(words instanceof Array) || !words.length) this.repeatWords = [];
     words = words.map((word) => {
       const newWord = word;
       newWord.wordStatus = WORD_STATUSES.OLD;
@@ -121,6 +123,7 @@ export default class LearnindWordsCards {
 
   async getComplicatedWords() {
     let words = await this.wordsApi.getComplicatedWords();
+    if (!(words instanceof Array) || !words.length) this.complicatedWords = [];
     words = words.map((word) => {
       const newWord = word;
       newWord.wordStatus = WORD_STATUSES.OLD;
