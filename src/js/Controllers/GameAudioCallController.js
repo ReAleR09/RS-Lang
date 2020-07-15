@@ -132,7 +132,7 @@ export default class GameAudioCallController extends Controller {
   }
 
   prepareWords() {
-    this.wordsToSend = this.dataWords.slice(0, 9).map((dataWord) => ({
+    this.wordsToSend = this.dataWords.slice(0, 10).map((dataWord) => ({
       audio: dataWord.audio,
       image: dataWord.image,
       word: dataWord.word,
