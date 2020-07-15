@@ -57,7 +57,7 @@ export default class LearningWordsController extends Controller {
       wasStarted = (params.get(PARAM_WAS_STARTED) === 'true');
     }
     this.props.stats = LocalStorageAdapter.get(PARAM_STATS_LEARNING);
-    console.log(this.props.stats);
+
     this.props.wasStarted = wasStarted;
     this.props.mode = mode; // new Statistics(GAMES.LEARNING, mode);
   }
