@@ -32,8 +32,12 @@ export default class IndexView extends View {
     }) => {
       if (status === INIT_GAME) {
         // console.log(wordsToSend);
-        this.wordsToSend = wordsToSend;
-        this.generateHtml(wordsToSend);
+        if (wordsToSend.length) {
+          this.wordsToSend = wordsToSend;
+          this.generateHtml(wordsToSend);
+        } else {
+          console.log('No words =(');
+        }
       } else if (status === GUESSED_WORD) {
         this.guessWord();
       } else if (status === NOT_GUESS) {
