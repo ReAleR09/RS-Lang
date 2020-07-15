@@ -228,7 +228,7 @@ export default class LearningWordsModel {
   async updateStatistics(result) {
     // eslint-disable-next-line no-underscore-dangle
     const wordId = this.card._id;
-    await this.statistics.updateWordStatistics(
+    this.statistics.updateWordStatistics(
       wordId,
       result,
       (this.cards.currentStatus === WORD_STATUSES.NEW),
