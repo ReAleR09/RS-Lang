@@ -19,13 +19,14 @@ export const CLASS_LETTER_FLIP = 'letter-flipped';
 export const CLASS_DRUM_ROTATE = 'drum-rotation';
 
 export const CLASS_BUTTON_DISABLED = 'disabled';
-export const CLASS_LISTENING = 'listening';
+export const CLASS_LISTENING = 'field-of-dreams__listening';
 export const CLASS_HIDE_CARD = 'card-hide';
 
 export const FIELD_OF_DREAMS_QUERIES = {
   question: `.${fieldOfDreamsComponent} .${CLASSES.question} p`,
   alphabet: `.${fieldOfDreamsComponent} .${CLASSES.alphabet}`,
   answer: `.${fieldOfDreamsComponent} .${CLASSES.answer}`,
+  speechButton: `.${fieldOfDreamsComponent} .${CLASSES.speechButton}`,
   skipButton: `.${fieldOfDreamsComponent} .${CLASSES.skipButton}`,
   drum: `.${fieldOfDreamsComponent} .${CLASSES.drum} img`,
 };
@@ -69,6 +70,7 @@ export const FIELD_OF_DREAMS_GAME_HTML = `
   <div class="${CLASSES.answer}">
   </div>
   <div class="control-panel">
+    <a class="${CLASSES.speechButton} waves-effect waves-light btn">Прослушать вопрос</a>
     <a class="${CLASSES.skipButton} waves-effect waves-light btn">Пропустить</a>
   </div>
   <div class="${COMPONENT_LOCK_CLASS}"></div>
