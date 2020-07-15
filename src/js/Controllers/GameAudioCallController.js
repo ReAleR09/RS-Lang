@@ -103,7 +103,6 @@ export default class GameAudioCallController extends Controller {
     const mode = userWordsMode ? MODES.REPITITION : MODES.GAME;
     this.statistics = new Statistics(GAMES.AUDIOCALL, mode, false);
 
-    await this.getWordsFromDataBase();
     this.props.startGame = () => {
       this.startGame();
     };
@@ -117,6 +116,7 @@ export default class GameAudioCallController extends Controller {
     this.props.audioEndGame = () => {
       this.playAudioEndGame();
     };
+    await this.getWordsFromDataBase();
     // this.startGame();
   }
 
@@ -132,15 +132,22 @@ export default class GameAudioCallController extends Controller {
   }
 
   prepareWords() {
-    for (let x = 0; x < 10; x += 1) {
-      this.wordsToSend.push({
-        audio: this.dataWords[x].audio,
-        image: this.dataWords[x].image,
-        word: this.dataWords[x].word,
-        wordTranslate: this.dataWords[x].wordTranslate,
-        randomTranslateWords: this.randomTranslateWord(this.dataWords[x].wordTranslate),
-      });
-    }
+    this.wordsToSend = this.dataWords.slice(0, 9).map((dataWord) => ({
+      audio: dataWord.audio,
+      image: dataWord.image,
+      word: dataWord.word,
+      wordTranslate: dataWord.wordTranslate,
+      randomTranslateWords: this.randomTranslateWord(dataWord.wordTranslate),
+    }));
+    // for (let x = 0; x < 10; x += 1) {
+    //   this.wordsToSend.push({
+    //     audio: this.dataWords[x].audio,
+    //     image: this.dataWords[x].image,
+    //     word: this.dataWords[x].word,
+    //     wordTranslate: this.dataWords[x].wordTranslate,
+    //     randomTranslateWords: this.randomTranslateWord(this.dataWords[x].wordTranslate),
+    //   });
+    // }
     // console.log(this.wordsToSend);
   }
 
@@ -194,20 +201,15 @@ export default class GameAudioCallController extends Controller {
       );
     }
 
-    const wordsState = words.map((wordInfo) => {
-      const wordState = {
-        id: wordInfo.id,
-        guessed: false,
-        word: wordInfo.word.toLowerCase(),
-        audio: wordInfo.audio,
-        image: wordInfo.image,
-        transcription: wordInfo.transcription,
-        wordTranslate: wordInfo.wordTranslate,
-      };
-
-      return wordState;
-    });
-    this.dataWords = wordsState;
+    this.dataWords = words.map((wordInfo) => ({
+      id: wordInfo.id,
+      guessed: false,
+      word: wordInfo.word.toLowerCase(),
+      audio: wordInfo.audio,
+      image: wordInfo.image,
+      transcription: wordInfo.transcription,
+      wordTranslate: wordInfo.wordTranslate,
+    }));
     // console.log(this.dataWords);
     // this.displayWords(wordsState);
     hidePreloader();
@@ -241,7 +243,7 @@ export default class GameAudioCallController extends Controller {
       this.statistics.sendGameResults();
       this.status = FINISH;
       this.updateView();
-    } else {
+    } else if (this.wordsToSend[this.countAnswerWords]) {
       // console.log('playaudio');
       this.audio = new Audio(this.wordsToSend[this.countAnswerWords].audio);
       this.audio.play();
