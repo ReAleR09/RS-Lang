@@ -18,8 +18,6 @@ const puzzleMaxLength = 10;
 export default class WordsApi {
   constructor() {
     this.api = new Api();
-    this.settingsObject = SettingsModel;
-    this.settings = this.settingsObject.settings;
   }
 
   static createArrayOfIndexes(count, maxIndex) {
@@ -111,7 +109,7 @@ export default class WordsApi {
 
     params.wordsPerPage = totalCount;
     let arrayOfResults = await this.api.getAggregatedWords(params);
-    const error = WordsApi.checkPromiseArrayErrors(arrayOfResults);
+    const { error } = arrayOfResults;
     if (error) {
       ErrorHandling.handleError(error, API_ERROR);
       return [];
@@ -154,10 +152,10 @@ export default class WordsApi {
     const filter = JSON.stringify({
       'userWord.optional.dictCategory': { $ne: DICT_CATEGORIES.DELETE },
       'userWord.optional.nextDate': { $lt: dateNow },
-      'userWord.optional.interval': { $lt: (this.settings.maxIntervalDays * MILLIS_PER_DAY) },
+      'userWord.optional.interval': { $lt: (SettingsModel.settings.maxIntervalDays * MILLIS_PER_DAY) },
     });
 
-    let repeatedWords = await this.getAggregatedWords(undefined, undefined, filter);
+    let repeatedWords = await this.getAggregatedWords(count, undefined, filter);
 
     if (repeatedWords.error) {
       ErrorHandling.handleError(repeatedWords.error, API_ERROR);
@@ -281,6 +279,7 @@ export default class WordsApi {
     params.filter = JSON.stringify({
       'userWord.optional.dictCategory': { $ne: DICT_CATEGORIES.DELETE },
       'userWord.optional.nextDate': { $lt: dateNow },
+      'userWord.optional.interval': { $lt: (SettingsModel.settings.maxIntervalDays * MILLIS_PER_DAY) },
     });
 
     const totalCount = await this.getTotalCountByAggregatedWordsRequest(params);
