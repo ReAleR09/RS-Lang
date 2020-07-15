@@ -96,8 +96,7 @@ export default class SavannahGameManager {
 
   sendStatisticToServer() {
     this.wordsState.forEach((wordState) => {
-      // eslint-disable-next-line no-underscore-dangle
-      this.statistics.updateWordStatistics(wordState._id, wordState.guessed);
+      this.statistics.updateWordStatistics(wordState.id, wordState.guessed);
     });
     this.statistics.sendGameResults();
   }
