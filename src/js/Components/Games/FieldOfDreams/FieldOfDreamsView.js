@@ -172,9 +172,7 @@ export default class FieldOfDreamsView {
       this.soundEffect = soundEffects.superGame;
     }
     this.showCard();
-    this.setTimer(() => {
-      this.speechButton.click();
-    }, 1000);
+
     this.unlockComponent();
   }
 
