@@ -56,7 +56,8 @@ export default class SpeakitGameManager {
 
             this.soundPlayer.playGuessSound();
             // mark word as success in stats
-            this.statistics.updateWordStatistics(wordState.id, true);
+            // eslint-disable-next-line no-underscore-dangle
+            this.statistics.updateWordStatistics(wordState._id, true);
           }
           return true;
         }
