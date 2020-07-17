@@ -189,6 +189,7 @@ export default class GameSprintController extends Controller {
   }
 
   stopGame() {
+    this.gameTimer = 0;
     this.statistics.sendGameResults();
     this.status = FINISHED_SPRINT_GAME;
     // AppNavigator.go('sprint', 'results');

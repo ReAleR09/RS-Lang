@@ -25,9 +25,11 @@ export default class Statistics {
     this.isLoaded = false;
   }
 
+  get statisticsCopy() {
+    return { ...this.statistics };
+  }
+
   async updateRepititionsStatistics(wordId, isNewWordStatus) {
-    console.log('rep stat');
-    console.log(this.statistics);
     if (this.game !== GAMES.LEARNING) return;
     if (!this.isLoaded) {
       await this.get();
@@ -70,7 +72,6 @@ export default class Statistics {
     }
     this.results.success = 0;
     this.results.errors = 0;
-    console.log(this.statistics);
   }
 
   async updateWordStatistics(wordId, result = true, isNewWord) {
@@ -91,7 +92,7 @@ export default class Statistics {
     if (this.mode === MODES.REPITITION && !(this.wordsSendAtEnd)) {
       await this.updateRepititionsStatistics(wordId, isNewWord);
       await this.spacedRepititions.putTrainingData(wordId, result);
-      await this.statisticsApi.update(this.statistics);
+      await this.statisticsApi.update(this.statisticsCopy);
     }
     this.wordStat.push({ wordId, result });
   }
@@ -101,8 +102,8 @@ export default class Statistics {
       await this.get();
     }
     const requestDate = Utils.getDateNoTime(date).getTime();
-    if (this.statistics[WORDS_LEARNING_RESULTS_KEY][requestDate]) {
-      return this.statistics[WORDS_LEARNING_RESULTS_KEY][requestDate];
+    if (this.statisticsCopy[WORDS_LEARNING_RESULTS_KEY][requestDate]) {
+      return this.statisticsCopy[WORDS_LEARNING_RESULTS_KEY][requestDate];
     }
     return {
       totalWordsCount: 0,
@@ -120,7 +121,7 @@ export default class Statistics {
     if (!this.isLoaded) {
       await this.get();
     }
-    const statArray = Object.entries(this.statistics[WORDS_LEARNING_RESULTS_KEY])
+    const statArray = Object.entries(this.statisticsCopy[WORDS_LEARNING_RESULTS_KEY])
       .sort((a, b) => a[0] < b[0]);
     const fullStatistics = statArray.map(([date, dayResult]) => ({ date, ...dayResult }));
     return fullStatistics;
@@ -130,9 +131,9 @@ export default class Statistics {
     if (!this.isLoaded) {
       await this.get();
     }
-    const gameResults = this.statistics[GAME_RESULTS_KEY][this.game];
+    const gameResults = this.statisticsCopy[GAME_RESULTS_KEY][this.game];
 
-    return gameResults[gameResults.length - 1];
+    return { ...gameResults[gameResults.length - 1] };
   }
 
   async sendGameResults() {
@@ -161,7 +162,7 @@ export default class Statistics {
       const requestStatArrays = [];
       const requestRepitArrays = [];
       bestResults.forEach(({ word, bestResult }) => {
-        requestStatArrays.push(this.updateRepititionsStatistics(word));
+        requestStatArrays.push(this.updateRepititionsStatistics(word, false));
         requestRepitArrays.push(this.spacedRepititions.putTrainingData(word, bestResult));
       });
 
@@ -169,7 +170,10 @@ export default class Statistics {
       await Promise.all(requestRepitArrays);
     }
 
-    const report = await this.statisticsApi.update(this.statistics);
+    const report = await this.statisticsApi.update(this.statisticsCopy);
+    if (!report.error) {
+      this.statistics = report;
+    }
 
     return report;
   }
@@ -202,9 +206,9 @@ export default class Statistics {
 
     let results = [];
     if (game) {
-      results = this.statistics[game];
+      results = this.statisticsCopy[game];
     } else {
-      Object.values(this.statistics[GAME_RESULTS_KEY]).forEach((gameResults) => {
+      Object.values(this.statisticsCopy[GAME_RESULTS_KEY]).forEach((gameResults) => {
         results = results.concat(gameResults);
       });
     }
@@ -240,10 +244,10 @@ export default class Statistics {
     let limits = {};
     try {
       limits = {
-        totalWordsCount: this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].totalWordsCount,
-        newWordsCount: this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow].newWordsCount,
+        totalWordsCount: this.statisticsCopy[WORDS_LEARNING_RESULTS_KEY][dateNow].totalWordsCount,
+        newWordsCount: this.statisticsCopy[WORDS_LEARNING_RESULTS_KEY][dateNow].newWordsCount,
       };
-      limits = this.statistics[WORDS_LEARNING_RESULTS_KEY][dateNow];
+      limits = { ...this.statisticsCopy[WORDS_LEARNING_RESULTS_KEY][dateNow] };
     } catch (error) {
       limits = {
         totalWordsCount: 0,

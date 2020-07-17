@@ -25,8 +25,8 @@ export const soundEffects = {
 };
 
 export const soundsSources = {
-  [soundEffects.success]: '/src/assets/audio/FieldOfDreams/word-true.mp3',
-  [soundEffects.error]: '/src/assets/audio/FieldOfDreams/word-false.mp3',
-  [soundEffects.letterTrue]: '/src/assets/audio/FieldOfDreams/letter-true.mp3',
-  [soundEffects.letterFalse]: '/src/assets/audio/FieldOfDreams/letter-false.mp3',
+  [soundEffects.success]: '/assets/audio/FieldOfDreams-word-true.mp3',
+  [soundEffects.error]: '/assets/audio/FieldOfDreams-word-false.mp3',
+  [soundEffects.letterTrue]: '/assets/audio/FieldOfDreams-letter-true.mp3',
+  [soundEffects.letterFalse]: '/assets/audio/FieldOfDreams-letter-false.mp3',
 };

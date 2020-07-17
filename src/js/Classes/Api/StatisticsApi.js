@@ -22,7 +22,10 @@ export default class StatisticsApi {
 
     statisticsStructure.optional[TEAM_KEY] = TEAM_VALUE;
 
-    const result = await this.api.putUserStatistics(statisticsStructure);
+    let result = await this.api.putUserStatistics(statisticsStructure);
+    if (!result.error) {
+      result = await StatisticsApi.unpackStatistics(result.optional);
+    }
     return result;
   }
 
@@ -83,6 +86,7 @@ export default class StatisticsApi {
     const shortGameResult = {
       br: gameResult.bestResult,
       cr: gameResult.currentResult,
+      s: gameResult.success,
       d: gameResult.date,
       e: gameResult.errors,
     };
@@ -96,6 +100,7 @@ export default class StatisticsApi {
     const gameResult = {
       bestResult: shortGameResult.br,
       currentResult: shortGameResult.cr,
+      success: shortGameResult.s,
       date: shortGameResult.d,
       errors: shortGameResult.e,
     };
