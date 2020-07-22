@@ -1,4 +1,4 @@
-# RS-Lang Team#7
+# [RS-Lang Team#7](https://rslang-team7-realer09.netlify.app/)
 
 Используемые сторонние библиотеки
  - [chartjs](https://www.chartjs.org/) - для отрисовски графиков статистики
