@@ -15,7 +15,7 @@
   "author": "ReAleR09",
   "license": "ISC",
   "dependencies": {
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "@fortawesome/fontawesome-free": "^5.13.1",
     "materialize-css": "^1.0.0-rc.2",
     "sortablejs": "^1.10.2"
