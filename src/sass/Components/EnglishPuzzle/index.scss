@@ -1,0 +1,98 @@
+// EP - English Puzzle
+
+.EP-start__wrapper {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.EP-start__panel {
+  width: 100%;
+}
+
+.canvas-item:not(:first-child) {
+  margin-left: -8px;
+}
+
+.canvas-item {
+  height: 48px;
+  cursor: pointer;
+}
+
+.group-words {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  &>* {
+    margin: 5px 10px;
+  }
+}
+.engPuz__drop-section {
+  min-height: 400px;
+}
+
+.min-padding {
+  padding: 10px;
+}
+.engPuz__drag-section {
+  min-height: 106px;
+}
+.engPuz__drop-section--line {
+  min-height: 50px;
+  display: flex;
+  width: 100%;
+}
+
+.canvas-red {
+  box-shadow: 0 0 14px red;
+  background-color: red;
+}
+.canvas-green {
+  box-shadow: 0 0 14px green;
+  background-color: green;
+}
+.engPuz__bottom-check {
+  margin-left: 50px;
+}
+.noPointer {
+  pointer-events: none;
+}
+.visually-hidden {
+  visibility: hidden;
+}
+.visually-visible {
+  visibility: visible;
+}
+.engPuz__drop-section img {
+  width: 100%;
+  height: auto;
+}
+.fullWidth {
+  width: 100%;
+}
+.margin-bottom {
+  margin-bottom: 20px;
+}
+.mar-left {
+  margin-left: 10px;
+}
+
+.flex-evenly a {
+  
+  @include media-mobie-mini {
+    font-size: 12px;
+    line-height: unset;
+    padding: 0 3px;
+  }
+}
+
+.engPuz__selects input.select-dropdown {
+  @include media-mobie-mini {
+    font-size: 14px;
+  }
+}
+.opacity-hidden {
+  opacity: 0;
+}

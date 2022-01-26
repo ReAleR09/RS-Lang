@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link id="page_favicon" href="/assets/favicon.ico" rel="icon" type="image/x-icon" />
+  <title>RS Lang [group #7]</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+</head>
+<body>
+  <ul class="sidenav orange lighten-5" id="sidenav-left">
+    <li class="center"><a class="btn-flat" id="application_username" ></a></li>
+    <li><div class="divider"></div></li>
+    <div id="sidebar__items_container"></div>
+    <li><div class="divider"></div></li>
+    <li data-controller="dictionary">
+      <a class="waves-effect waves-yellow"><i class="material-icons">g_translate</i>Словарь</a></li>
+    <li data-controller="settings">
+      <a class="waves-effect waves-green"><i class="material-icons">settings_applications</i>Настройки</a>
+    </li>
+    <li data-controller="statistics">
+      <a class="waves-effect waves-red"><i class="material-icons">equalizer</i>Статистика</a>
+    </li>
+    <li><div class="divider bottom"></div></li>
+    <li data-controller="about-team">
+      <a class="waves-effect waves-red"><i class="material-icons">nature_people</i>О команде</a>
+    </li>
+    <li data-controller="promo">
+      <a class="waves-effect waves-red"><i class="material-icons">remove_red_eyes</i>Промо-страница</a>
+    </li>
+    <!-- <li>
+      <a class="btn-flat waves-effect waves-teal"><i class="material-icons">hearing</i>Audio <span data-audio-side>On</span></a>
+    </li> -->
+    <li data-controller="authorization" data-action="logout" class="center">
+      <a class="waves-effect waves-red"><i class="material-icons">exit_to_app</i>Logout</a>
+    </li>
+  </ul>
+  <ul class="sidenav #81d4fa light-blue lighten-3" id="sidenav-right">
+    <li class="center"><a href="#">Username</a></li>
+    <li><div class="divider"></div></li>
+    <li class="center"><i class="large material-icons">insert_chart</i></li>
+  </ul>
+  <nav>
+    <div id='headerBar' class="nav-wrapper #ff7043 deep-orange lighten-1">
+      <div class="container">
+        <a data-target="sidenav-left" class="sidenav-trigger btn transparent waves-effect waves-orange vert-align sidenav-trigger-custom"><i class="material-icons">menu</i></a>
+        <span class="brand-logo center">RS Lang T#7</span>
+      </div>
+    </div>
+  </nav>
+  <div id="sidebar"></div>
+  <div class="container">
+    <app id='app'></app>
+  </div>
+  <div class="day-progress__container">
+    <div class="day-progress container hidden">
+      <div class="grid">
+        <div class="new-words-progress-wrapper progress">
+          <div class="new-words-progress determinate"></div>
+        </div>
+        <div class="new-words-title right-align">
+          <p>новых слов в день</p>
+        </div>
+        <div class="all-words-progress-wrapper">
+          <div class="progress">
+            <div class="all-words-progress determinate"></div>
+          </div>
+        </div>
+        <div class="all-words-title right-align">
+          <p>всего слов в день</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

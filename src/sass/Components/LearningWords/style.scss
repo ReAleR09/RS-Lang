@@ -1,0 +1,186 @@
+.learn-words {
+  position: relative;
+  opacity: 0;
+
+  &.visible {
+    opacity: 1;
+  }
+
+  transition: opacity ease-in-out 0.4s;
+
+  width: 100%;
+
+  .word-card {
+    padding: 2rem;
+    width: 100%;
+
+    .card-head {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .card-settings {
+        /* Correct Materialize styles of FAB */
+        position: static !important;
+      }
+    }
+
+    .img-rounded {
+      border-radius: 2vh;
+    }
+
+    .puzzle {
+      * {
+        font-size: 2rem;
+        margin: unset;
+      }
+
+      p {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      #word {
+        width: unset !important;
+        display: inline;
+        font-size: 2rem;
+
+        &::placeholder {
+          opacity: 0;
+        }
+
+        &.success::placeholder {
+          opacity: 1;
+          color: green;
+        }
+
+        &.error::placeholder {
+          opacity: 0.8;
+          color: rgb(146, 11, 11);
+        }
+      }
+    }
+
+    .hints {
+      p {
+        font-size: 1.5rem;
+        margin: unset;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .description {
+        i {
+          display: none;
+        }
+        span {
+          display: inline;
+        }
+      }
+    }
+  }
+
+  .d-none {
+    display: none;
+  }
+
+  .d-flex {
+    display: flex;
+  }
+
+  .flex-align-center {
+    align-items: center;
+  }
+
+  .p-1 {
+    padding: 1rem;
+  }
+
+  .p-2 {
+    padding: 2rem;
+  }
+
+  .m-1 {
+    margin: 1rem;
+  }
+
+  .m-2 {
+    margin: 2rem;
+  }
+
+  .flex-justify-center {
+    justify-content: center;
+  }
+
+  &.card-locked {
+    .hints {
+      .description {
+        i {
+          display: inline;
+        }
+        span {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &.component-locked {
+    .component-lock {
+      display: block;
+    }
+  }
+
+  .component-lock {
+    display: none;
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 10;
+  }
+}
+@media (max-width: 600px) {
+  .learn-words {
+    .p-2 {
+      padding: 0.5rem;
+    }
+
+    .m-1 {
+      margin: 0.25rem;
+    }
+
+    .m-2 {
+      margin: 0.5rem;
+    }
+
+    .word-card {
+      h5 {
+        display: none;
+      }
+
+      .puzzle {
+        * {
+          font-size: 1rem;
+        }
+
+        #word {
+          height: unset;
+          font-size: 1rem;
+        }
+      }
+
+      .hints {
+        p {
+          font-size: 1rem;
+          padding-left: 0.25rem;
+          padding-right: 0.25rem;
+        }
+      }
+    }
+  }
+}

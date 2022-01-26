@@ -1,0 +1,25 @@
+.speakit {
+
+  &__border {
+    border: 1px solid green;
+    margin: 2px;
+    cursor: pointer;
+  }
+
+  &__button-hidden {
+    display: none!important;
+  }
+
+  &__word-card {
+    // width: 20%!important;
+    &_sound-icon {
+      cursor: pointer;
+    }
+  }
+
+  &__word-card-result {
+    &_sound-icon {
+      cursor: pointer;
+    }
+  }
+}

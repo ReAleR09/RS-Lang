@@ -1,0 +1,131 @@
+.promo {
+
+  &__start {
+    padding: 10px;
+    padding-bottom: 30px;
+    background-color: #b1017c;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    color: #ffffff;
+
+    h1 {
+      @media (max-width: 540px) {
+        font-size: 40px;
+      }
+    }
+  }
+
+  &__start-button {
+    margin: 0 auto;
+    width: 300px;
+    font-size: 17px;
+    padding: 10px;
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.6s;
+    &:hover {
+      background-color: #cacaca;
+    }
+  }
+
+  &__login-button {
+    font-size: 17px;
+    padding: 10px;
+    border-radius: 10px;
+    margin-left: 10px;
+    border: 1px solid #ffffff;
+    cursor: pointer;
+    transition: 0.6s;
+    &:hover {
+      background-color: #e01ca5;
+    }
+  }
+
+  &__description {
+    background-color: #ffdada;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+
+    h2 {
+      @media (max-width: 540px) {
+        font-size: 30px;
+      }
+    }
+  }
+
+  &__video {
+    background-color: #a1c8f5;
+    text-align: center;
+    padding: 10px;
+    padding-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h2 {
+      @media (max-width: 540px) {
+        font-size: 30px;
+      }
+    }
+  }
+}
+
+.description-item {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  // justify-content: center;
+  align-items: center;
+  margin: 10px;
+
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  p {
+    text-align: center;
+    font-size: 17px;
+  }
+}
+
+.promo-container {
+  padding: 0 !important;
+}
+
+.promo-container h2 {
+  width: -webkit-fill-available;
+}
+
+.fa-5x {
+  color: red;
+  stroke: black;
+  stroke-width: 5px;
+}
+
+.promo-app {
+  background-color: #f3e595;
+}
+
+.promo-interval {
+  background-color: #9cf899;
+}
+
+.promo-games {
+  background-color: #99f8f0;
+}
+
+.promo-video {
+  width: 100%;
+}
+.promo__repolink {
+  &:hover {
+    text-decoration: underline;
+  }
+}
